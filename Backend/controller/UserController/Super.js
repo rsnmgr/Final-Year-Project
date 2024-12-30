@@ -13,6 +13,7 @@ export const createSuper = async(req,res) =>{
 
 export const fetchSuperById = async (req, res) => {
     const { id } = req.params;
+    console.log(id)
     try {
         const supper = await Super.findById(id).select('-password');
         if (!supper) {

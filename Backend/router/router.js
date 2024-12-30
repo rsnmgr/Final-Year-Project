@@ -29,5 +29,40 @@ router.get('/validUser',authenticate, validUser);
 router.get('/logout', authenticate, logOut);
 
 
+// Menu Category
+import {addCategory,getCategories, getCategoryById,updateCategory,deleteCategory} from '../controller/admin/menu/Category.js';
+router.post('/category', addCategory);
+router.get('/categories/:AdminId', getCategories);
+router.get('/category/:AdminId/:categoryId', getCategoryById);
+router.put('/category/:AdminId/:categoryId', updateCategory);
+router.delete('/category/:AdminId/:categoryId', deleteCategory);
+
+
+// Menu Product
+import { addProduct, getProducts, getProductById, updateProduct, deleteProduct } from '../controller/admin/menu/Products.js';
+router.post('/products', upload.single('image'), addProduct);
+router.get('/products/:AdminId', getProducts);
+router.get('/products/:AdminId/:productId', getProductById);
+router.put('/products/:AdminId/:productId', upload.single('image'), updateProduct);
+router.delete('/products/:AdminId/:productId', deleteProduct);
+
+// Staff Category
+import { addStaffCategory,getStaffCategories,getStaffCategoryById,updateStaffCategory,deleteStaffCategory } from '../controller/admin/staff/Category.js';
+router.post('/staff-category',addStaffCategory);
+router.get('/staff-category/:AdminId',getStaffCategories);
+router.get('/staff-category/:AdminId/:categoryId', getStaffCategoryById);
+router.put('/staff-category/:AdminId/:categoryId', updateStaffCategory);
+router.delete('/staff-category/:AdminId/:categoryId', deleteStaffCategory);
+
+// Staff Details
+import { addDetail, getDetails, getDetailById, updateDetail, deleteDetail } from '../controller/admin/staff/Details.js';
+router.post('/details', upload.single('image'), addDetail);
+router.get('/details/:AdminId', getDetails);
+router.get('/details/:AdminId/:detailId', getDetailById);
+router.put('/details/:AdminId/:detailId', upload.single('image'), updateDetail);
+router.delete('/details/:AdminId/:detailId', deleteDetail);
+
+
+
 
 export default router;
