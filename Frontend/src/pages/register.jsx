@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import img from '../assets/login.png';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +33,7 @@ export default function Register() {
 
   const handleRegisterSubmit = async(e) => {
     e.preventDefault();
-    const data = await fetch("http://localhost:8000/api/register",{
+    const data = await fetch(`${API_URL}/api/register`,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

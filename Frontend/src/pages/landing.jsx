@@ -11,6 +11,7 @@ import About from '../components/Landing/About';
 import Feature from '../components/Landing/Feature';
 import Services from '../components/Landing/Services';
 import Contact from '../components/Landing/Contact';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Landing() {
   const [menu, setMenu] = useState(false);
@@ -57,7 +58,7 @@ export default function Landing() {
   const validateUserRole = async () => {
     try {
       const token = localStorage.getItem("TokenFoodMe");
-      const res = await fetch("http://localhost:8000/api/validUser", {
+      const res = await fetch(`${API_URL}/api/validUser`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

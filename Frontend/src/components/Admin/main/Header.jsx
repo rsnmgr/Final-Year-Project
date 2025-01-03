@@ -3,6 +3,7 @@ import React, { useState,useEffect,useContext } from 'react'
 import { GiHamburgerMenu } from "react-icons/gi";
 import DropDown from './DropDown';
 import io from 'socket.io-client';
+const API_URL = import.meta.env.VITE_API_URL;
 
 /* Import Default Image */
 import img from '../../../assets/defaultImg.png';
@@ -11,11 +12,11 @@ export default function Header({toggleSidebar,profileClick,profile,title,handleP
   const {loginData, setLoginData} = useContext(LoginContext)
   const [userData, setUserData] = useState(null);
   const userId = loginData?.validUser?._id;
-  const socket = io(`http://localhost:8000`);
+  const socket = io(`${API_URL}`);
   const fetchUserData = async () => {
     try {
       if (userId) {
-        const res = await fetch(`http://localhost:8000/api/fetch/${userId}`, {
+        const res = await fetch(`${API_URL}/api/fetch/${userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -50,9 +51,9 @@ export default function Header({toggleSidebar,profileClick,profile,title,handleP
         </div>
         <div onClick={profileClick} className='cursor-pointer'>
           {userData && userData.image ? (
-            <img src={`http://localhost:8000/${userData.image}`} alt="" className='w-6 h-6 rounded-full bg-gray-800 object-cover'/>
+            <img src={`${API_URL}/${userData.image}`} alt="" className='w-6 h-6 rounded-full border border-gray-400 object-cover'/>
           ) : (
-            <h1 className="w-8 h-8 flex justify-center items-center rounded-full object-cover text-white font-bold border border-gray-600">
+            <h1 className="w-8 h-8 flex justify-center items-center rounded-full object-cover text-white font-bold border border-gray-400">
               {userData?.name?.[0]}
             </h1>
           )}
@@ -60,7 +61,7 @@ export default function Header({toggleSidebar,profileClick,profile,title,handleP
         
       </div>
       {profile &&(
-      <div className='absolute  right-0 top-0 bg-gray-900 h-screen border-l border-gray-600 rounded-l-2xl p-4'>
+      <div className='absolute  right-0 top-0 bg-gray-900 h-screen border-l border-gray-600 rounded-l-2xl p-4 z-50'>
         <DropDown profileClick={profileClick} handlePageChange={handlePageChange} userData={userData}/>
       </div>
       )}

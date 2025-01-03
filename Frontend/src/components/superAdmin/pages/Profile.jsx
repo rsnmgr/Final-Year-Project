@@ -21,13 +21,13 @@ export default function Profile({handlePageChange}) {
   const fetchUserData = async () => {
     try {
       if (userId) {
-        const res = await fetch(`${API_URL}/api/fetch/${userId}`, {
+        const res = await fetch(`${API_URL}/api/fetchsuper/${userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
         if (res.ok) {
           const data = await res.json();
-          setUserData(data.customer);
+          setUserData(data.supper);
         } else {
           console.error("Error fetching user data");
         }
@@ -59,7 +59,7 @@ export default function Profile({handlePageChange}) {
   }
 
   return (
-    <div className="flex flex-col md:flex-row  space-y-6 md:space-y-0 md:space-x-6">
+    <div className="flex flex-col md:flex-row w-full space-y-6 md:space-y-0 md:space-x-6">
       {/* Left Column - User Information */}
       <div className="flex flex-col w-full md:w-1/5 space-y-6 md:space-y-4">
         {/* Profile Picture and Name */}

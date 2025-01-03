@@ -11,6 +11,8 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { LoginContext } from '../../ContextProvider/Context';
 import {useNavigate} from 'react-router-dom';
 import img from '../../../assets/defaultImg.png';
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function DropDown({profileClick,handlePageChange,userData}) {
   const {loginData, setLoginData} = useContext(LoginContext);
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ export default function DropDown({profileClick,handlePageChange,userData}) {
 
   const logOutUser = async() => {
     let token = localStorage.getItem("TokenFoodMe");
-    const res = await fetch("http://localhost:8000/api/logout",{
+    const res = await fetch(`${API_URL}/api/logout`,{
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -42,9 +44,9 @@ export default function DropDown({profileClick,handlePageChange,userData}) {
           <div className="flex justify-between items-center gap-8">
             <div className='flex justify-start gap-3 items-center'>
                 {userData && userData.image ? (
-                  <img src={`http://localhost:8000/${userData.image}`} alt="" className='w-6 h-6 rounded-full bg-gray-800 object-cover cursor-pointer'/>
+                  <img src={`${API_URL}/${userData.image}`} alt="" className='w-6 h-6 rounded-full bg-gray-800 object-cover border border-gray-400 cursor-pointer'/>
                   ) : (
-                    <h1 className="w-8 h-8 flex justify-center items-center rounded-full object-cover text-white font-bold border border-gray-600 cursor-pointer">
+                    <h1 className="w-8 h-8 flex justify-center items-center rounded-full object-cover text-white font-bold border border-gray-400 cursor-pointer">
                       {userData?.name?.[0]}
                       </h1>
                 )}

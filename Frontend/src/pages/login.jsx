@@ -4,6 +4,7 @@ import img from '../assets/login.png';
 import { FaUser, FaLock, FaFacebook, FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
 import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +20,7 @@ export default function Login() {
 
   const loginuser = async (e) => {
     e.preventDefault();
-    const data = await fetch("http://localhost:8000/api/login", {
+    const data = await fetch(`${API_URL}/api/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

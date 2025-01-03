@@ -5,10 +5,11 @@ import { RxCross2 } from "react-icons/rx";
 import { FaPlus } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
 import { LoginContext } from "../../../ContextProvider/Context";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const BASE_URL = "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 export default function MenuCategory() {
   const [showModal, setShowModal] = useState(false);
@@ -34,7 +35,7 @@ export default function MenuCategory() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/categories/${AdminId}`);
+      const response = await axios.get(`${API_URL}/api/categories/${AdminId}`);
       setCategories(response.data.categories || []);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -58,7 +59,7 @@ export default function MenuCategory() {
 
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/category/${AdminId}/${categoryId}`
+        `${API_URL}/api/category/${AdminId}/${categoryId}`
       );
       setCategoryData(response.data.category || { name: "", status: "Active" });
       setSelectedCategory(categoryId);
@@ -82,7 +83,7 @@ export default function MenuCategory() {
 
     try {
       await axios.delete(
-        `${BASE_URL}/api/category/${AdminId}/${selectedCategory}`
+        `${API_URL}/api/category/${AdminId}/${selectedCategory}`
       );
       setCategories((prevCategories) =>
         prevCategories.filter((category) => category._id !== selectedCategory)
@@ -119,12 +120,12 @@ export default function MenuCategory() {
     try {
       if (selectedCategory) {
         await axios.put(
-          `${BASE_URL}/api/category/${AdminId}/${selectedCategory}`,
+          `${API_URL}/api/category/${AdminId}/${selectedCategory}`,
           categoryData
         );
         toast.success("Category updated successfully.");
       } else {
-        await axios.post(`${BASE_URL}/api/category`, {
+        await axios.post(`${API_URL}/api/category`, {
           AdminId,
           ...categoryData,
         });
@@ -143,7 +144,7 @@ export default function MenuCategory() {
   );
 
   return (
-    <div className="p-4">
+    <div className="p-2">
       <div className="flex justify-between items-center mb-4">
         <div className="relative w-full max-w-xs">
           <LuSearch className="absolute inset-y-0 left-3 top-1/2 transform -translate-y-1/2 flex items-center pointer-events-none text-gray-500 w-5 h-5" />
@@ -313,6 +314,7 @@ export default function MenuCategory() {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 }

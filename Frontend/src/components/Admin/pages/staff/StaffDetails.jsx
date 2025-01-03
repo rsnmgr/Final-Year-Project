@@ -9,7 +9,7 @@ import { LoginContext } from "../../../ContextProvider/Context";
 import { toast } from 'react-toastify'; // Import toastify
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify styles
 
-const BASE_URL = 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function StaffDetails() {
   const [showModal, setShowModal] = useState(false);
@@ -40,7 +40,7 @@ export default function StaffDetails() {
 
   const fetchDetails = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/details/${AdminId}`);
+      const response = await axios.get(`${API_URL}/api/details/${AdminId}`);
       setDetails(response.data.details);
     } catch (error) {
       toast.error('Error fetching details.');
@@ -49,7 +49,7 @@ export default function StaffDetails() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/staff-category/${AdminId}`);
+      const response = await axios.get(`${API_URL}/api/staff-category/${AdminId}`);
       setCategories(response.data.categories);
       if (response.data.categories.length > 0) {
         // Set the first category as the default selected category
@@ -74,7 +74,7 @@ export default function StaffDetails() {
         salary: detail.salary,
         status: detail.status || 'Active' // Default to 'Active' if not set
       });
-      setSelectedImage(`${BASE_URL}/${detail.image}`);
+      setSelectedImage(`${API_URL}/${detail.image}`);
       setSelectedDetail(detail);
     } else {
       setFormData({
@@ -97,7 +97,7 @@ export default function StaffDetails() {
 
   const handleDeleteConfirm = async () => {
     try {
-      await axios.delete(`${BASE_URL}/api/details/${AdminId}/${selectedDetail._id}`);
+      await axios.delete(`${API_URL}/api/details/${AdminId}/${selectedDetail._id}`);
       fetchDetails();
       setShowDeleteConfirm(false);
       setSelectedDetail(null);
@@ -146,11 +146,11 @@ export default function StaffDetails() {
     try {
       if (selectedDetail) {
         // Update existing detail
-        await axios.put(`${BASE_URL}/api/details/${AdminId}/${selectedDetail._id}`, data);
+        await axios.put(`${API_URL}/api/details/${AdminId}/${selectedDetail._id}`, data);
         toast.success('Detail updated successfully.');
       } else {
         // Add new detail
-        await axios.post(`${BASE_URL}/api/details`, data);
+        await axios.post(`${API_URL}/api/details`, data);
         toast.success('Detail added successfully.');
       }
       fetchDetails(); // Refresh detail list
@@ -170,7 +170,7 @@ export default function StaffDetails() {
   }, [selectedImage]);
 
   return (
-    <div className='p-4'>
+    <div className='p-2'>
       {/* Header with Search and Add Detail Button */}
       <div className='flex justify-between items-center mb-4'>
         <div className="relative w-full max-w-xs">
@@ -219,7 +219,7 @@ export default function StaffDetails() {
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{detail.salary}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                     <img
-                      src={`${BASE_URL}/${detail.image}` || image}
+                      src={`${API_URL}/${detail.image}` || image}
                       alt="Detail"
                       className="w-8 h-8 rounded-md object-cover mx-auto"
                     />

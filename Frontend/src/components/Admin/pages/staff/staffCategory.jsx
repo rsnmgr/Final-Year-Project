@@ -8,7 +8,7 @@ import { LoginContext } from "../../../ContextProvider/Context";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const BASE_URL = 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function staffCategory() {
   const [showModal, setShowModal] = useState(false);
@@ -28,7 +28,7 @@ export default function staffCategory() {
     // Fetch categories when the component mounts
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/staff-category/${AdminId}`);
+        const response = await axios.get(`${API_URL}/api/staff-category/${AdminId}`);
         setCategories(response.data.categories);
       } catch (error) {
       }
@@ -46,7 +46,7 @@ export default function staffCategory() {
 
   const handleEditClick = async (categoryId) => {
     try {
-      const response = await axios.get(`${BASE_URL}/api/staff-category/${AdminId}/${categoryId}`);
+      const response = await axios.get(`${API_URL}/api/staff-category/${AdminId}/${categoryId}`);
       setCategoryData(response.data.category);
       setSelectedCategory(categoryId);
       setIsFormOpen(true);
@@ -62,7 +62,7 @@ export default function staffCategory() {
 
   const handleDeleteConfirm = async () => {
     try {
-      await axios.delete(`${BASE_URL}/api/staff-category/${AdminId}/${selectedCategory}`);
+      await axios.delete(`${API_URL}/api/staff-category/${AdminId}/${selectedCategory}`);
       setCategories(categories.filter(category => category._id !== selectedCategory));
       setShowDeleteConfirm(false);
       setSelectedCategory(null);
@@ -90,14 +90,14 @@ export default function staffCategory() {
     try {
       if (selectedCategory) {
         // Update category
-        const response = await axios.put(`${BASE_URL}/api/staff-category/${AdminId}/${selectedCategory}`, categoryData);
+        const response = await axios.put(`${API_URL}/api/staff-category/${AdminId}/${selectedCategory}`, categoryData);
         setCategories(categories.map(category => 
           category._id === selectedCategory ? response.data.category : category
         ));
         toast.success("Category updated successfully.");
       } else {
         // Add new category
-        const response = await axios.post(`${BASE_URL}/api/staff-category`, {
+        const response = await axios.post(`${API_URL}/api/staff-category`, {
           AdminId,
           ...categoryData,
         });
@@ -118,7 +118,7 @@ export default function staffCategory() {
   );
 
   return (
-    <div className="p-4">
+    <div className="p-2">
       <div className="flex justify-between items-center mb-4">
         <div className="relative w-full max-w-xs">
           <LuSearch className="absolute inset-y-0 left-3 top-1/2 transform -translate-y-1/2 flex items-center pointer-events-none text-gray-500 w-5 h-5" />

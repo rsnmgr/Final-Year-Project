@@ -37,10 +37,10 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
         </li>
 
         {/* Menu Dropdown */}
-        <li className="flex flex-col border-y border-gray-600">
+        <li className="flex flex-col border-t border-gray-600">
           <div
             className={`flex items-center justify-between p-3 cursor-pointer ${
-              activeDropdown === 'Menu' ? 'bg-gray-800' : 'bg-gray-900'
+              activeDropdown === 'Menu' ? 'border-b border-gray-600' : 'border-b border-gray-600'
             }`}
             onClick={() => toggleDropdown('Menu')}
           >
@@ -58,7 +58,7 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
             <ul className="ml-6">
               <li
                 className={`p-3 cursor-pointer ${
-                  currentPage === 'Category' ? 'bg-gray-700' : 'bg-gray-800'
+                  currentPage === 'Category' ? 'bg-gray-800' : 'bg-gray-900'
                 }`}
                 onClick={() => handleItemClick('Category')}
               >
@@ -66,7 +66,7 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
               </li>
               <li
                 className={`p-3 cursor-pointer ${
-                  currentPage === 'Product' ? 'bg-gray-700' : 'bg-gray-800'
+                  currentPage === 'Product' ? 'bg-gray-800' : 'bg-gray-900'
                 }`}
                 onClick={() => handleItemClick('Product')}
               >
@@ -106,10 +106,10 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
         </li>
 
         {/* Staff Dropdown */}
-        <li className="flex flex-col border-t border-gray-600">
+        <li className="flex flex-col border-y border-gray-600">
           <div
             className={`flex items-center justify-between p-3 cursor-pointer ${
-              activeDropdown === 'Staff' ? 'bg-gray-800' : 'bg-gray-900'
+              activeDropdown === 'Staff' ? 'border-b border-gray-600' : 'border-b border-gray-600'
             }`}
             onClick={() => toggleDropdown('Staff')}
           >
@@ -127,7 +127,7 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
             <ul className="ml-6">
               <li
                 className={`p-3 cursor-pointer ${
-                  currentPage === 'Staff Category' ? 'bg-gray-700' : 'bg-gray-800'
+                  currentPage === 'Staff Category' ? 'bg-gray-800' : 'bg-gray-900'
                 }`}
                 onClick={() => handleItemClick('Staff Category')}
               >
@@ -135,7 +135,7 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
               </li>
               <li
                 className={`p-3 cursor-pointer ${
-                  currentPage === 'Staff Detail' ? 'bg-gray-700' : 'bg-gray-800'
+                  currentPage === 'Staff Detail' ? 'bg-gray-800' : 'bg-gray-900'
                 }`}
                 onClick={() => handleItemClick('Staff Detail')}
               >
@@ -146,10 +146,10 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
         </li>
 
         {/* Reports Dropdown */}
-        <li className="flex flex-col border-y border-gray-600">
+        <li className="flex flex-col border-b border-gray-600">
           <div
             className={`flex items-center justify-between p-3 cursor-pointer ${
-              activeDropdown === 'Reports' ? 'bg-gray-800' : 'bg-gray-900'
+              activeDropdown === 'Reports' ? 'border-b border-gray-600' : 'border-b border-gray-600'
             }`}
             onClick={() => toggleDropdown('Reports')}
           >
@@ -167,7 +167,7 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
             <ul className="ml-6">
               <li
                 className={`p-3 cursor-pointer ${
-                  currentPage === 'Salse' ? 'bg-gray-700' : 'bg-gray-800'
+                  currentPage === 'Salse' ? 'bg-gray-800' : 'bg-gray-900'
                 }`}
                 onClick={() => handleItemClick('Salse')}
               >
@@ -175,7 +175,7 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
               </li>
               <li
                 className={`p-3 cursor-pointer ${
-                  currentPage === 'Purchase' ? 'bg-gray-700' : 'bg-gray-800'
+                  currentPage === 'Purchase' ? 'bg-gray-800' : 'bg-gray-900'
                 }`}
                 onClick={() => handleItemClick('Purchase')}
               >

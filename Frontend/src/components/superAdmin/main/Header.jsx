@@ -5,6 +5,7 @@ import DropDown from './DropDown';
 /* Import Default Image */
 import img from '../../../assets/defaultImg.png';
 import { LoginContext } from '../../ContextProvider/Context';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Header({toggleSidebar,profileClick,profile,title,handlePageChange}) {
   const {loginData, setLoginData} = useContext(LoginContext)
@@ -14,7 +15,7 @@ export default function Header({toggleSidebar,profileClick,profile,title,handleP
     const fetchUserData = async () => {
       try {
         if (userId) {
-          const res = await fetch(`http://localhost:8000/api/fetchsuper/${userId}`, {
+          const res = await fetch(`${API_URL}/api/fetchsuper/${userId}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
           });
@@ -41,9 +42,9 @@ export default function Header({toggleSidebar,profileClick,profile,title,handleP
         </div>
         <div onClick={profileClick} className='cursor-pointer'>
             {userData && userData.image ? (
-              <img src={`http://localhost:8000/${userData.image}`} alt="" className='w-6 h-6 rounded-full bg-gray-800 object-cover'/>
+              <img src={`${API_URL}/${userData.image}`} alt="" className='w-6 h-6 rounded-full border  border:bg-gray-400 object-cover'/>
               ) : (
-                <h1 className="w-6 h-6 flex justify-center items-center rounded-full object-cover bg-blue-600 text-white font-bold border-2 border-gray-600">
+                <h1 className="w-6 h-6 flex justify-center items-center rounded-full object-cover bg-blue-600 text-white font-bold border border-gray-400">
                   {userData?.name?.[0]}
                 </h1>
             )}

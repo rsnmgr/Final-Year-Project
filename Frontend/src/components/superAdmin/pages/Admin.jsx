@@ -4,6 +4,7 @@ import { RxCross1 } from "react-icons/rx";
 import img from '../../../assets/defaultImg.png';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Admin() {
   const [selectedImage, setSelectedImage] = useState(img);
@@ -24,7 +25,7 @@ export default function Admin() {
   // Fetch customers function
   const fetchCustomers = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/fetchAll');
+      const response = await fetch(`${API_URL}/api/fetchAll`);
       if (response.ok) {
         const data = await response.json();
         setCustomers(data.customers);
@@ -70,7 +71,7 @@ export default function Admin() {
         restaurant: customer.restaurant,
         password: '', // Don't populate password for security reasons
       });
-      setSelectedImage(customer.image ? `http://localhost:8000/${customer.image}` : img);
+      setSelectedImage(customer.image ? `${API_URL}/${customer.image}` : img);
     } else {
       setCurrentCustomerId(null);
       setInpVal({
@@ -95,7 +96,7 @@ export default function Admin() {
       // Optimistically remove the customer from the local state before the deletion call
       setCustomers(prevCustomers => prevCustomers.filter(customer => customer._id !== currentCustomerId));
   
-      const response = await fetch(`http://localhost:8000/api/delete/${currentCustomerId}`, {
+      const response = await fetch(`${API_URL}/api/delete/${currentCustomerId}`, {
         method: 'DELETE',
       });
   
@@ -128,11 +129,11 @@ export default function Admin() {
 
     try {
       const response = currentCustomerId
-        ? await fetch(`http://localhost:8000/api/update/${currentCustomerId}`, {
+        ? await fetch(`${API_URL}/api/update/${currentCustomerId}`, {
             method: 'PUT',
             body: formData,
           })
-        : await fetch('http://localhost:8000/api/create', {
+        : await fetch('${API_URL}/api/create', {
             method: 'POST',
             body: formData,
           });
@@ -199,7 +200,7 @@ export default function Admin() {
                     <td className="px-6 py-4 items-center text-center">{customer.address}</td>
                     <td className="px-6 py-4 items-center text-center">{customer.restaurant}</td>
                     <td className="px-6 py-4 items-center text-center">
-                      <img src={customer.image ? `http://localhost:8000/${customer.image}` : img} className="w-8 h-8 border border-gray-600" alt="Customer" />
+                      <img src={customer.image ? `${API_URL}/${customer.image}` : img} className="w-8 h-8 border border-gray-600" alt="Customer" />
                     </td>
                     <td className="flex items-center justify-center px-6 py-4 space-x-4">
                       <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">

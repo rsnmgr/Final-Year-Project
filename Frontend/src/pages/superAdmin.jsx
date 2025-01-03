@@ -10,6 +10,8 @@ import Dashboard from '../components/superAdmin/pages/Dashboard';
 import Admin from '../components/superAdmin/pages/Admin';
 import UsersInfo from '../components/superAdmin/pages/UserInfo';
 import Setting from '../components/superAdmin/pages/Setting';
+import Profile from '../components/superAdmin/pages/Profile';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function SuperAdmin() {
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ export default function SuperAdmin() {
 
   const SuperAdmin = async()=>{
     let token = localStorage.getItem("TokenFoodMe");
-    const res = await fetch("http://localhost:8000/api/validUser",{
+    const res = await fetch(`${API_URL}/api/validUser`,{
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -57,7 +59,7 @@ export default function SuperAdmin() {
 
   return (
     <div className='flex w-full'>
-      <div className={`border-r border-gray-600 rounded-2xl md:rounded-none top-0 left-0 transition-all duration-500 overflow-hidden bg-gray-900  h-screen ${!sidebar ? "-translate-x-full md:translate-x-0 absolute md:relative w-0  md:w-[15vw]": "translate-x-0 md:-translate-x-full absolute md:relative w-[80%] md:w-0"}`}>
+      <div className={`border-r border-gray-600 rounded-2xl md:rounded-none top-0 left-0 transition-all duration-500 overflow-hidden bg-gray-900  h-screen z-50 ${!sidebar ? "-translate-x-full md:translate-x-0 absolute md:relative w-0  md:w-[20vw]": "translate-x-0 md:-translate-x-full absolute md:relative w-[80%] md:w-0"}`}>
         <Sidebar setSidebar={setSidebar} handlePageChange={handlePageChange} currentPage={currentPage}/>
       </div>
       <div className='w-full'>
@@ -69,7 +71,9 @@ export default function SuperAdmin() {
           {currentPage === 'Dashboard' && <Dashboard />}
           {currentPage === 'My Admin' && <Admin />}
           {currentPage === 'Users Info' && <UsersInfo />}
-          {currentPage === 'Settings' && <Setting />}
+          {currentPage === 'Setting' && <Setting handlePageChange={handlePageChange}/>}
+          {currentPage === 'Profile' && <Profile handlePageChange={handlePageChange}/>}
+
         </div>
       </div>
     </div>
