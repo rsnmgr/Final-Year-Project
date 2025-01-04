@@ -1,23 +1,28 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 /* React Icons */
 import { RxDashboard, RxCross2 } from "react-icons/rx";
 import { GiTabletopPlayers } from "react-icons/gi";
 import { MdCountertops } from "react-icons/md";
-import { IoMdSettings } from "react-icons/io";
-import { FaKitchenSet, FaChevronDown,FaUsers } from "react-icons/fa6";
+import { FaKitchenSet, FaChevronDown, FaUsers } from "react-icons/fa6";
 import { TbReportSearch } from "react-icons/tb";
 
-export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
+export default function Sidebar({ setSidebar }) {
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleDropdown = (dropdownName) => {
     setActiveDropdown((prev) => (prev === dropdownName ? null : dropdownName));
   };
 
-  const handleItemClick = (page) => {
-    handlePageChange(page); // Update the current page
+  const handleItemClick = (path) => {
+    navigate(path); // Navigate to the selected page
     setSidebar(false); // Close the sidebar on small screens
   };
+
+  const isActive = (path) => location.pathname === path;
 
   return (
     <div>
@@ -28,20 +33,18 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
       <ul>
         <li
           className={`flex items-center p-3 space-x-3 cursor-pointer ${
-            currentPage === 'Dashboard' ? 'bg-gray-800' : 'bg-gray-900'
+            isActive('/admin/dashboard') ? 'bg-gray-800 text-white' : 'bg-gray-900'
           }`}
-          onClick={() => handleItemClick('Dashboard')}
+          onClick={() => handleItemClick('/admin/dashboard')}
         >
           <RxDashboard size={18} />
           <span>Dashboard</span>
         </li>
 
         {/* Menu Dropdown */}
-        <li className="flex flex-col border-t border-gray-600">
+        <li className="flex flex-col border-y border-gray-600">
           <div
-            className={`flex items-center justify-between p-3 cursor-pointer ${
-              activeDropdown === 'Menu' ? 'border-b border-gray-600' : 'border-b border-gray-600'
-            }`}
+            className="flex items-center justify-between p-3 cursor-pointer border-b border-gray-600"
             onClick={() => toggleDropdown('Menu')}
           >
             <div className="flex items-center space-x-3">
@@ -58,17 +61,17 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
             <ul className="ml-6">
               <li
                 className={`p-3 cursor-pointer ${
-                  currentPage === 'Category' ? 'bg-gray-800' : 'bg-gray-900'
+                  isActive('/admin/menu/category') ? 'bg-gray-800 text-white' : 'bg-gray-900'
                 }`}
-                onClick={() => handleItemClick('Category')}
+                onClick={() => handleItemClick('/admin/menu/category')}
               >
                 Category
               </li>
               <li
                 className={`p-3 cursor-pointer ${
-                  currentPage === 'Product' ? 'bg-gray-800' : 'bg-gray-900'
+                  isActive('/admin/menu/product') ? 'bg-gray-800 text-white' : 'bg-gray-900'
                 }`}
-                onClick={() => handleItemClick('Product')}
+                onClick={() => handleItemClick('/admin/menu/product')}
               >
                 Product
               </li>
@@ -78,9 +81,9 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
 
         <li
           className={`flex items-center p-3 space-x-3 cursor-pointer ${
-            currentPage === 'Table' ? 'bg-gray-800' : 'bg-gray-900'
+            isActive('/admin/table') ? 'bg-gray-800 text-white' : 'bg-gray-900'
           }`}
-          onClick={() => handleItemClick('Table')}
+          onClick={() => handleItemClick('/admin/table')}
         >
           <GiTabletopPlayers size={18} />
           <span>Tables</span>
@@ -88,18 +91,18 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
 
         <li
           className={`flex items-center p-3 space-x-3 cursor-pointer ${
-            currentPage === 'Cashier' ? 'bg-gray-800' : 'bg-gray-900'
+            isActive('/admin/cashier') ? 'bg-gray-800 text-white' : 'bg-gray-900'
           }`}
-          onClick={() => handleItemClick('Cashier')}
+          onClick={() => handleItemClick('/admin/cashier')}
         >
           <MdCountertops size={18} />
           <span>Cashier</span>
         </li>
         <li
           className={`flex items-center p-3 space-x-3 cursor-pointer ${
-            currentPage === 'Kitchen' ? 'bg-gray-800' : 'bg-gray-900'
+            isActive('/admin/kitchen') ? 'bg-gray-800 text-white' : 'bg-gray-900'
           }`}
-          onClick={() => handleItemClick('Kitchen')}
+          onClick={() => handleItemClick('/admin/kitchen')}
         >
           <FaKitchenSet size={18} />
           <span>Kitchen</span>
@@ -108,9 +111,7 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
         {/* Staff Dropdown */}
         <li className="flex flex-col border-y border-gray-600">
           <div
-            className={`flex items-center justify-between p-3 cursor-pointer ${
-              activeDropdown === 'Staff' ? 'border-b border-gray-600' : 'border-b border-gray-600'
-            }`}
+            className="flex items-center justify-between p-3 cursor-pointer border-b border-gray-600"
             onClick={() => toggleDropdown('Staff')}
           >
             <div className="flex items-center space-x-3">
@@ -127,19 +128,19 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
             <ul className="ml-6">
               <li
                 className={`p-3 cursor-pointer ${
-                  currentPage === 'Staff Category' ? 'bg-gray-800' : 'bg-gray-900'
+                  isActive('/admin/staff/category') ? 'bg-gray-800 text-white' : 'bg-gray-900'
                 }`}
-                onClick={() => handleItemClick('Staff Category')}
+                onClick={() => handleItemClick('/admin/staff/category')}
               >
-                Staff Category
+                Category
               </li>
               <li
                 className={`p-3 cursor-pointer ${
-                  currentPage === 'Staff Detail' ? 'bg-gray-800' : 'bg-gray-900'
+                  isActive('/admin/staff/detail') ? 'bg-gray-800 text-white' : 'bg-gray-900'
                 }`}
-                onClick={() => handleItemClick('Staff Detail')}
+                onClick={() => handleItemClick('/admin/staff/detail')}
               >
-                Staff Details
+                Details
               </li>
             </ul>
           )}
@@ -148,9 +149,7 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
         {/* Reports Dropdown */}
         <li className="flex flex-col border-b border-gray-600">
           <div
-            className={`flex items-center justify-between p-3 cursor-pointer ${
-              activeDropdown === 'Reports' ? 'border-b border-gray-600' : 'border-b border-gray-600'
-            }`}
+            className="flex items-center justify-between p-3 cursor-pointer border-b border-gray-600"
             onClick={() => toggleDropdown('Reports')}
           >
             <div className="flex items-center space-x-3">
@@ -167,17 +166,17 @@ export default function Sidebar({ setSidebar, handlePageChange, currentPage }) {
             <ul className="ml-6">
               <li
                 className={`p-3 cursor-pointer ${
-                  currentPage === 'Salse' ? 'bg-gray-800' : 'bg-gray-900'
+                  isActive('/admin/report/sales') ? 'bg-gray-800 text-white' : 'bg-gray-900'
                 }`}
-                onClick={() => handleItemClick('Salse')}
+                onClick={() => handleItemClick('/admin/report/sales')}
               >
-                Salse
+                Sales
               </li>
               <li
                 className={`p-3 cursor-pointer ${
-                  currentPage === 'Purchase' ? 'bg-gray-800' : 'bg-gray-900'
+                  isActive('/admin/report/purchase') ? 'bg-gray-800 text-white' : 'bg-gray-900'
                 }`}
-                onClick={() => handleItemClick('Purchase')}
+                onClick={() => handleItemClick('/admin/report/purchase')}
               >
                 Purchase
               </li>

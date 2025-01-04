@@ -13,12 +13,13 @@ import {useNavigate} from 'react-router-dom';
 import img from '../../../assets/defaultImg.png';
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function DropDown({profileClick,handlePageChange,userData}) {
+export default function DropDown({profileClick,setSidebar,userData}) {
   const {loginData, setLoginData} = useContext(LoginContext);
   const navigate = useNavigate();
   const handleItemClick = (page) => {
-    handlePageChange(page); // Update the current page
-    profileClick(false); // Close the sidebar on small screens
+    setSidebar(false);
+    profileClick(false);
+    navigate(page); // Navigate to the respective page
   };
 
   const logOutUser = async() => {
@@ -65,11 +66,11 @@ export default function DropDown({profileClick,handlePageChange,userData}) {
           </div>
           </div>
          <div className='mt-2' >
-            <div className='flex justify-start items-center space-x-2 p-2 hover:bg-gray-800 rounded-md cursor-pointer' onClick={() => handleItemClick('Profile')}>
+            <div className='flex justify-start items-center space-x-2 p-2 hover:bg-gray-800 rounded-md cursor-pointer' onClick={() => handleItemClick('/admin/profile')}>
               <AiOutlineUser size={18} />
               <span>Your Profile</span>
             </div>
-            <div className='flex justify-start items-center space-x-2 p-2 hover:bg-gray-800 rounded-md cursor-pointer' onClick={() => handleItemClick('Setting')}>
+            <div className='flex justify-start items-center space-x-2 p-2 hover:bg-gray-800 rounded-md cursor-pointer' onClick={() => handleItemClick('/admin/settings/profile')}>
               <IoSettingsOutline size={18} />
               <span>Setting</span>
             </div>

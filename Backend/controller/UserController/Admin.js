@@ -16,7 +16,7 @@ const deleteImageFile = (filePath) => {
 export const createCustomer = async (req, res) => {
     try {
         const { name, email, phone, address, restaurant, password } = req.body;
-
+        console.log(req.body);
         // Check if all required fields are provided
         if (!name || !email || !phone || !address || !restaurant || !password) {
             return res.status(400).json({ message: 'All required fields must be provided' });

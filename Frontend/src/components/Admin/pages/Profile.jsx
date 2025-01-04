@@ -4,18 +4,19 @@ import { PiMapPinAreaBold } from "react-icons/pi";
 import { IoMailSharp } from "react-icons/io5";
 import { MdAddIcCall } from "react-icons/md";
 import { SiStartrek } from "react-icons/si";
-
 import moment from 'moment';
 import { LoginContext } from '../../ContextProvider/Context';
 import io from 'socket.io-client';
+import { useNavigate } from 'react-router-dom';  // Importing navigate
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function Profile({handlePageChange}) {
-  const { loginData, setLoginData } = useContext(LoginContext);
+export default function Profile() {
+  const { loginData } = useContext(LoginContext);
   const [userData, setUserData] = useState(null);
   const userId = loginData?.validUser?._id;
   const socket = io(`${API_URL}`);
+  const navigate = useNavigate();  // Using useNavigate for navigation
 
   // Fetch user data from API
   const fetchUserData = async () => {
@@ -49,17 +50,13 @@ export default function Profile({handlePageChange}) {
     };
   }, [userId]);
 
-  // Fallback UI while fetching data
-  if (!userData) {
-    return (
-      <div className="text-center py-10">
-        <p>Loading user data...</p>
-      </div>
-    );
-  }
+  // Handle Edit Profile button click to navigate to Settings page
+  const handleEditProfile = () => {
+    navigate('/admin/settings/profile');  // Use navigate to go to the Setting page
+  };
 
   return (
-    <div className="flex flex-col md:flex-row  space-y-6 md:space-y-0 md:space-x-6">
+    <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
       {/* Left Column - User Information */}
       <div className="flex flex-col w-full md:w-1/5 space-y-6 md:space-y-4">
         {/* Profile Picture and Name */}
@@ -69,11 +66,14 @@ export default function Profile({handlePageChange}) {
             alt="Profile"
             className="w-16 h-16 md:w-36 md:h-36 lg:w-64 lg:h-64 rounded-full bg-gray-800 object-cover"
           />
-          <span className="font-semibold text-md md:text-xl mt-2">{userData.name}</span>
+          <span className="font-semibold text-md md:text-xl mt-2">{userData?.name || 'Loading...'}</span>
         </div>
 
         {/* Edit Profile Button */}
-        <button className="w-full p-2 bg-gray-800 rounded-sm border border-gray-600 hover:bg-gray-700 text-white text-sm" onClick={()=>handlePageChange("Setting")}>
+        <button
+          className="w-full p-2 bg-gray-800 rounded-sm border border-gray-600 hover:bg-gray-700 text-white text-sm"
+          onClick={handleEditProfile}  // Click event to navigate
+        >
           Edit profile
         </button>
 
@@ -81,19 +81,19 @@ export default function Profile({handlePageChange}) {
         <ul className="space-y-2 text-sm text-gray-400">
           <li className="flex items-center space-x-2">
             <IoMailSharp size={18} />
-            <span>{userData.email}</span>
+            <span>{userData?.email || 'Loading...'}</span>
           </li>
           <li className="flex items-center space-x-2">
             <PiMapPinAreaBold size={18} />
-            <span>{userData.address}</span>
+            <span>{userData?.address || 'Loading...'}</span>
           </li>
           <li className="flex items-center space-x-2">
             <MdAddIcCall size={18} />
-            <span>{userData.phone}</span>
+            <span>{userData?.phone || 'Loading...'}</span>
           </li>
           <li className="flex items-center space-x-2">
             <SiStartrek size={18} />
-            <span>{moment(userData.createdAt).format("MMM D, YYYY")}</span>
+            <span>{userData?.createdAt ? moment(userData.createdAt).format("MMM D, YYYY") : 'Loading...'}</span>
           </li>
         </ul>
       </div>

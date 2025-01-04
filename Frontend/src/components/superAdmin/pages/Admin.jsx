@@ -133,7 +133,7 @@ export default function Admin() {
             method: 'PUT',
             body: formData,
           })
-        : await fetch('${API_URL}/api/create', {
+        : await fetch(`${API_URL}/api/create`, {
             method: 'POST',
             body: formData,
           });
