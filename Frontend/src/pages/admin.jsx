@@ -127,7 +127,7 @@ export default function Admin() {
             setSidebar={setSidebar}
           />
         </div>
-        <div className="p-3 h-[92vh] overflow-y-auto">
+        <div className="p-3 h-[91vh] overflow-y-auto">
           {/* Page Routes */}
           <Routes>
             <Route path="dashboard" element={<Dashboard />} />

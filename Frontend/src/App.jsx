@@ -12,7 +12,7 @@ import Menu from './pages/Menu';
 import Error from './pages/error';
 export default function App() {
   return (
-    <div className='bg-gray-950 text-slate-300 h-screen'>
+    <div className='bg-gray-950 text-slate-300 h-screen '>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />

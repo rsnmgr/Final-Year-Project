@@ -1,65 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import img from '../../../assets/defaultImg.png';
 import Sidebar from './Setting/Sidebar';
 import Profile from './Setting/pages/Profile';
 import Account from './Setting/pages/Account';
 import Notification from './Setting/pages/Notification';
-import { useNavigate } from 'react-router-dom';  // Importing navigate
+import { useNavigate } from 'react-router-dom';
+import { LoginContext } from '../../ContextProvider/Context';
+import io from 'socket.io-client';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Setting() {
-  const [activePage, setActivePage] = useState('Profile'); // State to track the active page
-  const navigate = useNavigate();  // Using useNavigate for navigation
+  const { loginData } = useContext(LoginContext);
+  const [userData, setUserData] = useState(null);
+  const [activePage, setActivePage] = useState('Profile');
+  const userId = loginData?.validUser?._id;
+  const navigate = useNavigate();
+  const socket = useState(() => io(API_URL))[0];
 
-  // This function renders the correct component based on the active page
-  const renderActivePage = () => {
-    switch (activePage) {
-      case 'Profile':
-        return <Profile />;
-      case 'Account':
-        return <Account />;
-      case 'Notification':
-        return <Notification />;
-      default:
-        return <Profile />;
+  useEffect(() => {
+    if (userId) fetchUserData();
+    socket.on('userUpdated', fetchUserData);
+    socket.on('userDeleted', fetchUserData);
+    return () => {
+      socket.off('userUpdated', fetchUserData);
+      socket.off('userDeleted', fetchUserData);
+    };
+  }, [userId, socket]);
+
+  const fetchUserData = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/fetch/${userId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setUserData(data.customer);
+      }
+    } catch (error) {
+      console.error("Error fetching user data", error);
     }
   };
 
-  // Handle the navigation to the Profile page
-  const handleGoToProfile = () => {
-    navigate('/admin/profile'); // Navigate to Profile page directly
-    setActivePage('Profile');   // Update the active page
+  const renderActivePage = () => {
+    const pages = {
+      Profile: <Profile />,
+      Account: <Account />,
+      Notification: <Notification />,
+    };
+    return pages[activePage] || <Profile />;
   };
 
   return (
-    <div className='space-y-4'>
-      <div className='flex flex-col md:flex-row justify-between md:items-center space-y-4 md:space-y-0'>
-        <div className='flex items-center space-x-4'>
+    <div className="space-y-4 max-w-screen-lg">
+      <div className="flex flex-col md:flex-row justify-between md:items-center space-y-4">
+        <div className="flex items-center space-x-4">
           <img
-            src={img}
+            src={userData?.image ? `${API_URL}/${userData.image}` : img}
             alt="Profile"
-            className='w-12 h-12 object-cover rounded-full border cursor-pointer'
+            className="w-12 h-12 object-cover rounded-full border cursor-pointer"
           />
           <div>
-            <span className='text-lg font-medium'>Roshan Thapa Magar</span>
-            <span className='block text-sm text-gray-400'>Your personal account</span>
+            <span className="text-lg font-medium">{userData?.name || 'Loading...'}</span>
+            <span className="block text-sm text-gray-400">Your personal account</span>
           </div>
         </div>
         <button
-          className='p-1 bg-gray-900 px-3 rounded-md text-sm border border-gray-700 w-full md:w-auto text-center'
-          onClick={handleGoToProfile} // Use the new handler to navigate
+          className="p-1 bg-gray-900 px-3 rounded-md text-sm border border-gray-700"
+          onClick={() => { navigate('/admin/profile'); setActivePage('Profile'); }}
         >
           Go to your personal profile
         </button>
       </div>
-
-      <div className='flex flex-col md:flex-row space-x-4'>
-        <div className='w-full md:w-1/5 mb-4 md:mb-0'>
+      <div className="flex flex-col md:flex-row md:space-x-4">
+        <div className="w-full md:w-1/5 mb-4 md:mb-0">
           <Sidebar activePage={activePage} setActivePage={setActivePage} />
         </div>
-        <div className='w-full md:w-4/5'>
-          {/* Render the active page based on the state */}
-          {renderActivePage()}
-        </div>
+        <div className="w-full md:w-4/5">{renderActivePage()}</div>
       </div>
     </div>
   );
