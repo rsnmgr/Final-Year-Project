@@ -1,8 +1,10 @@
 import Customer from '../../model/UserModel/Admin.js';
+import Super from '../../model/UserModel/Super.js';
 import fs from 'fs';
 import bcryptjs from 'bcryptjs'; // Only used for comparing the old password
 
-import {io} from '../../server.js';
+import { io } from '../../server.js';
+
 // Helper function to delete an image file
 const deleteImageFile = (filePath) => {
     fs.unlink(filePath, (err) => {
@@ -12,19 +14,26 @@ const deleteImageFile = (filePath) => {
     });
 };
 
+// Check if email exists in either Customer or Super collections
+const isEmailDuplicate = async (email) => {
+    const existingCustomer = await Customer.findOne({ email });
+    const existingSuper = await Super.findOne({ email });
+    return existingCustomer || existingSuper;
+};
+
 // Create a customer
 export const createCustomer = async (req, res) => {
     try {
         const { name, email, phone, address, restaurant, password } = req.body;
         console.log(req.body);
+
         // Check if all required fields are provided
         if (!name || !email || !phone || !address || !restaurant || !password) {
             return res.status(400).json({ message: 'All required fields must be provided' });
         }
 
         // Check if the email already exists
-        const existingCustomer = await Customer.findOne({ email });
-        if (existingCustomer) {
+        if (await isEmailDuplicate(email)) {
             return res.status(400).json({ message: 'Email already exists' });
         }
 
@@ -45,7 +54,6 @@ export const createCustomer = async (req, res) => {
         return res.status(500).json({ message: 'Error creating customer', error: error.message });
     }
 };
-
 
 // Fetch all customers excluding sensitive information
 export const fetchCustomers = async (req, res) => {
@@ -91,6 +99,11 @@ export const updateCustomer = async (req, res) => {
         const customer = await Customer.findById(id);
         if (!customer) {
             return res.status(404).json({ message: 'Customer not found' });
+        }
+
+        // Check if the updated email already exists in another record
+        if (email && email !== customer.email && await isEmailDuplicate(email)) {
+            return res.status(400).json({ message: 'Email already exists' });
         }
 
         // If a new image is uploaded, delete the old one
@@ -198,8 +211,6 @@ export const deleteCustomerImage = async (req, res) => {
         return res.status(500).json({ message: 'Error deleting customer image', error: error.message });
     }
 };
-
-
 
 // Update password for customer
 export const updateCustomerPassword = async (req, res) => {

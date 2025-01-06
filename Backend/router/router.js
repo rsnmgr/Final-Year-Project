@@ -62,6 +62,14 @@ router.get('/details/:AdminId/:detailId', getDetailById);
 router.put('/details/:AdminId/:detailId', upload.single('image'), updateDetail);
 router.delete('/details/:AdminId/:detailId', deleteDetail);
 
+// Table
+import {addTable,getTables,getTableById,updateTable,deleteTable} from '../controller/admin/tables/Table.js';
+router.post('/tables', addTable);
+router.get('/tables/:AdminId', getTables);
+router.get('/tables/:AdminId/:tableId', getTableById);
+router.put('/tables/:AdminId/:tableId', updateTable);
+router.delete('/tables/:AdminId/:tableId', deleteTable);
+
 
 
 
