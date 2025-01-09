@@ -42,7 +42,7 @@ export const getTables = async (req, res) => {
         const tableEntry = await Table.findOne({ AdminId });
 
         if (!tableEntry) {
-            return res.status(404).json({ message: 'No table entries found for this AdminId' });
+            // return res.status(404).json({ message: 'No table entries found for this AdminId' });
         }
 
         res.status(200).json({ tables: tableEntry.table });

@@ -125,9 +125,9 @@ export default function Profile() {
             </div>
             {showMessageBox && (
               <div className="absolute left-1/4 py-1 w-48 border border-gray-700 text-sm bg-gray-950 rounded-md">
-                <button className="block w-full text-left px-4 py-1" onClick={() => fileInputRef.current.click()}>Upload Photo</button>
+                <button className="block w-full text-left px-4 py-1 hover:bg-blue-800" onClick={() => fileInputRef.current.click()}>Upload Photo</button>
                 <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageChange} />
-                <button className="block w-full text-left px-4 py-1" onClick={handleImageDelete}>Delete Photo</button>
+                <button className="block w-full text-left px-4 py-1 hover:bg-blue-800" onClick={handleImageDelete}>Delete Photo</button>
               </div>
             )}
           </div>

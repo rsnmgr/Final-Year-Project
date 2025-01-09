@@ -43,7 +43,7 @@ export default function Items() {
       const response = await axios.get(`${API_URL}/api/products/${AdminId}`);
       setDetails(response.data.products);
     } catch (error) {
-      toast.error("Error fetching products.");
+      // toast.error("Error fetching products.");
     }
   };
 
@@ -58,7 +58,7 @@ export default function Items() {
         }));
       }
     } catch (error) {
-      toast.error("Error fetching categories.");
+      // toast.error("Error fetching categories.");
     }
   };
 

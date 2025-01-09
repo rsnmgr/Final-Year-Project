@@ -31,7 +31,7 @@ export default function Table() {
       const response = await axios.get(`${API_URL}/${userId}`);
       setTables(response.data.tables);
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error fetching tables');
+      // toast.error(error.response?.data?.message || 'Error fetching tables');
     }
   };
 
@@ -116,10 +116,33 @@ export default function Table() {
   };
 
   const copyToClipboard = () => {
-    const url = `${window.location.origin}/m/${userId}/${selectedTableId}`;
-    navigator.clipboard.writeText(url);
-    toast.success('URL copied to clipboard');
+    const url = `${window.location.origin}/menu/${userId}/${selectedTableId}`;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url)
+        .then(() => {
+          toast.success('URL copied to clipboard');
+        })
+        .catch((err) => {
+          console.error('Failed to copy text: ', err);
+          toast.error('Failed to copy URL. Please try again.');
+        });
+    } else {
+      // Fallback for older browsers or unsupported environments
+      try {
+        const tempInput = document.createElement('input');
+        tempInput.value = url;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        toast.success('URL copied to clipboard');
+      } catch (err) {
+        console.error('Fallback failed: ', err);
+        toast.error('Failed to copy URL. Please try again.');
+      }
+    }
   };
+  
 
   return (
     <div className="p-4">
@@ -212,7 +235,7 @@ export default function Table() {
             </div>
             <h1 className="text-2xl text-center mb-4">Scan Me</h1>
             <img src={qrCodeUrl} alt="QR Code" className="mb-4" />
-            <input type="text" className="bg-gray-950 border border-gray-900 p-2 w-full mb-4 text-center" value={`${window.location.origin}/m/${userId}/${selectedTableId}`} readOnly />
+            <input type="text" className="bg-gray-950 border border-gray-900 p-2 w-full mb-4 text-center" value={`${window.location.origin}/menu/${userId}/${selectedTableId}`} readOnly />
             <button className="bg-gray-800 p-2 w-full mb-4" onClick={copyToClipboard}>Copy URL</button>
           </div>
         </div>

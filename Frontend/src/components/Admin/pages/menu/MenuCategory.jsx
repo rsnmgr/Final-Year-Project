@@ -38,8 +38,8 @@ export default function MenuCategory() {
       const response = await axios.get(`${API_URL}/api/categories/${AdminId}`);
       setCategories(response.data.categories || []);
     } catch (error) {
-      console.error("Error fetching categories:", error);
-      toast.error("Error fetching categories.");
+      // console.error("Error fetching categories:", error);
+      // toast.error("Error fetching categories.");
     }
   };
 

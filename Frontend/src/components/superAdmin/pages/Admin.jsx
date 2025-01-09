@@ -100,11 +100,12 @@ export default function Admin() {
         method: 'DELETE',
       });
   
+      const data = await response.json();
       if (response.ok) {
-        toast.success('Customer deleted successfully');
+        toast.success(data.message); // Display backend success message
         fetchCustomers(); // Fetch customers again to make sure the data is synced with the server
       } else {
-        toast.error('Failed to delete customer');
+        toast.error(data.message); // Display backend error message
       }
     } catch (error) {
       toast.error('Error deleting customer');
@@ -138,8 +139,9 @@ export default function Admin() {
             body: formData,
           });
 
+      const data = await response.json();
       if (response.ok) {
-        toast.success(currentCustomerId ? 'Customer updated successfully' : 'Customer added successfully');
+        toast.success(data.message); // Display backend success message
         fetchCustomers(); // Fetch customers after add or edit
         setInpVal({
           name: '',
@@ -153,7 +155,7 @@ export default function Admin() {
         setFormVisible(false);
         setCurrentCustomerId(null);
       } else {
-        toast.error('Failed to save customer');
+        toast.error(data.message); // Display backend error message
       }
     } catch (error) {
       toast.error('Error saving customer');
@@ -173,8 +175,8 @@ export default function Admin() {
 
       {/* Table Section */}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-center rtl:text-right  dark:text-gray-400">
-          <thead className="text-xs  uppercase bg-gray-50 dark:bg-gray-800 dark:text-gray-300 border-b border-gray-600">
+        <table className="w-full text-sm text-center rtl:text-right dark:text-gray-400">
+          <thead className="text-xs uppercase bg-gray-50 dark:bg-gray-800 dark:text-gray-300 border-b border-gray-600">
             <tr>
               <th scope="col" className="px-6 py-3">SN</th>
               <th scope="col" className="px-6 py-3">User name</th>
@@ -207,7 +209,7 @@ export default function Admin() {
                         <FaEdit size={16} className="inline-block" onClick={() => handleOpenForm(customer)} />
                       </a>
                       <a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline">
-                        <FaTrash size={16} className="inline-block" onClick={() => handleDelete(customer._id)}/>
+                        <FaTrash size={16} className="inline-block" onClick={() => handleDelete(customer._id)} />
                       </a>
                     </td>
                   </tr>
@@ -230,7 +232,7 @@ export default function Admin() {
           <div className="bg-gray-800 md:w-1/2 p-6 rounded-md">
             {/* Header Section */}
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg  mb-4">{currentCustomerId ? 'Edit Customer' : 'Add Customer'}</h2>
+              <h2 className="text-lg mb-4">{currentCustomerId ? 'Edit Customer' : 'Add Customer'}</h2>
               <RxCross1 size={20} className="text-white cursor-pointer" onClick={() => setFormVisible(false)} />
             </div>
 
@@ -241,35 +243,32 @@ export default function Admin() {
                 <div className="space-y-2">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-300">Name:</label>
-                    <input type="text" id="name" name="name" onChange={handleChange} value={inpVal.name} className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800" required/>
+                    <input type="text" id="name" name="name" onChange={handleChange} value={inpVal.name} className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800" required />
                   </div>
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-300">Email:</label>
-                    <input type="email" id="email" name="email" onChange={handleChange} value={inpVal.email} className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800" required/>
+                    <input type="email" id="email" name="email" onChange={handleChange} value={inpVal.email} className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800" required />
                   </div>
 
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-300">Phone:</label>
-                    <input type="tel" id="phone" name="phone" onChange={handleChange}  value={inpVal.phone}  className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800"  required  />
+                    <input type="tel" id="phone" name="phone" onChange={handleChange} value={inpVal.phone} className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800" required />
                   </div>
 
                   <div>
                     <label htmlFor="address" className="block text-sm font-medium text-gray-300">Address:</label>
-                    <input  id="address"  name="address"  onChange={handleChange}  value={inpVal.address}  className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800"  required
-                    />
+                    <input id="address" name="address" onChange={handleChange} value={inpVal.address} className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800" required />
                   </div>
 
                   <div>
                     <label htmlFor="restaurant" className="block text-sm font-medium text-gray-300">Restaurant:</label>
-                    <input  type="text"  id="restaurant"  name="restaurant"  onChange={handleChange}  value={inpVal.restaurant}  className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800"  required
-                    />
+                    <input type="text" id="restaurant" name="restaurant" onChange={handleChange} value={inpVal.restaurant} className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800" required />
                   </div>
 
                   <div>
                     <label htmlFor="password" className="block text-sm font-medium text-gray-300">Password:</label>
-                    <input  type="text"  id="password"  name="password"  onChange={handleChange}  value={inpVal.password}  className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800" required={currentCustomerId === null}
-                    />
+                    <input type="text" id="password" name="password" onChange={handleChange} value={inpVal.password} className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800" required={currentCustomerId === null} />
                   </div>
                 </div>
 
@@ -313,18 +312,26 @@ export default function Admin() {
       {/* Confirmation Modal */}
       {deleteConfirmVisible && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="bg-gray-800 p-6 rounded shadow-md">
-            <h2 className="text-lg  mb-4">Confirm Deletion</h2>
-            <p>Are you sure you want to delete this customer?</p>
-            <div className="flex justify-end mt-4">
-              <button type="button" onClick={() => setDeleteConfirmVisible(false)} className="mr-2 bg-gray-700 p-2 rounded">Cancel</button>
-              <button onClick={handleConfirmDelete} className="bg-red-500 text-white p-2 rounded">Delete</button>
+          <div className="bg-gray-800 p-6 rounded-md space-y-4">
+            <h3 className="text-white">Are you sure you want to delete this customer?</h3>
+            <div className="flex space-x-4">
+              <button
+                className="bg-red-600 text-white py-2 px-4 rounded-md"
+                onClick={handleConfirmDelete}
+              >
+                Yes, Delete
+              </button>
+              <button
+                className="bg-gray-600 text-white py-2 px-4 rounded-md"
+                onClick={() => setDeleteConfirmVisible(false)}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Toastify Container */}
       <ToastContainer />
     </div>
   );

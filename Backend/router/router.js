@@ -70,6 +70,25 @@ router.get('/tables/:AdminId/:tableId', getTableById);
 router.put('/tables/:AdminId/:tableId', updateTable);
 router.delete('/tables/:AdminId/:tableId', deleteTable);
 
+// Selected Items
+import { addSelectedItems,fetchSelectedItems,deleteSelectedItem,updateItemInstructions,updateItemQuantity,deleteAllSelectedItems } from '../controller/Customer/SelectedItems.js'; // Adjust the path as necessary
+router.post('/add-selected-items', addSelectedItems);
+router.get('/selected-items/:AdminId/:tableId', fetchSelectedItems);
+router.delete('/selected-items/:AdminId/:tableId/:itemId', deleteSelectedItem);
+router.put('/update-item-instructions/:AdminId/:tableId/:itemId', updateItemInstructions);
+router.put('/selected-items/:adminId/:tableId/:itemId/quantity', updateItemQuantity);
+router.delete('/delete-selected-items/:AdminId/:tableId', deleteAllSelectedItems);
+
+
+// Order
+import { addOrder, fetchOrders,fetchOrdersByAdminId,deleteOrder,updateOrderStatus,OrdersTable} from '../controller/Customer/AddOrder.js'; // Adjust the path as necessary
+router.post('/add-order', addOrder);
+router.get('/fetch-orders/:AdminId/:tableId', fetchOrders);
+router.get('/fetch-orders/:AdminId', fetchOrdersByAdminId);
+router.get('/orders/:AdminId', OrdersTable);
+
+router.delete('/orders/:AdminId/:tableId', deleteOrder);
+router.put('/update-order-status/:adminId/:tableId/:orderId', updateOrderStatus);
 
 
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
+import { TableProvider } from "./components/ContextProvider/TableContext";
 
 // Pages routes
 import Landing from './pages/landing';
@@ -20,7 +21,10 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/super" element={<Super />} />
           <Route path="/admin/*" element={<Admin />} />
-          <Route path="/menu" element={<Menu />} /> 
+          <Route path="/menu/:AdminId/:tableId/*" element={
+             <TableProvider>
+            <Menu />
+            </TableProvider>} /> 
           <Route path="*" element={<Error />} /> 
         </Routes>
       </BrowserRouter>

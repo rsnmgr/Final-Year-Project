@@ -64,7 +64,7 @@ export default function Profile() {
           <img
             src={userData?.image ? `${API_URL}/${userData.image}` : img}
             alt="Profile"
-            className="w-16 h-16 md:w-36 md:h-36 lg:w-64 lg:h-64 rounded-full bg-gray-800 object-cover"
+            className="w-16 h-16 md:w-36 md:h-36 lg:w-48 lg:h-48 rounded-full bg-gray-800 boject-cover"
           />
           <span className="font-semibold text-md md:text-xl mt-2">{userData?.name || 'Loading...'}</span>
         </div>

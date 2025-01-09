@@ -73,8 +73,8 @@ export default function Landing() {
         setUserRole(data.validUser.role);
       }
     } catch (error) {
-      console.error("Error validating user role", error);
-      navigate("*");
+      // console.error("Error validating user role", error);
+      // navigate("*");
     }
   };
 

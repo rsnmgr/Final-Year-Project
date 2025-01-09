@@ -25,7 +25,6 @@ const isEmailDuplicate = async (email) => {
 export const createCustomer = async (req, res) => {
     try {
         const { name, email, phone, address, restaurant, password } = req.body;
-        console.log(req.body);
 
         // Check if all required fields are provided
         if (!name || !email || !phone || !address || !restaurant || !password) {
@@ -158,7 +157,6 @@ export const deleteCustomer = async (req, res) => {
 export const updateCustomerImage = async (req, res) => {
     const userId = req.body.userId; // Access userId from req.body
     const newImage = req.file ? req.file.path : null; // Get the uploaded image path
-    console.log(userId, newImage); // Log userId and image path for debugging
 
     try {
         const customer = await Customer.findById(userId);
@@ -188,7 +186,6 @@ export const updateCustomerImage = async (req, res) => {
 // Delete customer's image
 export const deleteCustomerImage = async (req, res) => {
     const userId = req.params.userId; // Access userId from req.params
-    console.log("Deleting image for userId:", userId); // Debugging log
 
     try {
         const customer = await Customer.findById(userId);
@@ -217,7 +214,6 @@ export const updateCustomerPassword = async (req, res) => {
     const { userId } = req.params; // Access userId from req.params
     const { oldPassword, newPassword, confirmPassword } = req.body; // Password data from request body
 
-    console.log(userId, oldPassword, newPassword, confirmPassword);
 
     try {
         const customer = await Customer.findById(userId);
