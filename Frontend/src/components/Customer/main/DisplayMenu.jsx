@@ -76,7 +76,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
     setSelectedFood(null);
   };
 
-  const handleAddSelectedItems = async () => {
+    const handleAddSelectedItems = async () => {
     try {
       const selectedItem = {
         name: selectedFood.name,
@@ -94,13 +94,20 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
         selectedItems: [selectedItem],
       });
 
-      // console.log('Items added successfully');
+      // Reset quantity for the selected product after adding to the cart
+      setQuantities((prevQuantities) => ({
+        ...prevQuantities,
+        [selectedFood._id]: 1, // Reset quantity to 1 after adding
+      }));
+
+      // Close the form after adding
       setForm(false);
       setSelectedFood(null);
     } catch (error) {
       console.error('Error adding selected items:', error);
     }
   };
+
 
   const calculatePrice = (product) => {
     return product.discount && product.discount > 0
@@ -115,7 +122,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
       ) : (
         <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 w-full'>
           {filteredProducts.map((product) => (
-            <div key={product._id} className='shadow-xl bg-gray-800 pb-1'>
+            <div key={product._id} className=' shadow-xl bg-gray-800 pb-1 rounded-md'>
               <div className='rounded-md flex flex-col'>
                 <div className='relative w-full h-30'>
                   <img
@@ -172,7 +179,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
         <div className='fixed inset-0 flex justify-center items-center h-screen bg-black bg-opacity-50'>
           <div className='p-4 bg-gray-800 rounded-md space-y-4 w-full max-w-md mx-2'>
             <div className='p-2 shadow-lg'>
-              <h1 className='text-center text-xl font-extrabold'>{selectedFood.name}({selectedFood.size})</h1>
+              <h1 className='text-center text-xl '>{selectedFood.name}{selectedFood.size && `(${selectedFood.size})`}</h1>
             </div>
             <img
               src={`${API_URL}/${selectedFood.image || img}`}
@@ -185,15 +192,15 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
             </div>
             <div className='flex justify-between items-center'>
               <label>Total</label>
-              <span className='text-orange-700 underline'>
-                ${((quantities[selectedFood._id] * calculatePrice(selectedFood))).toFixed(2)}
+              <span >
+                Rs {((quantities[selectedFood._id] * calculatePrice(selectedFood))).toFixed(2)}
               </span>
             </div>
             <div className='space-y-2'>
               <div className='flex justify-between items-center'>
                 <h1 className='text-sm text-gray-500'>Special instruction</h1>
                 <div
-                  className='bg-orange-700 p-1 text-white cursor-pointer'
+                  className='bg-green-700 text-white p-2  hover:bg-green-800 focus:ring-2 focus:ring-green-500 focus:outline-none'
                   onClick={() => setInstruction('Add your instruction here.')}
                 >
                   <FaPlus className='w-4 h-4' />
@@ -208,10 +215,10 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
               )}
             </div>
             <div className='flex space-x-2'>
-              <button className='w-full bg-orange-700 p-2' onClick={handleCancel}>
+              <button className='w-full bg-gray-700 p-2' onClick={handleCancel}>
                 Cancel
               </button>
-              <button className='w-full bg-green-700 p-2' onClick={handleAddSelectedItems}>
+              <button className='bg-green-700 text-white p-2 w-full hover:bg-green-800 focus:ring-2 focus:ring-green-500 focus:outline-none' onClick={handleAddSelectedItems}>
                 Add
               </button>
             </div>

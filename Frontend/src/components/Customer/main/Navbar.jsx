@@ -87,7 +87,7 @@ export default function Navbar({ onSearch }) {
 
         {/* Shopping Cart Section */}
         <div className="flex items-center space-x-2 cursor-pointer">
-          <label className="text-white">${totalAmount.toFixed(2)}</label>
+          <label className="text-white">{totalAmount.toFixed(2)}</label>
           <div className="relative" onClick={() => navigate(`/menu/${AdminId}/${tableId}/bag`)}>
             {/* Display unique item count */}
             <label className="absolute -top-1 -right-1 text-xs text-white bg-gray-500 rounded-full h-5 w-5 flex items-center justify-center">

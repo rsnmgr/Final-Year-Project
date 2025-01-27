@@ -63,8 +63,8 @@ export default function Sidebar({ onCategorySelect }) {
         categories.map((category) => (
           <div
             key={category._id}
-            className={`p-3 text-white text-center cursor-pointer border border-gray-700 ${activeCategory === category.name ? 'bg-gray-900' : ''}`}
-            onClick={() => handleCategoryClick(category.name)} // Click handler for categories
+            className={`p-3 text-white text-center cursor-pointer border border-gray-700 ${activeCategory === category._id ? 'bg-gray-900' : ''}`}
+            onClick={() => handleCategoryClick(category._id)} // Click handler for categories
             style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} // Ensure long text fits
             title={category.name} // Tooltip for full category name on hover
           >

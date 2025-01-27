@@ -16,6 +16,7 @@ export default function Items() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [selectedDetail, setSelectedDetail] = useState(null);
   const [selectedImage, setSelectedImage] = useState(image);
+  const [categoryName, setCategoryName] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     category: '', // Initially empty
@@ -26,6 +27,7 @@ export default function Items() {
   });
   const [details, setDetails] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [categoryNames, setCategoryNames] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const { loginData } = useContext(LoginContext);
   const AdminId = loginData?.validUser?._id;
@@ -41,9 +43,13 @@ export default function Items() {
   const fetchDetails = async () => {
     try {
       const response = await axios.get(`${API_URL}/api/products/${AdminId}`);
-      setDetails(response.data.products);
+      const products = response.data.products;
+      setDetails(products);
+      // Fetch category names for all products
+      const categoryIds = products.map(product => product.category);
+      fetchCategoryNames(categoryIds);
     } catch (error) {
-      // toast.error("Error fetching products.");
+      toast.error("Error fetching products.");
     }
   };
 
@@ -58,9 +64,33 @@ export default function Items() {
         }));
       }
     } catch (error) {
-      // toast.error("Error fetching categories.");
+      toast.error("Error fetching categories.");
     }
   };
+
+  const fetchCategoryNames = async (categoryIds) => {
+    try {
+      // Create a set of unique category IDs
+      const uniqueCategoryIds = [...new Set(categoryIds)];
+      
+      // Fetch category names using the unique category IDs
+      const responses = await Promise.all(
+        uniqueCategoryIds.map(categoryId => axios.get(`${API_URL}/api/category/${AdminId}/${categoryId}`))
+      );
+  
+      // Create a map of category ID to category name
+      const categoriesMap = {};
+      responses.forEach(response => {
+        const category = response.data.category;
+        categoriesMap[category._id] = category.name;
+      });
+      
+      setCategoryNames(categoriesMap);
+    } catch (error) {
+      toast.error("Error fetching category names.");
+    }
+  };
+  
 
   const handleToggleModal = (detail = null) => {
     setShowModal(!showModal);
@@ -187,7 +217,7 @@ export default function Items() {
         <table className="min-w-full divide-y divide-gray-200 bg-white">
           <thead className="bg-gray-700 sticky top-0 z-10">
             <tr>
-              {['SN', 'Name', 'Category', 'size', 'price', 'discount', 'Image', 'Status', 'Actions'].map((header) => (
+              {['SN', 'Name', 'Category', 'Size', 'Price', 'Discount', 'Image', 'Status', 'Actions'].map((header) => (
                 <th
                   key={header}
                   className="px-6 py-3 text-center text-sm font-medium uppercase tracking-wider text-gray-100"
@@ -203,9 +233,11 @@ export default function Items() {
                 <tr key={detail._id} className="text-slate-200">
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{index + 1}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{detail.name}</td>
-                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{detail.category}</td>
+                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
+                    {categoryNames[detail.category] || 'Loading...'}
+                  </td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{detail.size}</td>
-                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">${detail.price}</td>
+                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{detail.price}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{detail.discount}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                     <img
@@ -258,8 +290,8 @@ export default function Items() {
                   {['name', 'size', 'price', 'discount'].map((field) => (
                     <div key={field} className='relative'>
                       <label className='block text-sm font-medium text-white mb-1 capitalize'>
-                      {field} <span className={['name', 'price'].includes(field) ? 'text-red-500' : 'text-transparent'}> *</span>
-                        </label>
+                        {field} <span className={['name', 'price'].includes(field) ? 'text-red-500' : 'text-transparent'}> *</span>
+                      </label>
                       <input
                         type={field === 'price' ? 'tel' : field === 'discount' ? 'number' : 'text'}
                         name={field}
@@ -283,7 +315,7 @@ export default function Items() {
                       required
                     >
                       {categories.map((category) => (
-                        <option key={category._id} value={category.name}>
+                        <option key={category._id} value={category._id}>
                           {category.name}
                         </option>
                       ))}
@@ -325,8 +357,11 @@ export default function Items() {
                   >
                     Browse Image
                   </button>
-                  <button type="submit" className='p-2 bg-gray-700 text-white w-full'>
-                    {selectedDetail ? 'Update' : 'Submit'}
+                  <button
+                    type="submit"
+                    className='p-2 bg-blue-700 text-white w-full'
+                  >
+                    {selectedDetail ? 'Update Detail' : 'Add Detail'}
                   </button>
                 </div>
               </div>
@@ -335,29 +370,21 @@ export default function Items() {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Confirmation */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-          <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-md w-full">
-            <div className="flex justify-between items-center mb-4">
-              <h1 className="text-xl font-semibold text-white">Confirm Deletion</h1>
-              <RxCross2
-                size={25}
-                className="cursor-pointer text-white"
-                onClick={handleDeleteCancel}
-              />
-            </div>
-            <p className="text-white mb-4">Are you sure you want to delete the detail <strong>{selectedDetail?.name}</strong>?</p>
-            <div className="flex justify-end gap-4">
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-20 z-50">
+          <div className="relative p-4 bg-gray-900 rounded-lg shadow-md max-w-sm w-full">
+            <h1 className="text-lg font-semibold text-white mb-6">Are you sure you want to delete this product?</h1>
+            <div className="flex justify-between">
               <button
                 onClick={handleDeleteConfirm}
-                className="p-1 bg-red-600 text-white w-auto"
+                className='bg-red-600 text-white p-2 rounded-lg'
               >
-                Delete
+                Yes, Delete
               </button>
               <button
                 onClick={handleDeleteCancel}
-                className="p-1 bg-gray-600 text-white w-auto"
+                className='bg-gray-600 text-white p-2 rounded-lg'
               >
                 Cancel
               </button>
@@ -366,7 +393,6 @@ export default function Items() {
         </div>
       )}
 
-      {/* Toastify Container */}
       <ToastContainer />
     </div>
   );

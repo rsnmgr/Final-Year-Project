@@ -178,3 +178,43 @@ export const updateOrderStatus = async (req, res) => {
 
 
 
+export const deleteOrderHistory = async (req, res) => {
+  const { adminId, tableId, orderId } = req.params; // Extract AdminId, tableId, and OrderHistory ID from the request
+
+  try {
+    // Find the order by AdminId and tableId
+    const order = await Order.findOne({ AdminId: adminId, tableId: tableId });
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Filter out the OrderHistory entry with the given orderId
+    const initialLength = order.OrderHistory.length;
+    order.OrderHistory = order.OrderHistory.filter(
+      (history) => history._id.toString() !== orderId
+    );
+
+    if (order.OrderHistory.length === initialLength) {
+      // No changes made, meaning the orderId was not found
+      return res.status(404).json({ message: 'Order history not found' });
+    }
+
+    // Recalculate the totalOrderAmount after deleting the entry
+    order.totalOrderAmount = order.OrderHistory.reduce(
+      (acc, history) => acc + history.total,
+      0
+    );
+
+    // Save the updated order
+    await order.save();
+
+    // Emit a socket event to notify clients about the deletion
+    io.emit('orderHistoryRemoved', { adminId, tableId, orderId });
+
+    return res.status(200).json({ message: 'Order history deleted successfully', order });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error deleting order history', error });
+  }
+};
+

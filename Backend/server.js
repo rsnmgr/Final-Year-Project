@@ -19,7 +19,7 @@ const URL = process.env.URL;
 
 export const io = new SocketServer(server,{
     cors: {
-        origin: 'http://192.168.1.67:5173',
+        origin: 'http://192.168.18.10:5173',
         methods: ['GET', 'POST'],
         credentials: true,
     },

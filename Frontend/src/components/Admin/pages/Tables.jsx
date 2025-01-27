@@ -152,7 +152,7 @@ export default function Table() {
           <FaPlus />
         </button>
       </div>
-      <div className="relative overflow-x-auto mt-4 h-[78vh] overflow-y-auto">
+      <div className="relative overflow-x-auto mt-4 h-[74vh] overflow-y-auto">
         <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>

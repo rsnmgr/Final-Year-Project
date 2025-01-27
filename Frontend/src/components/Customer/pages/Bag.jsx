@@ -143,7 +143,7 @@ export default function Bag() {
       setTimeout(() => {
         setLoading(false); // End loading
         navigate(`/menu/${AdminId}/${tableId}/bill`);
-      }, 5000); // 5 seconds delay
+      }, 1000); // 1 seconds delay
     } catch (error) {
       setLoading(false); // Stop loading in case of an error
       console.error("Error placing order:", error);
@@ -217,7 +217,7 @@ export default function Bag() {
                       className="cursor-pointer"
                     >
                       <h1 className="text-sm border-b-2 border-gray-600">
-                        {item.name}-{item.size}
+                        {item.name}{item.size && `(${item.size})`}
                       </h1>
                       {/* Display Category and Size */}
                       
@@ -244,7 +244,7 @@ export default function Bag() {
 
                   {/* Right Section: Price and Item Image */}
                   <div className="flex justify-end items-center gap-2">
-                    <h1 className="text-blue-700">${item.price * item.quantity}</h1>
+                    <h1 >{item.price * item.quantity}</h1>
                     {/* Display Item Image */}
                     {item.image && (
                       <img
@@ -270,17 +270,17 @@ export default function Bag() {
               <li>Total</li>
             </ul>
             <ul>
-              <li className="text-blue-700  text-sm">${subtotal}</li>
-              <li className="text-blue-700  text-sm">${gst}</li>
-              <li className=" text-md">${total}</li>
+              <li className="  text-sm">{subtotal}</li>
+              <li className="  text-sm">{gst}</li>
+              <li className=" text-md">{total}</li>
             </ul>
           </footer>
         )}
         {!isEmpty && (
           <div className="flex text-center gap-2 mt-4 shadow-2xl">
-            <button  className="bg-orange-700 p-2 text-slate-100  w-full">Change Table</button>
+            {/* <button  className="bg-gray-700 p-2 text-slate-100  w-full">Change Table</button> */}
             <button
-              className="bg-green-700 p-2 text-slate-100  w-full"
+              className="bg-green-700 text-white p-2 w-full hover:bg-green-800 focus:ring-2 focus:ring-green-500 focus:outline-none"
               onClick={handleOrderNowClick}
             >
               Order Now
@@ -292,18 +292,18 @@ export default function Bag() {
       {/* Order Confirmation Modal */}
       {showOrderConfirmation && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-gray-900 p-6 rounded-md shadow-lg text-center w-[80vw] md:w-[25vw]">
+          <div className="bg-gray-900 border border-gray-700 p-6 rounded-md shadow-lg text-center w-[80vw] md:w-[25vw]">
             <h2 className="text-xl  mb-4">Confirm Your Order</h2>
             <p className="mb-6">Are you sure you want to place this order?</p>
             <div className="flex justify-center gap-4">
               <button
-                className="bg-gray-500 text-white px-4 py-2 rounded"
+                className="bg-gray-700 text-white px-4 py-2 rounded"
                 onClick={() => setShowOrderConfirmation(false)}
               >
                 Cancel
               </button>
               <button
-                className="bg-orange-700 text-white px-4 py-2 rounded"
+                className="bg-green-700 text-white p-2 rounded hover:bg-green-800 focus:ring-2 focus:ring-green-500 focus:outline-none"
                 onClick={handleOrderConfirmation}
               >
                 Confirm
@@ -316,12 +316,12 @@ export default function Bag() {
       {/* Delete Confirmation Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-gray-900 p-6 rounded shadow-lg">
+          <div className="bg-gray-900 border border-gray-700 w-[80vw] md:w-[25vw] p-6 rounded shadow-lg">
             <h2 className="text-xl  mb-4">Confirm Delete</h2>
             <p className="mb-4">Are you sure you want to delete this item?</p>
             <div className="flex justify-end gap-4">
               <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                className="bg-gray-700 text-white px-4 py-2 rounded"
                 onClick={() => setShowModal(false)}
               >
                 Cancel
@@ -340,7 +340,7 @@ export default function Bag() {
       {/* Instructions Form */}
       {showInstructions && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-gray-900 p-6 rounded shadow-lg">
+          <div className="bg-gray-900 border border-gray-700 p-6 rounded shadow-lg">
             <h2 className="text-xl  mb-4">Instructions</h2>
             <textarea
               className="w-full h-40 p-2 border border-gray-500 bg-gray-900 rounded"
@@ -366,8 +366,8 @@ export default function Bag() {
       )}
       {/* Success Fully place order */}
       {loading && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center px-2">
-          <div className="bg-slate-200 p-6 w-full h-1/2 md:w-1/3 rounded shadow-lg">
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center px-2">
+          <div className="bg-gray-900 border border-gray-700 p-6 w-full h-1/2 md:w-1/3 rounded shadow-lg">
             <div className="flex justify-center items-center mt-10">
               <TiTick size={72} className="text-white bg-green-700 p-2 rounded-full"/>
             </div>
