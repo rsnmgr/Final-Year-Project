@@ -118,7 +118,7 @@ export default function Admin() {
       </div>
       {/* Main Content */}
       <div className="w-full">
-        <div className="p-3 shadow-md">
+        <div className="p-3 shadow-md border-b border-gray-800">
           <Header
             toggleSidebar={toggleSidebar}
             profileClick={profileClick}

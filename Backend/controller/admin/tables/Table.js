@@ -1,5 +1,5 @@
 import Table from '../../../model/admin/tables/Table.js';
-
+import { io } from '../../../server.js';
 // Add a new table entry
 export const addTable = async (req, res) => {
     try {
@@ -22,6 +22,7 @@ export const addTable = async (req, res) => {
         }
 
         await tableEntry.save();
+        io.emit('tableAdded', tableEntry);
 
         res.status(201).json({ message: 'Table entry added successfully', tableEntry });
     } catch (error) {
@@ -106,6 +107,7 @@ export const updateTable = async (req, res) => {
         table.status = status || table.status;
 
         await tableEntry.save();
+        io.emit('tableUpdated', tableEntry);
 
         res.status(200).json({ message: 'Table entry updated successfully', table });
     } catch (error) {
@@ -135,6 +137,7 @@ export const deleteTable = async (req, res) => {
         tableEntry.table.splice(tableIndex, 1);
 
         await tableEntry.save();
+        io.emit('tableDeleted', tableEntry);
 
         res.status(200).json({ message: 'Table entry deleted successfully' });
     } catch (error) {
