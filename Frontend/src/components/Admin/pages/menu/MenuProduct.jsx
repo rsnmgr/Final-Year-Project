@@ -163,6 +163,7 @@ export default function Items() {
     <div className="p-2">
       <ProductTable
         searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm} // ✅ Pass the function as a prop
         details={details}
         handleToggleModal={handleToggleModal}
         handleDeleteClick={handleDeleteClick}

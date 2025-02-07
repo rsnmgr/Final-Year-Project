@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { TableContext } from '../../ContextProvider/TableContext';
-import moment from 'moment';
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { TableContext } from "../../ContextProvider/TableContext";
+import moment from "moment";
 import { MdOutlineAutoDelete } from "react-icons/md";
-import io from 'socket.io-client';
+import io from "socket.io-client";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL);
@@ -19,11 +19,13 @@ export default function Bill() {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/fetch-orders/${AdminId}/${tableId}`);
+      const response = await fetch(
+        `${API_URL}/api/fetch-orders/${AdminId}/${tableId}`
+      );
       const data = await response.json();
       if (response.ok) setOrders(data.orders.OrderHistory || []);
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      console.error("Error fetching orders:", error);
     }
   };
 
@@ -32,11 +34,11 @@ export default function Bill() {
   }, [AdminId, tableId]);
 
   useEffect(() => {
-    socket.on('orderUpdated', fetchOrders);
-    socket.on('orderHistoryRemoved', fetchOrders);
+    socket.on("orderUpdated", fetchOrders);
+    socket.on("orderHistoryRemoved", fetchOrders);
     return () => {
-      socket.off('orderUpdated');
-      socket.off('orderHistoryRemoved');
+      socket.off("orderUpdated");
+      socket.off("orderHistoryRemoved");
     };
   }, []);
 
@@ -44,7 +46,7 @@ export default function Bill() {
     const newHideDeleteIcon = {};
     const currentTime = Date.now(); // Current time in milliseconds
 
-    orders.forEach(order => {
+    orders.forEach((order) => {
       const orderDate = moment(order.orderDate).valueOf(); // Convert orderDate to a timestamp
       const hideTime = orderDate + 60000; // Add 60 seconds to the order date
 
@@ -55,7 +57,7 @@ export default function Bill() {
         newHideDeleteIcon[order._id] = false;
         // Set timeout for orders that are still within the 1-minute window
         const timeout = setTimeout(() => {
-          setHideDeleteIcon(prev => ({ ...prev, [order._id]: true }));
+          setHideDeleteIcon((prev) => ({ ...prev, [order._id]: true }));
         }, hideTime - currentTime);
         // Cleanup timeout on component unmount or when orders change
         return () => clearTimeout(timeout);
@@ -69,15 +71,18 @@ export default function Bill() {
     // Prevent deletion if the delete icon is hidden
     if (!hideDeleteIcon[orderToDelete]) {
       try {
-        const response = await fetch(`${API_URL}/api/delete-order-id/${AdminId}/${tableId}/${orderToDelete}`, {
-          method: 'DELETE',
-        });
+        const response = await fetch(
+          `${API_URL}/api/delete-order-id/${AdminId}/${tableId}/${orderToDelete}`,
+          {
+            method: "DELETE",
+          }
+        );
         if (response.ok) {
           setDeleteOrderForm(false);
           fetchOrders();
         }
       } catch (error) {
-        console.error('Error deleting order:', error);
+        console.error("Error deleting order:", error);
       }
     } else {
       console.log("Order cannot be deleted as time has expired.");
@@ -86,20 +91,32 @@ export default function Bill() {
 
   return (
     <div>
-      <div className='bg-gray-900 space-y-4'>
-        <p className='text-center p-4 text-xl'>Your Total Orders</p>
-        <h1 className='text-center'>${orders.reduce((acc, order) => acc + order.total, 0)}</h1>
-        <div className='p-4 overflow-y-auto' style={{ maxHeight: '375px' }}>
+      <div className="bg-gray-900 space-y-4">
+        <p className="text-center p-4 text-xl">Your Total Orders</p>
+        <h1 className="text-center">
+          ${orders.reduce((acc, order) => acc + order.total, 0)}
+        </h1>
+        <div className="p-4 overflow-y-auto" style={{ maxHeight: "375px" }}>
           {orders.map((order) => (
-            <div className='relative ' key={order._id}>
+            <div className="relative " key={order._id}>
               <div
-                className='flex justify-between items-center bg-gray-800 p-3 mt-2 rounded-md cursor-pointer'
-                onClick={() => setExpandedOrderId(prev => prev === order._id ? null : order._id)}
+                className="flex justify-between items-center bg-gray-800 p-3 mt-2 rounded-md cursor-pointer"
+                onClick={() =>
+                  setExpandedOrderId((prev) =>
+                    prev === order._id ? null : order._id
+                  )
+                }
               >
-                <div className='text-xs'>
-                  <div className='flex justify-between items-center'>
-                    <label>{moment(order.orderDate).format('hh:mm A')}</label>
-                    <h1 className={`underline ${order.itemsStatus === 'prepare' ? 'text-gray-500' : 'text-green-700'}`}>
+                <div className="text-xs">
+                  <div className="flex justify-between items-center">
+                    <label>{moment(order.orderDate).format("hh:mm A")}</label>
+                    <h1
+                      className={`underline ${
+                        order.itemsStatus === "prepare"
+                          ? "text-gray-500"
+                          : "text-green-700"
+                      }`}
+                    >
                       {order.itemsStatus}
                     </h1>
                   </div>
@@ -112,26 +129,33 @@ export default function Bill() {
               {/* Show the delete icon if it's not hidden */}
               {!hideDeleteIcon[order._id] && (
                 <div
-                  className='absolute top-0 right-0 h-full flex justify-center items-center text-red-700 cursor-pointer'
-                  onClick={() => { 
-                    setDeleteOrderForm(true); 
-                    setOrderToDelete(order._id); 
+                  className="absolute top-0 right-0 h-full flex justify-center items-center text-red-700 cursor-pointer"
+                  onClick={() => {
+                    setDeleteOrderForm(true);
+                    setOrderToDelete(order._id);
                   }}
                 >
-                  <span className='bg-gray-900 p-2 border border-red-700 rounded-full'>
+                  <span className="bg-gray-900 p-2 border border-red-700 rounded-full">
                     <MdOutlineAutoDelete />
                   </span>
                 </div>
               )}
 
               {expandedOrderId === order._id && (
-                <div className='p-4 bg-gray-900 mt-2 rounded-md'>
-                  <h3 className='mb-2'>Order Details:</h3>
+                <div className="p-4 bg-gray-900 mt-2 rounded-md">
+                  <h3 className="mb-2">Order Details:</h3>
                   <ul>
                     {order.items.map((item, index) => (
-                      <li key={index} className='flex justify-between mb-1'>
-                        <span>{item.name}</span>
-                        <span>{item.quantity} x ${item.price}</span>
+                      <li
+                        key={index}
+                        className="flex justify-between items-center mb-1"
+                      >
+                        <span>
+                          {item.name}({item.size})
+                        </span>
+                        <span>
+                          {item.quantity} x ${item.price}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -139,12 +163,16 @@ export default function Bill() {
               )}
             </div>
           ))}
-          
         </div>
-        <div className='flex justify-between p-4 gap-2'>
-            <button className='p-2 w-full bg-gray-950' onClick={() => navigate(`/menu/${AdminId}/${tableId}`)}>NEW ORDER</button>
-            <button className='p-2 w-full bg-green-800'>PAID</button>
-          </div>
+        <div className="flex justify-between p-4 gap-2">
+          <button
+            className="p-2 w-full bg-gray-950"
+            onClick={() => navigate(`/menu/${AdminId}/${tableId}`)}
+          >
+            NEW ORDER
+          </button>
+          <button className="p-2 w-full bg-green-800">PAID</button>
+        </div>
       </div>
 
       {deleteOrderForm && (
@@ -153,9 +181,14 @@ export default function Bill() {
             <h2 className="text-xl mb-4">Confirm Delete</h2>
             <p className="mb-4">Are you sure you want to delete this order?</p>
             <div className="flex justify-end gap-4">
-              <button className="bg-gray-700 text-white px-4 py-2 rounded" onClick={() => setDeleteOrderForm(false)}>Cancel</button>
-              <button 
-                className="bg-red-500 text-white px-4 py-2 rounded" 
+              <button
+                className="bg-gray-700 text-white px-4 py-2 rounded"
+                onClick={() => setDeleteOrderForm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded"
                 onClick={handleDelete}
                 disabled={hideDeleteIcon[orderToDelete]} // Disable delete if the icon is hidden
               >

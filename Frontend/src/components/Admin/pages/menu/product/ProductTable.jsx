@@ -8,6 +8,7 @@ export default function ProductTable({
   handleToggleModal,
   handleDeleteClick,
   categoryNames,
+  setSearchTerm,
 }) {
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -41,7 +42,6 @@ export default function ProductTable({
                 "SN",
                 "Name",
                 "Category",
-                "Discount",
                 "Units",
                 "Image",
                 "Status",
@@ -74,10 +74,6 @@ export default function ProductTable({
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                       {categoryNames[detail.category] || "Loading..."}
-                    </td>
-
-                    <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
-                      {detail.discount}
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                       {detail.units && detail.units.length > 0

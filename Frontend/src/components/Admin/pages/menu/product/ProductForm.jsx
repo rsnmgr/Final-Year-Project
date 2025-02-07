@@ -47,7 +47,7 @@ export default function ProductForm({
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-20 z-50">
-      <div className="relative p-4 bg-gray-900 rounded-lg shadow-md max-w-xl w-full h-[80vh] md:h-auto overflow-y-auto">
+      <div className="relative p-4 bg-gray-900 rounded-lg shadow-md max-w-xl w-full ">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-xl font-semibold text-white">
             {selectedDetail ? "Edit Product" : "Add Product"}
@@ -61,10 +61,10 @@ export default function ProductForm({
         </div>
 
         <form className="mt-4" onSubmit={handleSubmit}>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-4 h-[80vh] md:h-auto overflow-y-auto">
             <div className="space-y-1">
               {/* Name and Discount Fields */}
-              {["name", "discount"].map((field) => (
+              {["name"].map((field) => (
                 <div key={field} className="relative">
                   <label className="block text-sm font-medium text-white mb-1 capitalize">
                     {field}{" "}
@@ -86,56 +86,6 @@ export default function ProductForm({
                   />
                 </div>
               ))}
-
-              {/* Units Section */}
-              <div className="space-y-2">
-                <div className="flex justify-between items-center mt-2">
-                  <label className="text-white">Units</label>
-                  <button
-                    type="button"
-                    className="p-2 bg-green-800"
-                    onClick={handleAddUnit}
-                  >
-                    <FaPlus size={16} />
-                  </button>
-                </div>
-
-                {/* Unit Inputs */}
-                <div className="h-[19vh] space-y-2  overflow-y-auto">
-                  {(formData.units ?? []).map((unit, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between items-center space-x-2"
-                    >
-                      <input
-                        type="text"
-                        className="p-1 bg-gray-900 px-3 border border-gray-700 outline-none w-full"
-                        placeholder="Size"
-                        value={unit.size}
-                        onChange={(e) =>
-                          handleUnitChange(index, "size", e.target.value)
-                        }
-                      />
-                      <input
-                        type="number"
-                        className="p-1 bg-gray-900 px-3 border border-gray-700 outline-none w-full"
-                        placeholder="Price"
-                        value={unit.price}
-                        onChange={(e) =>
-                          handleUnitChange(index, "price", e.target.value)
-                        }
-                      />
-                      <button
-                        type="button"
-                        className="p-2 bg-red-800"
-                        onClick={() => handleRemoveUnit(index)}
-                      >
-                        <MdDelete size={16} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
               {/* Category Selection */}
               <div className="relative">
@@ -173,6 +123,57 @@ export default function ProductForm({
                   <option value="Inactive">Inactive</option>
                 </select>
               </div>
+              {/* Units Section */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center mt-2">
+                  <label className="text-white">Units</label>
+                  <button
+                    type="button"
+                    className="p-2 bg-green-800"
+                    onClick={handleAddUnit}
+                  >
+                    <FaPlus size={16} />
+                  </button>
+                </div>
+
+                {/* Unit Inputs */}
+                <div className="h-[16vh] space-y-2  overflow-y-auto">
+                  {(formData.units ?? []).map((unit, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center space-x-2"
+                    >
+                      <input
+                        type="text"
+                        className="p-1 bg-gray-900 px-3 border border-gray-700 outline-none w-full"
+                        placeholder="Size"
+                        value={unit.size}
+                        required
+                        onChange={(e) =>
+                          handleUnitChange(index, "size", e.target.value)
+                        }
+                      />
+                      <input
+                        type="number"
+                        className="p-1 bg-gray-900 px-3 border border-gray-700 outline-none w-full"
+                        placeholder="Price"
+                        value={unit.price}
+                        required
+                        onChange={(e) =>
+                          handleUnitChange(index, "price", e.target.value)
+                        }
+                      />
+                      <button
+                        type="button"
+                        className="p-2 bg-red-800"
+                        onClick={() => handleRemoveUnit(index)}
+                      >
+                        <MdDelete size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* Image Upload */}
@@ -181,7 +182,7 @@ export default function ProductForm({
                 <img
                   src={selectedImage || image}
                   alt="Selected"
-                  className="object-cover w-full h-[40vh] rounded-md"
+                  className="object-cover w-full h-[30vh] rounded-md"
                 />
               )}
               <input

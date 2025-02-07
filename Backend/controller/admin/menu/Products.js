@@ -15,7 +15,7 @@ const deleteImageFile = (filePath) => {
 // Add a new product
 export const addProduct = async (req, res) => {
   try {
-    const { AdminId, name, category, discount, status } = req.body;
+    const { AdminId, name, category, status } = req.body;
     let { units } = req.body;
 
     console.log("Received Data:", req.body); // Debugging
@@ -36,7 +36,7 @@ export const addProduct = async (req, res) => {
     const image = req.file ? req.file.path : null;
     let productEntry = await Products.findOne({ AdminId });
 
-    const newProduct = { name, category, units, discount, status, image };
+    const newProduct = { name, category, units, status, image }; // Removed discount
 
     if (productEntry) {
       productEntry.products.push(newProduct);
@@ -108,7 +108,7 @@ export const getProductById = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { AdminId, productId } = req.params;
-    let { name, category, units, discount, status } = req.body;
+    let { name, category, units, status } = req.body; // Removed discount
     const newImage = req.file ? req.file.path : null;
 
     // Parse units if it's a string
@@ -130,7 +130,6 @@ export const updateProduct = async (req, res) => {
     product.name = name || product.name;
     product.category = category || product.category;
     product.units = units || product.units; // Ensure units are correctly updated
-    product.discount = discount || product.discount;
     product.status = status || product.status;
     product.image = newImage || product.image;
 
