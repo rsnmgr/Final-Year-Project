@@ -9,9 +9,10 @@ export default function ProductTable({
   handleDeleteClick,
   categoryNames,
   setSearchTerm,
+  units,
 }) {
   const API_URL = import.meta.env.VITE_API_URL;
-
+  //  console.log(categoryNames)
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -77,7 +78,16 @@ export default function ProductTable({
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                       {detail.units && detail.units.length > 0
-                        ? detail.units.map((unit) => unit.size).join(", ")
+                        ? detail.units
+                            .map((unit) => {
+                              const matchedUnit = units.find(
+                                (u) => u._id === unit.size
+                              );
+                              return matchedUnit
+                                ? matchedUnit.name
+                                : "Unknown Unit";
+                            })
+                            .join(", ")
                         : "N/A"}
                     </td>
 

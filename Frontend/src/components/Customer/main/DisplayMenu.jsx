@@ -18,12 +18,12 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
   const [selectedFood, setSelectedFood] = useState(null);
   const [selectedSize, setSelectedSize] = useState(""); // Initially an empty string
   const [selectedPrice, setSelectedPrice] = useState(0);
+  const [allUnits, setAllUnits] = useState([]); // State to store all units
 
+  // Fetch Product Data
   const fetchData = async () => {
     try {
-      const productResponse = await axios.get(
-        `${API_URL}/api/products/${AdminId}`
-      );
+      const productResponse = await axios.get(`${API_URL}/api/products/${AdminId}`);
       const activeProducts = productResponse.data.products.filter(
         (product) => product.status === "Active"
       );
@@ -39,9 +39,21 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
     }
   };
 
+  // Fetch Units
+  const fetchUnits = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/units/${AdminId}`);
+      const unitsData = response.data.units || [];
+      setAllUnits(unitsData); // Store all units
+    } catch (error) {
+      console.error("Error fetching units.");
+    }
+  };
+
   useEffect(() => {
     if (AdminId) {
       fetchData();
+      fetchUnits(); // Fetch units when AdminId changes
     }
   }, [AdminId]);
 
@@ -58,11 +70,8 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
   }, []);
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory =
-      selectedCategory === "All" || product.category === selectedCategory;
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
+    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -76,8 +85,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
   const handleDecrease = (productId) => {
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [productId]:
-        prevQuantities[productId] > 1 ? prevQuantities[productId] - 1 : 1,
+      [productId]: prevQuantities[productId] > 1 ? prevQuantities[productId] - 1 : 1,
     }));
   };
 
@@ -89,30 +97,49 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
     setInstruction("");
   };
 
+  // Get Unit Name by matching unit._id with product.units.size
+  const getUnitName = (unitId) => {
+    const unit = allUnits.find((unit) => unit._id === unitId);
+    return unit ? unit.name : "Unknown Size";
+  };
+
   const handleAddSelectedItems = async () => {
     try {
+      // Find the selected unit based on the selected size (_id)
+      const selectedUnit = selectedFood.units.find(
+        (unit) => unit._id === selectedSize
+      );
+
+      if (!selectedUnit) {
+        alert("Please select a valid size.");
+        return;
+      }
+
+      // Prepare the selected item with correct size name and price
       const selectedItem = {
         name: selectedFood.name,
         category: selectedFood.category,
-        size: selectedSize,
+        size: getUnitName(selectedUnit.size), // Get the size name using your helper function
         quantity: quantities[selectedFood._id],
-        price: selectedPrice,
+        price: selectedUnit.price, // Use the price from the selected unit
         instructions: instruction,
         image: selectedFood.image,
       };
 
+      // Add selected item to the cart
       await axios.post(`${API_URL}/api/add-selected-items`, {
         AdminId,
         tableId,
         selectedItems: [selectedItem],
       });
 
+      // Reset quantities and form after adding the item
       setQuantities((prevQuantities) => ({
         ...prevQuantities,
         [selectedFood._id]: 1,
       }));
 
-      // Reset after adding the item
+      // Reset the form
       setForm(false);
       setSelectedFood(null);
       setSelectedSize(""); // Reset size
@@ -130,10 +157,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 w-full">
           {filteredProducts.map((product) => (
-            <div
-              key={product._id}
-              className="shadow-xl bg-gray-800 pb-1 rounded-md"
-            >
+            <div key={product._id} className="shadow-xl bg-gray-800 pb-1 rounded-md">
               <div className="rounded-md flex flex-col">
                 <div className="relative w-full h-30">
                   <img
@@ -141,9 +165,6 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
                     className="w-full h-[12vh] rounded-t-md object-cover"
                     alt={product.name}
                   />
-                  <p className="absolute top-0 right-1 text-slate-200">
-                    {product.size}
-                  </p>
                   <h1 className="absolute bottom-0 left-0 w-full text-center text-white bg-black bg-opacity-50 py-2">
                     {product.name}
                   </h1>
@@ -202,24 +223,17 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
                   value={selectedSize}
                   onChange={(e) => {
                     const size = e.target.value;
-                    const unit = selectedFood.units.find(
-                      (unit) => unit.size === size
-                    );
+                    const unit = selectedFood.units.find((unit) => unit._id === size);
                     setSelectedSize(size);
                     setSelectedPrice(unit ? unit.price : 0);
                   }}
                   className="p-2 w-full bg-gray-800 border border-gray-900 outline-none cursor-pointer"
                   required
                 >
-                  <option value="">Select Size</option>{" "}
-                  {/* Default option is empty */}
+                  <option value="">Select Size</option>
                   {selectedFood.units.map((unit) => (
-                    <option
-                      key={unit.size}
-                      value={unit.size}
-                      className="outline-node"
-                    >
-                      {unit.size} - Rs {unit.price}
+                    <option key={unit._id} value={unit._id} className="outline-node">
+                      {getUnitName(unit.size)} - Rs {unit.price}
                     </option>
                   ))}
                 </select>

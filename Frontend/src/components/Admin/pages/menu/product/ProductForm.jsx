@@ -14,6 +14,7 @@ export default function ProductForm({
   handleImageChange,
   handleToggleModal,
   setFormData, // ✅ Added to update units
+  units,
 }) {
   // Track multiple product units
   useEffect(() => {
@@ -33,10 +34,11 @@ export default function ProductForm({
   const handleUnitChange = (index, field, value) => {
     setFormData((prev) => {
       const updatedUnits = [...prev.units];
-      updatedUnits[index][field] = value;
-      return { ...prev, units: updatedUnits }; // ✅ Update formData
+      updatedUnits[index][field] = value; // ✅ Ensure correct field update
+      return { ...prev, units: updatedUnits };
     });
   };
+  
 
   const handleRemoveUnit = (index) => {
     setFormData((prev) => {
@@ -143,7 +145,7 @@ export default function ProductForm({
                       key={index}
                       className="flex justify-between items-center space-x-2"
                     >
-                      <input
+                      {/* <input
                         type="text"
                         className="p-1 bg-gray-900 px-3 border border-gray-700 outline-none w-full"
                         placeholder="Size"
@@ -152,7 +154,21 @@ export default function ProductForm({
                         onChange={(e) =>
                           handleUnitChange(index, "size", e.target.value)
                         }
-                      />
+                      /> */}
+                      <select
+                        value={unit.size} // ✅ Ensure correct value binding
+                        onChange={(e) => handleUnitChange(index, "size", e.target.value)}
+                        className="block p-1 bg-gray-900 px-3 border border-gray-700 outline-none w-full"
+                        required
+                      >
+                        <option value="">Select Unit</option> {/* ✅ Default option */}
+                        {units.map((unitOption) => (
+                          <option key={unitOption._id} value={unitOption._id}>
+                            {unitOption.name}
+                          </option>
+                        ))}
+                      </select>
+
                       <input
                         type="number"
                         className="p-1 bg-gray-900 px-3 border border-gray-700 outline-none w-full"

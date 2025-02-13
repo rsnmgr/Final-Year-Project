@@ -69,6 +69,14 @@ export default function Sidebar({ setSidebar }) {
               </li>
               <li
                 className={`p-3 cursor-pointer ${
+                  isActive('/admin/menu/units') ? 'bg-gray-800 text-white' : 'bg-gray-900'
+                }`}
+                onClick={() => handleItemClick('/admin/menu/units')}
+              >
+                units
+              </li>
+              <li
+                className={`p-3 cursor-pointer ${
                   isActive('/admin/menu/product') ? 'bg-gray-800 text-white' : 'bg-gray-900'
                 }`}
                 onClick={() => handleItemClick('/admin/menu/product')}

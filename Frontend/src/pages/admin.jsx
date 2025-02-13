@@ -17,6 +17,7 @@ import Profile from '../components/Admin/pages/Profile';
 /* Menu */
 import MenuCategory from '../components/Admin/pages/menu/MenuCategory';
 import MenuProduct from '../components/Admin/pages/menu/MenuProduct';
+import Units from '../components/Admin/pages/menu/units';
 
 /* Staff */
 import StaffCategory from '../components/Admin/pages/staff/staffCategory';
@@ -85,6 +86,8 @@ export default function Admin() {
         return "Menu Category";
       case "/admin/menu/product":
         return "Menu Product";
+      case "/admin/menu/units":
+        return "Units";
       case "/admin/staff/category":
         return "Staff Category";
       case "/admin/staff/detail":
@@ -136,6 +139,7 @@ export default function Admin() {
             <Route path="kitchen" element={<Kitchen />} />
             <Route path="menu/category" element={<MenuCategory />} />
             <Route path="menu/product" element={<MenuProduct />} />
+            <Route path="menu/units" element={<Units />} />
             <Route path="staff/category" element={<StaffCategory />} />
             <Route path="staff/detail" element={<StaffDetails />} />
             <Route path="report/sales" element={<Sales />} />

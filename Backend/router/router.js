@@ -37,6 +37,13 @@ router.get('/category/:AdminId/:categoryId', getCategoryById);
 router.put('/category/:AdminId/:categoryId', updateCategory);
 router.delete('/category/:AdminId/:categoryId', deleteCategory);
 
+// Menu Units
+import {addUnit, getUnits, getUnitById, updateUnit, deleteUnit} from '../controller/admin/menu/Units.js';
+router.post('/unit', addUnit);
+router.get('/units/:AdminId', getUnits);
+router.get('/unit/:AdminId/:unitId', getUnitById);
+router.put('/unit/:AdminId/:unitId', updateUnit);
+router.delete('/unit/:AdminId/:unitId', deleteUnit);
 
 // Menu Product
 import { addProduct, getProducts, getProductById, updateProduct, deleteProduct } from '../controller/admin/menu/Products.js';

@@ -31,24 +31,25 @@ export default function Items() {
 
   const [details, setDetails] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [units, setUnits] = useState([]);
+ useEffect(() => {
+  if (AdminId) {
+    fetchDetails();
+    fetchCategories();
+    fetchUnits(); // ✅ Fetch units on load
+  }
+}, [AdminId]);
 
-  useEffect(() => {
-    if (AdminId) {
-      fetchDetails();
-      fetchCategories();
-    }
-  }, [AdminId]);
 
   const fetchDetails = async () => {
     try {
       const response = await axios.get(`${API_URL}/api/products/${AdminId}`);
       setDetails(response.data.products);
-      console.log(response.data.products.units);
     } catch (error) {
       toast.error("Error fetching products.");
     }
   };
-
+{/* Fetch Categories */}
   const fetchCategories = async () => {
     try {
       const response = await axios.get(`${API_URL}/api/categories/${AdminId}`);
@@ -67,6 +68,19 @@ export default function Items() {
       toast.error("Error fetching categories.");
     }
   };
+
+  {/* Fetch Units */}
+  const fetchUnits = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/units/${AdminId}`);
+      const unitsData = response.data.units || [];
+  
+      setUnits(unitsData); // ✅ Fix: Set fetched units
+    } catch (error) {
+      toast.error("Error fetching units.");
+    }
+  };
+  
 
   const handleToggleModal = (detail = null) => {
     setShowModal(!showModal);
@@ -168,6 +182,7 @@ export default function Items() {
         handleToggleModal={handleToggleModal}
         handleDeleteClick={handleDeleteClick}
         categoryNames={categoryNames}
+        units={units} // ✅ Pass units as a prop
       />
 
       {showModal && (
@@ -184,6 +199,7 @@ export default function Items() {
           selectedImage={selectedImage}
           fileInputRef={fileInputRef}
           handleToggleModal={handleToggleModal}
+          units = {units}
         />
       )}
 
