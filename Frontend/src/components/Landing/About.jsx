@@ -38,7 +38,7 @@ export default function About() {
             <img src={Sadir} alt="Sadir Singh" className='h-[30vh] w-[30vh] rounded-full border-4 border-gray-700 object-cover' />
           </div>
           <div className='text-center mt-6'>
-            <h1 className='text-2xl text-white font-bold'>Sadir Singh</h1>
+            <h1 className='text-2xl text-white font-bold'>Sadir Thapa Magar</h1>
             <h2 className='text-orange-400 font-medium'>UI/UX Designer</h2>
             <p className='text-gray-400 mt-4'>
               Designing with passion, creating user-friendly experiences with a modern aesthetic.
@@ -59,7 +59,7 @@ export default function About() {
             <img src={Rijan} alt="Rijan Karki" className='h-[30vh] w-[30vh] rounded-full border-4 border-gray-700 object-cover' />
           </div>
           <div className='text-center mt-6'>
-            <h1 className='text-2xl text-white font-bold'>Rijan Karki</h1>
+            <h1 className='text-2xl text-white font-bold'>Rijan Thapa Magar</h1>
             <h2 className='text-orange-400 font-medium'>Backend Developer</h2>
             <p className='text-gray-400 mt-4'>
               Backend architecture and databases are my playground, turning ideas into scalable solutions.

@@ -1,30 +1,27 @@
 import SelectedItems from "../../model/customer/SelectedItems.js"; // Adjust the path as necessary
 import { io } from "../../server.js";
 
+
+
 export const addSelectedItems = async (req, res) => {
   try {
     const { AdminId, tableId, selectedItems } = req.body;
-    // Find existing document by AdminId and tableId
+
     let selectedItemsEntry = await SelectedItems.findOne({ AdminId, tableId });
 
     if (selectedItemsEntry) {
-      // If document exists, update quantities or add new items
       selectedItems.forEach((newItem) => {
-        // Check if an item with the same name already exists
         const existingItem = selectedItemsEntry.selectedItems.find(
-          (item) => item.size === newItem.size
+          (item) => item.name === newItem.name && item.size === newItem.size
         );
 
         if (existingItem) {
-          // If the item with the same name exists, increase the quantity
           existingItem.quantity += newItem.quantity;
         } else {
-          // If the item doesn't exist, add it as a new object
           selectedItemsEntry.selectedItems.push(newItem);
         }
       });
     } else {
-      // If document doesn't exist, create a new one
       selectedItemsEntry = new SelectedItems({
         AdminId,
         tableId,
@@ -32,21 +29,19 @@ export const addSelectedItems = async (req, res) => {
       });
     }
 
-    // Save the updated document to the database
     await selectedItemsEntry.save();
     io.emit("ItemsAdded", selectedItemsEntry);
 
-    res
-      .status(201)
-      .json({
-        message: "Selected items added successfully",
-        selectedItemsEntry,
-      });
+    res.status(201).json({
+      message: "Selected items added successfully",
+      selectedItemsEntry,
+    });
   } catch (error) {
     console.error("Error adding selected items:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // Controller to fetch selected items
 export const fetchSelectedItems = async (req, res) => {

@@ -3,7 +3,7 @@ import { io } from "../../server.js";
 // Controller to add a new order
 export const addOrder = async (req, res) => {
   try {
-    const { AdminId, tableId, items, subtotal, gst, total } = req.body;
+    const { AdminId, tableId,Cname,Cphone, items, subtotal, gst, total } = req.body;
     // Create a new order object with order details
     const newOrder = {
       items,
@@ -20,6 +20,8 @@ export const addOrder = async (req, res) => {
       order = new Order({
         AdminId,
         tableId,
+        Cname,
+        Cphone,
         OrderHistory: [newOrder],
         totalOrderAmount: total, // Initialize totalOrderAmount with the first order's total
       });

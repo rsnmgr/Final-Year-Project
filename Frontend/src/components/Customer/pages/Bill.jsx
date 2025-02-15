@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { TableContext } from "../../ContextProvider/TableContext";
+import { CustomerContext } from '../../ContextProvider/CustomerContext';
 import moment from "moment";
 import { MdOutlineAutoDelete } from "react-icons/md";
 import io from "socket.io-client";
@@ -10,7 +10,7 @@ const socket = io(API_URL);
 
 export default function Bill() {
   const navigate = useNavigate();
-  const { AdminId, tableId } = useContext(TableContext);
+  const {AdminId, tableId} = useContext(CustomerContext);
   const [orders, setOrders] = useState([]);
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [deleteOrderForm, setDeleteOrderForm] = useState(false);
@@ -167,7 +167,7 @@ export default function Bill() {
         <div className="flex justify-between p-4 gap-2">
           <button
             className="p-2 w-full bg-gray-950"
-            onClick={() => navigate(`/menu/${AdminId}/${tableId}`)}
+            onClick={() => navigate(`/menu`)}
           >
             NEW ORDER
           </button>

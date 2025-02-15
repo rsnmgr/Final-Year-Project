@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Admin from "../model/UserModel/Admin.js";
 import Super from '../model/UserModel/Super.js';
 import Online from "../model/Online/userSchema.js";
-
+import Customer from "../model/customer/Customer.js";
 const keySecret = 'ldjfjaojorejoojfoajoejrfoaoohahojoehojohahojfoaohahojoeoohohohoh';
 
 export const authenticate = async (req, res, next) => {
@@ -24,6 +24,9 @@ export const authenticate = async (req, res, next) => {
             req.userRole = "Super";
         } else if ((rootUser = await Online.findOne({ _id: verifytoken._id }))) {
             req.userRole = "Online";
+        }
+        else if ((rootUser = await Customer.findOne({ _id: verifytoken._id }))) {
+            req.userRole = "Customer";
         }
 
         // If the user isn't found in any schema, throw an error

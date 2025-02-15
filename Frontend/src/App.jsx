@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
-import { TableProvider } from "./components/ContextProvider/TableContext";
+import { CustomerContextProvider } from './components/ContextProvider/CustomerContext';  // Import your CustomerContextProvider
 
 // Pages routes
 import Landing from './pages/landing';
@@ -11,23 +11,25 @@ import Super from './pages/superAdmin';
 import Admin from './pages/admin';
 import Menu from './pages/Menu';
 import Error from './pages/error';
+import Info from './pages/info';
+
 export default function App() {
   return (
-    <div className='bg-gray-950 text-slate-300 h-screen '>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/super" element={<Super />} />
-          <Route path="/admin/*" element={<Admin />} />
-          <Route path="/menu/:AdminId/:tableId/*" element={
-             <TableProvider>
-            <Menu />
-            </TableProvider>} /> 
-          <Route path="*" element={<Error />} /> 
-        </Routes>
-      </BrowserRouter>
+    <div className='bg-gray-950 text-slate-300 h-screen'>
+      <CustomerContextProvider> {/* Wrap everything with the CustomerContextProvider */}
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/super" element={<Super />} />
+            <Route path="/admin/*" element={<Admin />} />
+            <Route path="/info/:AdminId/:tableId" element={<Info />} />
+            <Route path="/menu/*" element={<Menu />} /> 
+            <Route path="*" element={<Error />} /> 
+          </Routes>
+        </BrowserRouter>
+      </CustomerContextProvider>
     </div>
   );
 }

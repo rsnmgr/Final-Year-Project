@@ -9,12 +9,13 @@ import { useNavigate } from "react-router-dom";
 import { TiTick } from "react-icons/ti";
 import io from 'socket.io-client';
 
-import { TableContext } from "../../ContextProvider/TableContext";
+import { CustomerContext } from '../../ContextProvider/CustomerContext';
+
 const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL);
 
 export default function Bag() {
-  const { AdminId, tableId } = useContext(TableContext);
+  const {AdminId, tableId,Cname,Cphone} = useContext(CustomerContext);
   const [selectedItems, setSelectedItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [subtotal, setSubtotal] = useState(0);
@@ -131,6 +132,8 @@ export default function Bag() {
       await axios.post(`${API_URL}/api/add-order`, {
         AdminId,
         tableId,
+        Cname,
+        Cphone,
         items: selectedItems,
         subtotal,
         gst,
@@ -142,7 +145,7 @@ export default function Bag() {
       // Simulate a 2-second delay before navigating to the next page
       setTimeout(() => {
         setLoading(false); // End loading
-        navigate(`/menu/${AdminId}/${tableId}/bill`);
+        navigate(`/menu/bill`);
       }, 1000); // 1 seconds delay
     } catch (error) {
       setLoading(false); // Stop loading in case of an error
@@ -178,7 +181,7 @@ export default function Bag() {
       <header className="grid grid-cols-3 p-2  shadow-xl">
         <IoIosArrowUp
           className="transform rotate-[-90deg] w-6 h-6 cursor-pointer"
-          onClick={() => navigate(`/menu/${AdminId}/${tableId}`)}
+          onClick={() => navigate(`/menu`)}
         />
         <div className="flex items-center">
           <MdShoppingCart className="w-6 h-6" />
@@ -373,7 +376,7 @@ export default function Bag() {
             </div>
             <h1 className="text-center">Success</h1>
             <p className="text-center text-gray-500">Your order has been Successfully Placed. We will let you know when it is ready!</p>
-            <button className="bg-green-700 p-2 w-full mt-4" onClick={() => navigate(`/menu/${AdminId}/${tableId}/b`)}>Done</button>
+            <button className="bg-green-700 p-2 w-full mt-4" onClick={() => navigate(`/menu/b`)}>Done</button>
           </div>
         </div>
       )}

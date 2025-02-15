@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { LuSearch } from 'react-icons/lu';
 import { MdShoppingCart } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { TableContext } from '../../ContextProvider/TableContext';
+import { CustomerContext } from '../../ContextProvider/CustomerContext';
 import axios from 'axios';
 import io from 'socket.io-client';
 
@@ -12,7 +12,7 @@ const socket = io(API_URL);
 
 export default function Navbar({ onSearch }) {
   const [searchQuery, setSearchQuery] = useState(''); // State for search input
-  const { AdminId, tableId } = useContext(TableContext);
+  const {AdminId, tableId} = useContext(CustomerContext);
   const [itemCount, setItemCount] = useState(0); // Number of unique items
   const [totalAmount, setTotalAmount] = useState(0); // Total cost of items
   const navigate = useNavigate();
@@ -47,28 +47,21 @@ export default function Navbar({ onSearch }) {
 
   // Initial fetch when AdminId is available
   useEffect(() => {
-    if (AdminId) {
+    if (AdminId && tableId) {
       updateCart();
     }
-  }, [AdminId]);
+  }, [AdminId, tableId]);
+  
 
-  // Socket event listeners for real-time updates
   useEffect(() => {
-    socket.on('ItemsAdded', updateCart);
-    socket.on('ItemsUpdated', updateCart);
-    socket.on('ItemsDeleted', updateCart);
-    socket.on('ItemsQtyUpdated', updateCart);
-    socket.on('ItemsDeletedAll', updateCart);
-
-    // Clean up socket event listeners on unmount
+    const events = ['ItemsAdded', 'ItemsUpdated', 'ItemsDeleted', 'ItemsQtyUpdated', 'ItemsDeletedAll'];
+    events.forEach(event => socket.on(event, updateCart));
+  
     return () => {
-      socket.off('ItemsAdded', updateCart);
-      socket.off('ItemsUpdated', updateCart);
-      socket.off('ItemsDeleted', updateCart);
-      socket.off('ItemsQtyUpdated', updateCart);
-      socket.off('ItemsDeletedAll', updateCart);
+      events.forEach(event => socket.off(event, updateCart));
     };
-  }, []);
+  }, [AdminId, tableId]);
+  
 
   return (
     <div>
@@ -88,7 +81,7 @@ export default function Navbar({ onSearch }) {
         {/* Shopping Cart Section */}
         <div className="flex items-center space-x-2 cursor-pointer">
           <label className="text-white">{totalAmount.toFixed(2)}</label>
-          <div className="relative" onClick={() => navigate(`/menu/${AdminId}/${tableId}/bag`)}>
+          <div className="relative" onClick={() => navigate(`/menu/bag`)}>
             {/* Display unique item count */}
             <label className="absolute -top-1 -right-1 text-xs text-white bg-gray-500 rounded-full h-5 w-5 flex items-center justify-center">
               {itemCount}

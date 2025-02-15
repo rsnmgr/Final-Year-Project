@@ -97,7 +97,7 @@ export default function Table() {
   };
 
   const generateQRCode = async (tableId, tableName) => {
-    const url = `${window.location.origin}/menu/${userId}/${tableId}`;
+    const url = `${window.location.origin}/info/${userId}/${tableId}`;
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(url);
       setQrCodeUrl(qrCodeDataUrl);
@@ -116,7 +116,7 @@ export default function Table() {
   };
 
   const copyToClipboard = () => {
-    const url = `${window.location.origin}/menu/${userId}/${selectedTableId}`;
+    const url = `${window.location.origin}/info/${userId}/${selectedTableId}`;
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url)
         .then(() => {
@@ -235,7 +235,7 @@ export default function Table() {
             </div>
             <h1 className="text-2xl text-center mb-4">Scan Me</h1>
             <img src={qrCodeUrl} alt="QR Code" className="mb-4" />
-            <input type="text" className="bg-gray-950 border border-gray-900 p-2 w-full mb-4 text-center" value={`${window.location.origin}/menu/${userId}/${selectedTableId}`} readOnly />
+            <input type="text" className="bg-gray-950 border border-gray-900 p-2 w-full mb-4 text-center" value={`${window.location.origin}/info/${userId}/${selectedTableId}`} readOnly />
             <button className="bg-gray-800 p-2 w-full mb-4" onClick={copyToClipboard}>Copy URL</button>
           </div>
         </div>

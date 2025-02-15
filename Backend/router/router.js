@@ -22,6 +22,11 @@ router.put('/updatePassword/:userId',updateCustomerPassword);
 import { userRegister } from '../controller/Online/userController.js';
 router.post('/register', userRegister);
 
+// Customer
+import {addCustomer,validCustomer} from '../controller/Customer/Customer.js' ;
+router.post('/add-customer', addCustomer);
+router.get('/valid-customer',authenticate, validCustomer);
+
 // Multi-login
 import { login,validUser,logOut } from '../controller/MultiLogin/Login.js';
 router.post('/login', login);

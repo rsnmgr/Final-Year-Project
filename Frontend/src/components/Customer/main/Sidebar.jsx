@@ -1,14 +1,15 @@
 // Sidebar.js
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios'; 
-import { TableContext } from '../../ContextProvider/TableContext';
+import { CustomerContext } from '../../ContextProvider/CustomerContext';
+
 import io from 'socket.io-client';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL);
 
 export default function Sidebar({ onCategorySelect }) {
-  const { AdminId } = useContext(TableContext);
+  const {AdminId} = useContext(CustomerContext);
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All'); // Set 'All' as the default active category
 

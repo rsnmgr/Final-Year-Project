@@ -1,9 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { GiRoundTable } from "react-icons/gi";
 import { MdOutlineMenu } from "react-icons/md";
-import { TableContext } from '../ContextProvider/TableContext';
+import { CustomerContext } from '../ContextProvider/CustomerContext';
+
 export default function Header() {
-  const { tableData ,AdminId,tableId} = useContext(TableContext);
+  const { tableData ,AdminId, tableId} = useContext(CustomerContext);
 
   return (
     <div className="flex justify-between items-center p-2">

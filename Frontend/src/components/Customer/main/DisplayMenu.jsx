@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { TiMinus } from "react-icons/ti";
 import { FaPlus } from "react-icons/fa";
-import { TableContext } from "../../ContextProvider/TableContext";
+import { CustomerContext } from '../../ContextProvider/CustomerContext';
 import axios from "axios";
 import img from "../../../assets/defaultImg.png"; // Placeholder image
 import io from "socket.io-client";
@@ -10,7 +10,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL);
 
 export default function DisplayMenu({ selectedCategory, searchQuery }) {
-  const { AdminId, tableId } = useContext(TableContext);
+  const {AdminId, tableId} = useContext(CustomerContext);
   const [products, setProducts] = useState([]);
   const [quantities, setQuantities] = useState({});
   const [instruction, setInstruction] = useState("");
