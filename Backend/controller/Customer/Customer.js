@@ -24,8 +24,8 @@ export const addCustomer = async (req, res) => {
 
     // If customer does not exist, create a new customer
     const newCustomer = new Customer({
-      name: name || "Unknown", // Use provided name or default to "Unknown"
-      phone: phone || "Unknown",
+      name,
+      phone,
       adminId,
       tableId,
     });

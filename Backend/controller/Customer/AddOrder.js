@@ -6,6 +6,8 @@ export const addOrder = async (req, res) => {
     const { AdminId, tableId,Cname,Cphone, items, subtotal, gst, total } = req.body;
     // Create a new order object with order details
     const newOrder = {
+      Cname : Cname || "Unknown",
+      Cphone : Cphone || "Unknown",
       items,
       subtotal,
       gst,
@@ -20,8 +22,6 @@ export const addOrder = async (req, res) => {
       order = new Order({
         AdminId,
         tableId,
-        Cname,
-        Cphone,
         OrderHistory: [newOrder],
         totalOrderAmount: total, // Initialize totalOrderAmount with the first order's total
       });

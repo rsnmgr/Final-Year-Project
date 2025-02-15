@@ -14,13 +14,13 @@ const OrderItem = ({ order, tableName, onReady }) => (
       <h1>Table: {tableName || "Unknown"}</h1>
       <date>{moment(order.orderDate).format("MMMM D, YYYY h:mm A")}</date>
       <button
-        className="py-1 px-2 bg-green-700 text-white rounded hover:bg-green-800"
+        className="py-1 px-2 bg-gray-700 text-white"
         onClick={() => onReady(order._id)}
       >
         Ready
       </button>
     </div>
-    <table className="w-full table-auto border-2 border-blue-700 mb-4">
+    <table className="w-full table-auto border-2 border-gray-700 mb-4">
       <thead className="bg-black text-white border-b border-gray-500">
         <tr>
           <th className="p-2 text-left">Item</th>
@@ -62,10 +62,10 @@ const ConfirmationModal = ({ onClose, onConfirm }) => {
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-30">
-      <div ref={modalRef} className="bg-black p-6 border-2 border-blue-700">
+      <div ref={modalRef} className="bg-black p-6 border-2 border-gray-700">
         <h1>Are you sure this table Order Ready?</h1>
         <div className="flex justify-end items-center mt-4">
-          <button className="p-1 bg-orange-700 px-3" onClick={onClose}>
+          <button className="p-1 bg-gray-700 px-3" onClick={onClose}>
             Cancel
           </button>
           <button className="p-1 bg-green-700 ml-2 px-3" onClick={onConfirm}>
@@ -215,7 +215,7 @@ export default function Kitchen_Area() {
       )}
 
       {backendMessage && (
-        <div className="fixed right-4 bottom-4 border-2 border-blue-700">
+        <div className="fixed right-4 bottom-4 border-2 border-gray-700">
           <div className="flex justify-between px-3 items-center p-2 bg-gray-900">
             <h1 className="text-white mr-3">{backendMessage}</h1>
             <RxCross2

@@ -7,7 +7,6 @@ import DisplayMenu from './main/DisplayMenu';
 export default function Main() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState(''); // State for the search query
-  
   return (
     <div className="flex flex-col h-full">
       {/* Navbar Section */}
