@@ -11,6 +11,11 @@ const customerSchema = new mongoose.Schema(
     adminId: { type: "string", required: true },
     tableId: { type: "string", required: true },
     role: { type: "string", default: "customer" },
+    status: { type: "string", default: "booked" },
+    friendCode: { 
+      type: "string", 
+      default: () => Math.floor(1000 + Math.random() * 9000).toString() 
+    },
     tokens: [
       {
         token: {

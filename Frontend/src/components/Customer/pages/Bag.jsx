@@ -15,7 +15,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL);
 
 export default function Bag() {
-  const {AdminId, tableId,Cname,Cphone} = useContext(CustomerContext);
+  const {customerData,AdminId, tableId,Cname,Cphone} = useContext(CustomerContext);
   const [selectedItems, setSelectedItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [subtotal, setSubtotal] = useState(0);
@@ -30,11 +30,11 @@ export default function Bag() {
   const [showOrderConfirmation, setShowOrderConfirmation] = useState(false);
   const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
-
+  const CustomerId = customerData?.validUser?._id;
  
     const fetchSelectedItems = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/selected-items/${AdminId}/${tableId}`);
+        const response = await axios.get(`${API_URL}/api/selected-items/${AdminId}/${tableId}/${CustomerId}`);
         const { selectedItems } = response.data.selectedItemsEntry;
 
         if (selectedItems.length === 0) {
@@ -53,7 +53,7 @@ export default function Bag() {
 
   const calculateTotals = (items) => {
     const newSubtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const gstPercentage = 0; // Replace with actual GST percentage
+    const gstPercentage = 13; // Replace with actual GST percentage
     const newGst = (newSubtotal * gstPercentage) / 100;
     setSubtotal(newSubtotal);
     setGst(newGst);
@@ -62,7 +62,7 @@ export default function Bag() {
 
   const updateItemQuantity = async (itemId, quantity) => {
     try {
-      await axios.put(`${API_URL}/api/selected-items/${AdminId}/${tableId}/${itemId}/quantity`, { quantity });
+      await axios.put(`${API_URL}/api/selected-items/${AdminId}/${tableId}/${CustomerId}/${itemId}/quantity`, { quantity });
     } catch (error) {
       console.error("Error updating item quantity:", error);
     }
@@ -82,7 +82,7 @@ export default function Bag() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`${API_URL}/api/selected-items/${AdminId}/${tableId}/${itemToDelete._id}`);
+      await axios.delete(`${API_URL}/api/selected-items/${AdminId}/${tableId}/${CustomerId}/${itemToDelete._id}`);
       const updatedItems = selectedItems.filter((item) => item._id !== itemToDelete._id);
       setSelectedItems(updatedItems);
       calculateTotals(updatedItems);
@@ -106,7 +106,7 @@ export default function Bag() {
 
   const handleUpdateInstructions = async () => {
     try {
-      await axios.put(`${API_URL}/api/update-item-instructions/${AdminId}/${tableId}/${editingItemId}`, {
+      await axios.put(`${API_URL}/api/update-item-instructions/${AdminId}/${tableId}/${CustomerId}/${editingItemId}`, {
         instructions: editableInstructions,
       });
       const updatedItems = selectedItems.map((item) =>
@@ -132,6 +132,7 @@ export default function Bag() {
       await axios.post(`${API_URL}/api/add-order`, {
         AdminId,
         tableId,
+        CustomerId,
         Cname,
         Cphone,
         items: selectedItems,
@@ -140,7 +141,7 @@ export default function Bag() {
         total,
       });
       // Clear the cart after order placement
-      await axios.delete(`${API_URL}/api/delete-selected-items/${AdminId}/${tableId}`);
+      await axios.delete(`${API_URL}/api/delete-selected-items/${AdminId}/${tableId}/${CustomerId}`);
       
       // Simulate a 2-second delay before navigating to the next page
       setTimeout(() => {
@@ -217,10 +218,10 @@ export default function Bag() {
                     {/* Item Name and Category */}
                     <div
                       onClick={() => handleItemClick(item)}
-                      className="cursor-pointer"
+                      className="relative cursor-pointer"
                     >
-                      <h1 className="text-sm border-b-2 border-gray-600">
-                        {item.name}{item.size && `(${item.size})`}
+                      <h1 className="text-sm space-y-[-6px]">
+                        <span>{item.name}</span><span className="block text-[8px]">{item.size && `(${item.size})`}</span>
                       </h1>
                       {/* Display Category and Size */}
                       
@@ -269,7 +270,7 @@ export default function Bag() {
           <footer className="flex bg-gray-800 justify-between items-center p-2 mt-4 shadow-2xl">
             <ul className="">
               <li>Subtotal</li>
-              <li>GST(0%)</li>
+              <li>GST(13%)</li>
               <li>Total</li>
             </ul>
             <ul>

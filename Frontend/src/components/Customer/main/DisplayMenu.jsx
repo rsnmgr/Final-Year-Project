@@ -10,7 +10,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL);
 
 export default function DisplayMenu({ selectedCategory, searchQuery }) {
-  const {AdminId, tableId} = useContext(CustomerContext);
+  const {customerData,AdminId, tableId} = useContext(CustomerContext);
   const [products, setProducts] = useState([]);
   const [quantities, setQuantities] = useState({});
   const [instruction, setInstruction] = useState("");
@@ -19,7 +19,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
   const [selectedSize, setSelectedSize] = useState(""); // Initially an empty string
   const [selectedPrice, setSelectedPrice] = useState(0);
   const [allUnits, setAllUnits] = useState([]); // State to store all units
-
+  const CustomerId = customerData?.validUser?._id;
   // Fetch Product Data
   const fetchData = async () => {
     try {
@@ -130,6 +130,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
       await axios.post(`${API_URL}/api/add-selected-items`, {
         AdminId,
         tableId,
+        CustomerId,
         selectedItems: [selectedItem],
       });
 

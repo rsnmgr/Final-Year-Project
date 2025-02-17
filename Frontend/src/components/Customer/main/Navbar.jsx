@@ -12,11 +12,11 @@ const socket = io(API_URL);
 
 export default function Navbar({ onSearch }) {
   const [searchQuery, setSearchQuery] = useState(''); // State for search input
-  const {AdminId, tableId} = useContext(CustomerContext);
+  const {customerData,AdminId, tableId} = useContext(CustomerContext);
   const [itemCount, setItemCount] = useState(0); // Number of unique items
   const [totalAmount, setTotalAmount] = useState(0); // Total cost of items
   const navigate = useNavigate();
-
+  const CustomerId = customerData?.validUser?._id;
   // Handle search input changes
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -27,7 +27,7 @@ export default function Navbar({ onSearch }) {
   // Fetch and update cart data
   const updateCart = async () => {
     try {
-      const cartResponse = await axios.get(`${API_URL}/api/selected-items/${AdminId}/${tableId}`);
+      const cartResponse = await axios.get(`${API_URL}/api/selected-items/${AdminId}/${tableId}/${CustomerId}`);
       const selectedItems = cartResponse.data.selectedItemsEntry?.selectedItems || [];
 
       let count = 0;
@@ -41,7 +41,7 @@ export default function Navbar({ onSearch }) {
       setItemCount(count);
       setTotalAmount(totalPrice);
     } catch (error) {
-      console.error('Error updating cart:', error);
+      // console.error('Error updating cart:', error);
     }
   };
 

@@ -7,7 +7,6 @@ import Side from './Side';
 export default function Header() {
   const { tableData ,AdminId, tableId} = useContext(CustomerContext);
   const [sidebar,setSidebar] = useState();
-
   return (
     <div className="relative flex justify-between items-center p-2">
       {/* Logo Section */}

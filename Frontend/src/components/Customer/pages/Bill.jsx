@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { CustomerContext } from '../../ContextProvider/CustomerContext';
+import { CustomerContext } from "../../ContextProvider/CustomerContext";
 import moment from "moment";
 import { MdOutlineAutoDelete } from "react-icons/md";
 import io from "socket.io-client";
@@ -10,13 +10,13 @@ const socket = io(API_URL);
 
 export default function Bill() {
   const navigate = useNavigate();
-  const {AdminId, tableId} = useContext(CustomerContext);
+  const { customerData, AdminId, tableId } = useContext(CustomerContext);
   const [orders, setOrders] = useState([]);
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [deleteOrderForm, setDeleteOrderForm] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState(null);
   const [hideDeleteIcon, setHideDeleteIcon] = useState({}); // To track which order's delete icon should be hidden
-
+  const CustomerId = customerData?.validUser?._id;
   const fetchOrders = async () => {
     try {
       const response = await fetch(
@@ -72,7 +72,7 @@ export default function Bill() {
     if (!hideDeleteIcon[orderToDelete]) {
       try {
         const response = await fetch(
-          `${API_URL}/api/delete-order-id/${AdminId}/${tableId}/${orderToDelete}`,
+          `${API_URL}/api/delete-order-id/${AdminId}/${tableId}/${CustomerId}/${orderToDelete}`,
           {
             method: "DELETE",
           }
@@ -109,7 +109,18 @@ export default function Bill() {
               >
                 <div className="text-xs">
                   <div className="flex justify-between items-center">
-                    <label>{moment(order.orderDate).format("hh:mm A")}</label>
+                    <label>
+                      {moment(order.orderDate).format("hh:mm A")}{" "}
+                      <span
+                        className={
+                          order.Cname === customerData?.validUser?.name
+                            ? "text-green-500"
+                            : ""
+                        }
+                      >
+                        ({order.Cname})
+                      </span>
+                    </label>
                     <h1
                       className={`underline ${
                         order.itemsStatus === "prepare"

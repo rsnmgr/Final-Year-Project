@@ -3,11 +3,12 @@ import { io } from "../../server.js";
 // Controller to add a new order
 export const addOrder = async (req, res) => {
   try {
-    const { AdminId, tableId,Cname,Cphone, items, subtotal, gst, total } = req.body;
+    const { AdminId, tableId,Cname,Cphone,CustomerId, items, subtotal, gst, total } = req.body;
     // Create a new order object with order details
     const newOrder = {
       Cname : Cname || "Unknown",
       Cphone : Cphone || "Unknown",
+      CustomerId,
       items,
       subtotal,
       gst,
@@ -189,7 +190,7 @@ export const updateOrderStatus = async (req, res) => {
 };
 
 export const deleteOrderHistory = async (req, res) => {
-  const { adminId, tableId, orderId } = req.params; // Extract AdminId, tableId, and OrderHistory ID from the request
+  const { adminId, tableId, CustomerId, orderId } = req.params; // Extract AdminId, tableId, CustomerId, and orderId from the request
 
   try {
     // Find the order by AdminId and tableId
@@ -199,16 +200,26 @@ export const deleteOrderHistory = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    // Filter out the OrderHistory entry with the given orderId
-    const initialLength = order.OrderHistory.length;
-    order.OrderHistory = order.OrderHistory.filter(
-      (history) => history._id.toString() !== orderId
+    // Find the order history entry for the given orderId
+    const customerHistoryIndex = order.OrderHistory.findIndex(
+      (history) => history._id.toString() === orderId
     );
 
-    if (order.OrderHistory.length === initialLength) {
-      // No changes made, meaning the orderId was not found
+    if (customerHistoryIndex === -1) {
       return res.status(404).json({ message: "Order history not found" });
     }
+
+    const historyEntry = order.OrderHistory[customerHistoryIndex];
+
+    // Check if the CustomerId matches
+    if (historyEntry.CustomerId !== CustomerId) {
+      return res.status(403).json({
+        message: "You cannot delete your friend's order. Access denied.",
+      });
+    }
+
+    // Remove the order history entry for the customer
+    const deletedHistory = order.OrderHistory.splice(customerHistoryIndex, 1)[0];
 
     // Recalculate the totalOrderAmount after deleting the entry
     order.totalOrderAmount = order.OrderHistory.reduce(
@@ -220,11 +231,11 @@ export const deleteOrderHistory = async (req, res) => {
     await order.save();
 
     // Emit a socket event to notify clients about the deletion
-    io.emit("orderHistoryRemoved", { adminId, tableId, orderId });
+    io.emit("orderHistoryRemoved", { adminId, tableId, orderId, CustomerId });
 
     return res
       .status(200)
-      .json({ message: "Order history deleted successfully", order });
+      .json({ message: "Order history deleted successfully", deletedHistory, order });
   } catch (error) {
     return res
       .status(500)

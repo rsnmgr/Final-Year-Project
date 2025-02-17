@@ -73,7 +73,7 @@ export default function Sidebar({ setSidebar }) {
                 }`}
                 onClick={() => handleItemClick('/admin/menu/units')}
               >
-                units
+                Units
               </li>
               <li
                 className={`p-3 cursor-pointer ${

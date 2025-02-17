@@ -84,12 +84,13 @@ router.delete('/tables/:AdminId/:tableId', deleteTable);
 
 // Selected Items
 import { addSelectedItems,fetchSelectedItems,deleteSelectedItem,updateItemInstructions,updateItemQuantity,deleteAllSelectedItems } from '../controller/Customer/SelectedItems.js'; // Adjust the path as necessary
-router.post('/add-selected-items', addSelectedItems);
-router.get('/selected-items/:AdminId/:tableId', fetchSelectedItems);
-router.delete('/selected-items/:AdminId/:tableId/:itemId', deleteSelectedItem);
-router.put('/update-item-instructions/:AdminId/:tableId/:itemId', updateItemInstructions);
-router.put('/selected-items/:adminId/:tableId/:itemId/quantity', updateItemQuantity);
-router.delete('/delete-selected-items/:AdminId/:tableId', deleteAllSelectedItems);
+router.post("/add-selected-items", addSelectedItems);
+router.get("/selected-items/:AdminId/:tableId/:CustomerId", fetchSelectedItems);
+router.delete("/selected-items/:AdminId/:tableId/:CustomerId/:itemId", deleteSelectedItem);
+router.put("/update-item-instructions/:AdminId/:tableId/:CustomerId/:itemId", updateItemInstructions);
+router.put("/selected-items/:AdminId/:tableId/:CustomerId/:itemId/quantity", updateItemQuantity);
+router.delete("/delete-selected-items/:AdminId/:tableId/:CustomerId", deleteAllSelectedItems);
+
 
 
 // Order
@@ -101,7 +102,7 @@ router.get('/orders/:AdminId', OrdersTable);
 
 router.delete('/orders/:AdminId/:tableId', deleteOrder);
 router.put('/update-order-status/:adminId/:tableId/:orderId', updateOrderStatus);
-router.delete('/delete-order-id/:adminId/:tableId/:orderId', deleteOrderHistory);
+router.delete('/delete-order-id/:adminId/:tableId/:CustomerId/:orderId', deleteOrderHistory);
 
 
 

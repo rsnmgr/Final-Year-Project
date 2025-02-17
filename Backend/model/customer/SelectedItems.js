@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const selectedItems = new mongoose.Schema({
     AdminId: { type: String, required: true },
     tableId: { type: String, required: true },
+    CustomerId: {type: String, required:true},
     selectedItems: [{
       name: { type: String, required: true },
       category: { type: String },

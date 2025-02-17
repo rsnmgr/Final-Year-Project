@@ -4,6 +4,7 @@ const OrderSchema = new mongoose.Schema({
     AdminId: { type: String, required: true },
     tableId: { type: String, required: true },
     OrderHistory: [{
+        CustomerId : {type:String,rewuire:true},
         Cname:{type:String,require:true},
         Cphone:{type:String,require:true},
         items: [{
