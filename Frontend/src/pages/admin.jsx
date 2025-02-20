@@ -113,24 +113,26 @@ export default function Admin() {
       <div
         className={`rounded-2xl md:rounded-none top-0 left-0 transition-all duration-500 overflow-hidden bg-gray-900 h-screen z-50 ${
           !sidebar
-            ? "-translate-x-full md:translate-x-0 absolute md:relative w-0 md:w-[20vw]"
-            : "translate-x-0 md:-translate-x-full absolute md:relative w-[70%] md:w-0"
+            ? "-translate-x-full lg:translate-x-0 absolute lg:relative w-0 lg:w-[20vw]"
+            : "translate-x-0 lg:-translate-x-full absolute lg:relative w-[70%] lg:w-0"
         }`}
       >
         <Sidebar setSidebar={setSidebar} />
       </div>
       {/* Main Content */}
       <div className="w-full">
-        <div className="p-3 shadow-md border-b border-gray-800">
-          <Header
-            toggleSidebar={toggleSidebar}
-            profileClick={profileClick}
-            profile={profile}
-            title={headerTitle}
-            setSidebar={setSidebar}
-          />
+        <div>
+          <div className="p-3 shadow-md border-b border-gray-800">
+            <Header
+              toggleSidebar={toggleSidebar}
+              profileClick={profileClick}
+              profile={profile}
+              title={headerTitle}
+              setSidebar={setSidebar}
+            />
+          </div>
         </div>
-        <div className="p-3 h-[91vh] overflow-y-auto">
+        <div className="overflow-y-auto">
           {/* Page Routes */}
           <Routes>
             <Route path="dashboard" element={<Dashboard />} />
