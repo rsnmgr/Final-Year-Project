@@ -3,10 +3,8 @@ import mongoose from 'mongoose';
 const OrderSchema = new mongoose.Schema({
     AdminId: { type: String, required: true },
     tableId: { type: String, required: true },
+    CustomerId : {type:String,rewuire:true},
     OrderHistory: [{
-        CustomerId : {type:String,rewuire:true},
-        Cname:{type:String,require:true},
-        Cphone:{type:String,require:true},
         items: [{
             name: { type: String, required: true },
             category: { type: String },
@@ -20,7 +18,7 @@ const OrderSchema = new mongoose.Schema({
         gst: { type: Number, required: true }, // Assuming gst is a percentage
         total: { type: Number, required: true },
         orderDate: { type: Date, default: Date.now },
-        itemsStatus: { type: String, default: "prepare" }
+        itemsStatus: { type: String, default: "pending" }
     }],
     totalOrderAmount: { type: Number, required: true },
     orderStatus: { type: String, default: "Running" },

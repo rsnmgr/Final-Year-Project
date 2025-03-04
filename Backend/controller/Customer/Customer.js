@@ -1,75 +1,27 @@
-import Customer from "../../model/customer/customer.js";
+import Customer from "../../model/customer/Customer.js";
 
 export const addCustomer = async (req, res) => {
-  const { name, phone, adminId, tableId, friendCode } = req.body;
-
-  if (!adminId || !tableId) {
-    return res.status(400).json({ message: "adminId and tableId are required" });
-  }
+  const { name, phone, adminId, tableId } = req.body;
 
   try {
-    // Check if the table is already booked with the same adminId and tableId
-    const bookedTable = await Customer.findOne({ tableId, adminId, status: "booked" });
-
-    if (bookedTable) {
-      // If friendCode matches, create a new user
-      if (friendCode) {
-        if (bookedTable.friendCode === friendCode) {
-          const newFriend = new Customer({
-            name: name || "Friend",
-            phone: phone || "Unknown",
-            adminId,
-            tableId,
-            status: "booked",
-          });
-
-          const token = await newFriend.generateAuthToken();
-
-          return res.status(201).json({
-            message: "Friend successfully added to the table",
-            token,
-          });
-        } else {
-          return res.status(400).json({ message: "Friend code does not match" });
-        }
-      } else {
-        return res.status(400).json({ message: "This table is already booked, you can access it using a friend code" });
-      }
-    }
-
-    // Check if a customer with the same phone number and adminId exists
-    if (phone) {
-      const existingCustomer = await Customer.findOne({ phone, adminId });
-      if (existingCustomer) {
-        return res.status(400).json({
-          message: "Customer with this phone number already exists for this admin",
-        });
-      }
-    }
-
-    // Create a new customer if no existing customer is found
-    const newCustomer = new Customer({
-      name: name || "Unknown",
-      phone: phone || "Unknown",
+    // Directly create a new customer without checking if the phone number exists
+    const customer = new Customer({
+      name,
+      phone,
       adminId,
       tableId,
-      status: "booked",
     });
 
-    const token = await newCustomer.generateAuthToken();
+    await customer.save();
 
-    res.status(201).json({
-      message: "Customer added successfully",
-      token,
-    });
+    // Generate auth token for the new customer
+    const token = await customer.generateAuthToken();
+    res.status(201).json({ customer, token });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error", error });
+    console.error("Error registering customer:", error);
+    res.status(500).json({ message: "Server error during registration" });
   }
 };
-
-
-
 
 export const validCustomer = async (req, res) => {
   try {

@@ -72,7 +72,7 @@ export default function Bill() {
     if (!hideDeleteIcon[orderToDelete]) {
       try {
         const response = await fetch(
-          `${API_URL}/api/delete-order-id/${AdminId}/${tableId}/${CustomerId}/${orderToDelete}`,
+          `${API_URL}/api/delete-order-id/${AdminId}/${tableId}/${orderToDelete}`,
           {
             method: "DELETE",
           }
@@ -111,15 +111,6 @@ export default function Bill() {
                   <div className="flex justify-between items-center">
                     <label>
                       {moment(order.orderDate).format("hh:mm A")}{" "}
-                      <span
-                        className={
-                          order.Cname === customerData?.validUser?.name
-                            ? "text-green-500"
-                            : ""
-                        }
-                      >
-                        ({order.Cname})
-                      </span>
                     </label>
                     <h1
                       className={`underline ${

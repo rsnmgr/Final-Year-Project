@@ -102,8 +102,10 @@ router.get('/orders/:AdminId', OrdersTable);
 
 router.delete('/orders/:AdminId/:tableId', deleteOrder);
 router.put('/update-order-status/:adminId/:tableId/:orderId', updateOrderStatus);
-router.delete('/delete-order-id/:adminId/:tableId/:CustomerId/:orderId', deleteOrderHistory);
+router.delete('/delete-order-id/:adminId/:tableId/:orderId', deleteOrderHistory);
 
-
+// Report
+import {addSalesReport} from '../controller/admin/reports/reports.js';
+router.post('/add-report', addSalesReport);
 
 export default router;

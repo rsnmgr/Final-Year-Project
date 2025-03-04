@@ -18,7 +18,7 @@ export default function Side({setSidebar}) {
           <FaArrowRight  />
         </div>
         <div>
-          <h1>{customerData?.validUser?.friendCode}</h1>
+          <h1></h1>
         </div>
       </div>
       <ul>

@@ -5,12 +5,14 @@ import { CustomerContext } from '../../ContextProvider/CustomerContext';
 import axios from "axios";
 import img from "../../../assets/defaultImg.png"; // Placeholder image
 import io from "socket.io-client";
+import { ToastContainer, toast } from 'react-toastify'; // Import toastify
+import "react-toastify/dist/ReactToastify.css"; // Import toastify styles
 
 const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL);
 
 export default function DisplayMenu({ selectedCategory, searchQuery }) {
-  const {customerData,AdminId, tableId} = useContext(CustomerContext);
+  const { customerData, AdminId, tableId } = useContext(CustomerContext);
   const [products, setProducts] = useState([]);
   const [quantities, setQuantities] = useState({});
   const [instruction, setInstruction] = useState("");
@@ -20,6 +22,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
   const [selectedPrice, setSelectedPrice] = useState(0);
   const [allUnits, setAllUnits] = useState([]); // State to store all units
   const CustomerId = customerData?.validUser?._id;
+
   // Fetch Product Data
   const fetchData = async () => {
     try {
@@ -36,6 +39,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
       setQuantities(initialQuantities);
     } catch (err) {
       console.error("Error fetching products:", err);
+      toast.error("Failed to fetch products"); // Show toast error
     }
   };
 
@@ -47,6 +51,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
       setAllUnits(unitsData); // Store all units
     } catch (error) {
       console.error("Error fetching units.");
+      toast.error("Failed to fetch units"); // Show toast error
     }
   };
 
@@ -111,7 +116,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
       );
 
       if (!selectedUnit) {
-        alert("Please select a valid size.");
+        toast.error("Please select a valid size."); // Show toast error if no size selected
         return;
       }
 
@@ -127,12 +132,15 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
       };
 
       // Add selected item to the cart
-      await axios.post(`${API_URL}/api/add-selected-items`, {
+      const response = await axios.post(`${API_URL}/api/add-selected-items`, {
         AdminId,
         tableId,
         CustomerId,
         selectedItems: [selectedItem],
       });
+
+      // Show toast success message
+      toast.success("Item added to cart successfully!");
 
       // Reset quantities and form after adding the item
       setQuantities((prevQuantities) => ({
@@ -147,7 +155,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
       setSelectedPrice(0);
       setInstruction("");
     } catch (error) {
-      console.error("Error adding selected items:", error);
+      toast.error("Sorry, this table is already booked !"); // Show toast error
     }
   };
 
@@ -269,6 +277,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
           </div>
         </div>
       )}
+      <ToastContainer /> {/* Add ToastContainer to your component */}
     </div>
   );
 }

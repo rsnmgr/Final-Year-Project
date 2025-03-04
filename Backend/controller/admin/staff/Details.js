@@ -19,11 +19,11 @@ export const addDetail = async (req, res) => {
         let detailEntry = await Details.findOne({ AdminId });
 
         if (detailEntry) {
-            detailEntry.products.push({ name, category, address, phone, salary, status, image });
+            detailEntry.details.push({ name, category, address, phone, salary, status, image });
         } else {
             detailEntry = new Details({
                 AdminId,
-                products: [{ name, category, address, phone, salary, status, image }]
+                details: [{ name, category, address, phone, salary, status, image }]
             });
         }
 
@@ -47,7 +47,7 @@ export const getDetails = async (req, res) => {
             return res.status(404).json({ message: 'No details found for this AdminId' });
         }
 
-        res.status(200).json({ details: detailEntry.products });
+        res.status(200).json({ details: detailEntry.details });
     } catch (error) {
         console.error('Error fetching details:', error);
         res.status(500).json({ message: 'Server error' });
@@ -65,7 +65,7 @@ export const getDetailById = async (req, res) => {
             return res.status(404).json({ message: 'Detail not found' });
         }
 
-        const detail = detailEntry.products.id(detailId);
+        const detail = detailEntry.details.id(detailId);
 
         if (!detail) {
             return res.status(404).json({ message: 'Detail not found' });
@@ -91,7 +91,7 @@ export const updateDetail = async (req, res) => {
             return res.status(404).json({ message: 'Detail not found' });
         }
 
-        const detail = detailEntry.products.id(detailId);
+        const detail = detailEntry.details.id(detailId);
 
         if (!detail) {
             return res.status(404).json({ message: 'Detail not found' });
@@ -132,10 +132,10 @@ export const deleteDetail = async (req, res) => {
             return res.status(404).json({ message: 'Detail entry not found' });
         }
 
-        // Remove the detail from the products array
+        // Remove the detail from the details array
         const result = await Details.updateOne(
-            { AdminId, 'products._id': detailId },
-            { $pull: { products: { _id: detailId } } }
+            { AdminId, 'details._id': detailId },
+            { $pull: { details: { _id: detailId } } }
         );
 
         if (result.modifiedCount === 0) {
@@ -143,7 +143,7 @@ export const deleteDetail = async (req, res) => {
         }
 
         // Find the detail document that was removed to check for image deletion
-        const removedDetail = detailEntry.products.id(detailId);
+        const removedDetail = detailEntry.details.id(detailId);
         
         // Delete the detail's image file if it exists
         if (removedDetail && removedDetail.image) {

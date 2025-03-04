@@ -4,8 +4,12 @@ import { IoIosStar } from "react-icons/io";
 import { LoginContext } from '../../../../ContextProvider/Context';
 import axios from "axios";
 import moment from 'moment';
+import { io } from "socket.io-client";
+import { toast, ToastContainer } from "react-toastify"; // ✅ Import ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // ✅ Import CSS
 
 const API_URL = import.meta.env.VITE_API_URL;
+const socket = io(API_URL);
 
 export default function Dinein({ setSelectedTable }) {
   const { loginData } = useContext(LoginContext);
@@ -13,7 +17,8 @@ export default function Dinein({ setSelectedTable }) {
   const [tableData, setTableData] = useState(null);
   const [orderData, setOrderData] = useState({ items: [], totalOrderAmount: 0 });
   const [discount, setDiscount] = useState(0); // Discount percentage
-
+  const [paymentType, setPaymentType] = useState("Cash"); // Define paymentType state
+  const [settlement,setSettlement] = useState(false);
   const tableId = localStorage.getItem("selectedTableId");
 
   useEffect(() => {
@@ -54,20 +59,77 @@ export default function Dinein({ setSelectedTable }) {
       try {
         const response = await axios.get(`${API_URL}/api/tables/${AdminId}/${tableId}`);
         setTableData(response.data);
+
       } catch (error) {
         console.error("Error fetching table data:", error);
       }
     };
 
+
+
     fetchOrderData();
     fetchTableData();
+    // Socket connection
+
+  
+
+    socket.on("orderAdded", fetchOrderData);
+    socket.on("orderUpdated", fetchOrderData);
+    socket.on("orderRemoved", fetchOrderData);
+    socket.on("orderHistoryRemoved", fetchOrderData);
+
+    // Cleanup the socket connection on unmount
+    return () => {
+      socket.off("orderAdded", fetchOrderData);
+      socket.off("orderUpdated", fetchOrderData);
+      socket.off("orderRemoved", fetchOrderData);
+      socket.off("orderHistoryRemoved", fetchOrderData);
+
+    };
   }, [AdminId, tableId]);
+
+
+
+  const addReport = async () => {
+    const totalAfterDiscount = (orderData.totalOrderAmount - (orderData.totalOrderAmount * discount / 100)).toFixed(2);
+
+    const reportData = {
+      adminId: AdminId,
+      tableId,
+      items: orderData.items.map(item => ({
+        name: item.name,
+        size: item.size,
+        quantity: item.quantity,
+        price: item.price
+      })),
+      SubtotalAmmount: orderData.totalOrderAmount,
+      Discount: discount,
+      DiscountAmmount: (orderData.totalOrderAmount * discount) / 100,
+      totalAmmount: totalAfterDiscount,
+      paymentType,
+      status: "paid"
+    };
+
+    try {
+      const response = await axios.post(`${API_URL}/api/add-report`, reportData);
+      const deleteOrder = await axios.delete(`${API_URL}/api/orders/${AdminId}/${tableId}`);
+      toast.success(response.data.message);
+      setSettlement(false);
+      setDiscount(0);
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+      setSettlement(false);
+    }
+  };
+  
 
   // Calculate total after applying percentage discount
   const totalAfterDiscount = (orderData.totalOrderAmount - (orderData.totalOrderAmount * discount / 100)).toFixed(2);
 
   return (
     <div className="relative flex flex-col">
+      <ToastContainer position="top-right" autoClose={3000} />
+
       <div className="flex justify-between items-center border-b border-gray-800 py-1">
         <ul className="flex justify-between items-center">
           <li className="p-2 px-6 border border-gray-700 text-sm cursor-pointer">{tableData?.table?.name || "N/A"}</li>
@@ -149,36 +211,37 @@ export default function Dinein({ setSelectedTable }) {
         </table>
 
         {/* Payment Methods */}
-        <ul className="flex justify-between items-center px-6 py-2 bg-gray-800">
-          <li className="flex items-center space-x-2">
-            <input type="checkbox" />
-            <span>Cash</span>
-          </li>
-          <li className="flex items-center space-x-2">
-            <input type="checkbox" />
-            <span>Card</span>
-          </li>
-          <li className="flex items-center space-x-2">
-            <input type="checkbox" />
-            <span>Due</span>
-          </li>
-          <li className="flex items-center space-x-2">
-            <input type="checkbox" />
-            <span>Other</span>
-          </li>
-          <li className="flex items-center space-x-2">
-            <input type="checkbox" />
-            <span>Part</span>
-          </li>
-        </ul>
+        <div className="flex justify-between items-center px-6 py-2 bg-gray-800">
+          {["Cash", "Card", "Due", "Other"].map((type) => (
+            <label key={type} className="text-white">
+              <input type="radio" value={type} checked={paymentType === type} onChange={() => setPaymentType(type)} /> {type}
+            </label>
+          ))}
+        </div>
         <div className="flex justify-between md:justify-end items-center p-2">
           <button className="md:hidden p-2 px-4 bg-gray-800 text-white" onClick={() => setSelectedTable(null)}>Back</button>
           <div className="space-x-2">
-            <button className="p-2 bg-green-700 text-white">Settlement</button>
+          <button className="p-2 bg-green-700 text-white"  onClick={()=>setSettlement(true)}>Settlement</button>
             <button className="p-2 bg-green-900 text-white">Save & Print</button>
           </div>
         </div>
       </footer>
+
+      {/* Bill Settlement Modal */}
+      {settlement &&(
+      <div className="absolute top-0 left-0 w-full h-full bg-gray-900 bg-opacity-90 flex justify-center items-center z-50">
+        <div className="bg-gray-800 p-8 rounded-lg space-y-4">
+          <div>
+          <h2 className="text-lg font-semibold text-center">Bill Settlement</h2>
+          <p className="text-center text-gray-300">Table: <span className="font-semibold">{tableData?.table?.name || "N/A"}</span></p>
+          </div>
+          <div className="flex justify-center items-center space-x-4">
+            <button className="p-2 rounded-md bg-gray-900 px-6" onClick={()=>setSettlement(false)}>Cancle</button>
+            <button className="p-2 rounded-md bg-green-900 px-3" onClick={addReport}>Settlement</button>
+          </div>
+        </div>
+      </div>
+      )}
     </div>
   );
 }

@@ -9,37 +9,11 @@ export default function Info() {
 
   // State for form data
   const [formData, setFormData] = useState({ name: '', phone: '' });
-  const [friendCode, setFriendCode] = useState(["", "", "", ""]);
-  const [isFriendOpen, setFriendOpen] = useState(false);
-  const [friendName, setFriendName] = useState('');
 
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // Handle friend code input with auto-focus
-  const handleFriendCodeChange = (e, index) => {
-    const value = e.target.value;
-
-    if (/^\d?$/.test(value)) {
-      const newFriendCode = [...friendCode];
-      newFriendCode[index] = value;
-      setFriendCode(newFriendCode);
-
-      // Move focus to the next input if not empty and not the last input
-      if (value && index < friendCode.length - 1) {
-        document.getElementById(`friendCode-${index + 1}`).focus();
-      }
-    }
-  };
-
-  // Handle backspace to move to the previous input
-  const handleFriendCodeKeyDown = (e, index) => {
-    if (e.key === 'Backspace' && !friendCode[index] && index > 0) {
-      document.getElementById(`friendCode-${index - 1}`).focus();
-    }
   };
 
   // Handle form submission
@@ -97,41 +71,6 @@ export default function Info() {
       console.error('Error adding customer:', error);
       alert('An error occurred. Please try again.');
     }
-  };
-
-  // Handle Friend Code Submission
-  const handleFriendSubmit = async (e) => {
-    e.preventDefault();
-    if (!friendName) {
-      alert('Please enter your name.');
-      return;
-    }
-    const friendCodeStr = friendCode.join("");
-    try {
-      const response = await fetch(`${API_URL}/api/add-customer`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          adminId: AdminId,
-          tableId: tableId,
-          friendCode: friendCodeStr,
-          name: friendName
-        })
-      });
-
-      const data = await response.json();
-      if (response.ok && data.token) {
-        localStorage.setItem('customerToken', data.token);
-        alert('Friend successfully added to the table!');
-        navigate('/menu');
-      } else {
-        alert(data.message || 'Failed to add friend.');
-      }
-    } catch (error) {
-      console.error('Error adding friend:', error);
-      alert('An error occurred. Please try again.');
-    }
-    setFriendOpen(false);
   };
 
   const customer = async () => {
@@ -201,9 +140,6 @@ export default function Info() {
           </button>
 
           <div className='flex justify-between items-center'>
-            <div onClick={() => setFriendOpen(true)} className='cursor-pointer'>
-              <p>Friend Code</p>
-            </div>
             <span
               className='flex justify-between items-center underline cursor-pointer mt-2'
               onClick={handleSkip}
@@ -214,48 +150,6 @@ export default function Info() {
           </div>
         </div>
       </form>
-
-      {/* Friend Code Modal */}
-      {isFriendOpen && (
-        <div className='fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 p-2'>
-          <form onSubmit={handleFriendSubmit} className='p-6 bg-gray-950 md:w-1/4 space-y-4 border border-gray-700'>
-            <h1 className='text-center text-lg'>Enter Your Friend Code</h1>
-            <div>
-              <input
-                type="text"
-                className='py-2 bg-gray-950 border-b border-gray-800 outline-none w-full'
-                placeholder='Enter Your Name'
-                required
-                value={friendName}
-                onChange={(e) => setFriendName(e.target.value)}
-              />
-            </div>
-            <div className='grid grid-cols-4 gap-4'>
-              {friendCode.map((code, index) => (
-                <input
-                  key={index}
-                  id={`friendCode-${index}`}
-                  type="text"
-                  maxLength={1}
-                  value={code}
-                  onChange={(e) => handleFriendCodeChange(e, index)}
-                  onKeyDown={(e) => handleFriendCodeKeyDown(e, index)}
-                  className='p-2 bg-gray-950 border border-gray-800 outline-none text-center rounded-md'
-                  required
-                />
-              ))}
-            </div>
-            <div className='grid grid-cols-2 gap-4'>
-              <button type="button" className='p-2 bg-gray-800 w-full' onClick={() => setFriendOpen(false)}>
-                Cancel
-              </button>
-              <button type="submit" className='p-2 bg-green-800 w-full'>
-                Submit
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
     </div>
   );
 }

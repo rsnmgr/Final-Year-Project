@@ -15,7 +15,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL);
 
 export default function Bag() {
-  const {customerData,AdminId, tableId,Cname,Cphone} = useContext(CustomerContext);
+  const {customerData,AdminId, tableId} = useContext(CustomerContext);
   const [selectedItems, setSelectedItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [subtotal, setSubtotal] = useState(0);
@@ -133,8 +133,6 @@ export default function Bag() {
         AdminId,
         tableId,
         CustomerId,
-        Cname,
-        Cphone,
         items: selectedItems,
         subtotal,
         gst,

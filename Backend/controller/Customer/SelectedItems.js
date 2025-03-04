@@ -1,15 +1,30 @@
 import SelectedItems from "../../model/customer/SelectedItems.js"; // Adjust the path as necessary
+import Order from "../../model/customer/AddOrder.js";
 import { io } from "../../server.js";
-
 
 // Add or update selected items
 export const addSelectedItems = async (req, res) => {
   try {
     const { AdminId, tableId, CustomerId, selectedItems } = req.body;
 
+    // Check if the table is already booked (an order already exists)
+    const existingOrder = await Order.findOne({ AdminId, tableId });
+    
+    // If an order exists, check if the CustomerId matches the one in the OrderHistory
+    if (existingOrder) {
+      const customerOrder = existingOrder.CustomerId === CustomerId;
+
+      if (!customerOrder) {
+        // If the CustomerId does not match any existing orders for this table
+        return res.status(400).json({ message: "Sorry, this table is already booked by another customer, we can't process ahead." });
+      }
+    }
+
+    // Find the existing selected items for the customer
     let selectedItemsEntry = await SelectedItems.findOne({ AdminId, tableId, CustomerId });
 
     if (selectedItemsEntry) {
+      // Update the quantities or add new items
       selectedItems.forEach((newItem) => {
         const existingItem = selectedItemsEntry.selectedItems.find(
           (item) => item.name === newItem.name && item.size === newItem.size
@@ -22,6 +37,7 @@ export const addSelectedItems = async (req, res) => {
         }
       });
     } else {
+      // Create a new selected items entry if it doesn't exist
       selectedItemsEntry = new SelectedItems({
         AdminId,
         tableId,
@@ -30,7 +46,10 @@ export const addSelectedItems = async (req, res) => {
       });
     }
 
+    // Save the selected items entry
     await selectedItemsEntry.save();
+
+    // Emit the "ItemsAdded" event to notify the front end
     io.emit("ItemsAdded", selectedItemsEntry);
 
     res.status(201).json({
@@ -38,10 +57,12 @@ export const addSelectedItems = async (req, res) => {
       selectedItemsEntry,
     });
   } catch (error) {
-    console.error("Error adding selected items:", error);
-    res.status(500).json({ message: "Server error" });
+    // console.error("Error adding selected items:", error);
+    // res.status(500).json({ message: "Server error" });
   }
 };
+
+
 
 // Fetch selected items
 export const fetchSelectedItems = async (req, res) => {
@@ -65,8 +86,8 @@ export const fetchSelectedItems = async (req, res) => {
       selectedItemsEntry,
     });
   } catch (error) {
-    console.error("Error fetching selected items:", error);
-    res.status(500).json({ message: "Server error" });
+    // console.error("Error fetching selected items:", error);
+    // res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -93,8 +114,8 @@ export const deleteSelectedItem = async (req, res) => {
       selectedItemsEntry,
     });
   } catch (error) {
-    console.error("Error deleting selected item:", error);
-    res.status(500).json({ message: "Server error" });
+    // console.error("Error deleting selected item:", error);
+    // res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -123,8 +144,8 @@ export const updateItemInstructions = async (req, res) => {
       res.status(404).json({ message: "Item not found" });
     }
   } catch (error) {
-    console.error("Error updating item instructions:", error);
-    res.status(500).json({ message: "Server error" });
+    // console.error("Error updating item instructions:", error);
+    // res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -154,8 +175,8 @@ export const updateItemQuantity = async (req, res) => {
       selectedItemsEntry,
     });
   } catch (error) {
-    console.error("Error updating item quantity:", error);
-    res.status(500).json({ message: "Server error" });
+    // console.error("Error updating item quantity:", error);
+    // res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -164,26 +185,24 @@ export const deleteAllSelectedItems = async (req, res) => {
   try {
     const { AdminId, tableId, CustomerId } = req.params;
 
-    const selectedItemsEntry = await SelectedItems.findOne({
+    const deletedEntry = await SelectedItems.findOneAndDelete({
       AdminId,
       tableId,
       CustomerId,
     });
 
-    if (!selectedItemsEntry) {
+    if (!deletedEntry) {
       return res.status(404).json({ message: "No selected items found." });
     }
 
-    selectedItemsEntry.selectedItems = [];
-    await selectedItemsEntry.save();
-    io.emit("ItemsDeletedAll", selectedItemsEntry);
+    io.emit("ItemsDeletedAll", { AdminId, tableId, CustomerId });
 
     res.status(200).json({
-      message: "All selected items deleted successfully",
-      selectedItemsEntry,
+      message: "Selected items collection deleted successfully",
+      deletedEntry,
     });
   } catch (error) {
-    console.error("Error deleting all selected items:", error);
+    console.error("Error deleting selected items collection:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

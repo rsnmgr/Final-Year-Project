@@ -18,7 +18,7 @@ export function CustomerContextProvider({ children }) {
         const response = await axios.get(`${API_URL}/api/tables/${AdminId}/${tableId}`);
         setTableData(response.data); // Update the state with fetched data
       } catch (error) {
-        console.error("Error fetching table data:", error);
+        // console.error("Error fetching table data:", error);
       }
     };
 

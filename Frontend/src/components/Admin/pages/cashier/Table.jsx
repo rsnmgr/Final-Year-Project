@@ -67,14 +67,34 @@ export default function Table({ onTableSelect }) {
       );
     };
 
+    const handleOrderHistoryRemoved = (removedData) => {
+      // Update orders when order history is removed
+      setOrders(prevOrders => {
+        return prevOrders.map(order => {
+          if (order.tableId === removedData.tableId) {
+            const updatedHistory = order.OrderHistory.filter(history => history._id !== removedData.orderId);
+            
+            // Recalculate the totalOrderAmount after removal
+            const newTotalAmount = updatedHistory.reduce((acc, history) => acc + history.total, 0);
+            return { ...order, OrderHistory: updatedHistory, totalOrderAmount: newTotalAmount };
+          }
+          return order;
+        });
+      });
+    };
+
     socket.on('orderAdded', handleOrderAdded);
     socket.on('orderRemoved', handleOrderRemoved);
+    socket.on('orderHistoryRemoved', handleOrderHistoryRemoved); // Listen for order history removal
 
     return () => {
       socket.off('orderAdded', handleOrderAdded);
       socket.off('orderRemoved', handleOrderRemoved);
+      socket.off('orderHistoryRemoved', handleOrderHistoryRemoved); // Cleanup the socket listener
     };
   }, [AdminId]);
+
+
 
   // Get table details based on its current order status
   const getTableDetails = (tableId) => {
