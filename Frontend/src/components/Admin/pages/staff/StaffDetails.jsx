@@ -18,6 +18,8 @@ export default function StaffDetails() {
   const [selectedImage, setSelectedImage] = useState(image);
   const [formData, setFormData] = useState({
     name: '',
+    email: '',
+    password: '',
     category: '', // Initially empty
     address: '',
     phone: '',
@@ -68,6 +70,8 @@ export default function StaffDetails() {
     if (detail) {
       setFormData({
         name: detail.name,
+        email: detail.email,
+        password: detail.password,
         category: detail.category || '', // Ensure it's set correctly
         address: detail.address,
         phone: detail.phone,
@@ -79,6 +83,8 @@ export default function StaffDetails() {
     } else {
       setFormData({
         name: '',
+        email: '',
+        password: '',
         category: categories.length > 0 ? categories[0].name : '', // Default to first category
         address: '',
         phone: '',
@@ -131,35 +137,35 @@ export default function StaffDetails() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
-    
+  
     // Append form data
     Object.keys(formData).forEach(key => data.append(key, formData[key]));
-    
+  
     // Append image if available
     if (fileInputRef.current.files[0]) {
       data.append('image', fileInputRef.current.files[0]);
     }
   
-    // Append AdminId to form data
-    data.append('AdminId', AdminId);
-    
+    data.append('AdminId', AdminId); // Make sure AdminId is set correctly
+  
+    console.log("Submitting data:", Object.fromEntries(data.entries())); // Debugging
+  
     try {
       if (selectedDetail) {
-        // Update existing detail
         await axios.put(`${API_URL}/api/details/${AdminId}/${selectedDetail._id}`, data);
         toast.success('Detail updated successfully.');
       } else {
-        // Add new detail
         await axios.post(`${API_URL}/api/details`, data);
         toast.success('Detail added successfully.');
       }
-      fetchDetails(); // Refresh detail list
-      handleToggleModal(); // Close modal
+      fetchDetails();
+      handleToggleModal();
     } catch (error) {
-      console.error('Error submitting detail:', error);
+      console.error("Error submitting detail:", error.response?.data || error.message);
       toast.error('Error submitting detail.');
     }
   };
+  
 
   useEffect(() => {
     return () => {
@@ -197,7 +203,7 @@ export default function StaffDetails() {
         <table className="min-w-full divide-y divide-gray-200 bg-white">
           <thead className="bg-gray-700 sticky top-0 z-10">
             <tr>
-              {['SN', 'Name', 'Position', 'Address', 'Phone', 'Salary', 'Image', 'Status', 'Actions'].map((header) => (
+              {['SN', 'Name','Email', 'Position', 'Address', 'Phone', 'Salary', 'Image', 'Status', 'Actions'].map((header) => (
                 <th
                   key={header}
                   className="px-6 py-3 text-center text-sm font-medium uppercase tracking-wider text-gray-100"
@@ -213,6 +219,7 @@ export default function StaffDetails() {
                 <tr key={detail._id} className="text-slate-200">
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{index + 1}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{detail.name}</td>
+                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{detail.email}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{detail.category}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{detail.address}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">${detail.phone}</td>
@@ -241,7 +248,7 @@ export default function StaffDetails() {
               ))
             ) : (
               <tr>
-                <td colSpan="9" className="px-6 py-4 text-center text-sm text-gray-100">No data found</td>
+                <td colSpan="10" className="px-6 py-4 text-center text-sm text-gray-100">No data found</td>
               </tr>
             )}
           </tbody>
@@ -265,7 +272,7 @@ export default function StaffDetails() {
             <form className='mt-4' onSubmit={handleSubmit}>
               <div className='grid md:grid-cols-2 gap-4'>
                 <div className='space-y-1'>
-                  {['name', 'address', 'phone', 'salary'].map((field) => (
+                  {['name','email','password', 'address', 'phone', 'salary'].map((field) => (
                     <div key={field} className='relative'>
                       <label className='block text-sm font-medium text-white mb-1 capitalize'>
                         {field} <span className='text-red-500'> *</span>

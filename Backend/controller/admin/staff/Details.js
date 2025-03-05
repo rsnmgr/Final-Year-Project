@@ -1,37 +1,41 @@
 import fs from 'fs';
 import path from 'path';
-import Details from '../../../model/admin/staff/Details.js'; // Adjust the import path accordingly
+import Details from '../../../model/admin/staff/Details.js';
 
-// Helper function to delete a file
+// Helper function to delete a file safely
 const deleteImageFile = (filePath) => {
-    fs.unlink(filePath, (err) => {
-        if (err) {
-            console.error("Error deleting image:", err);
-        }
-    });
+    if (filePath && fs.existsSync(filePath)) {
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error("Error deleting image:", err);
+            }
+        });
+    }
 };
 
-// Add a new product (Staff detail)
+// Add a new staff detail
 export const addDetail = async (req, res) => {
     try {
-        const { AdminId, name, category, address, phone, salary, status } = req.body;
+        const { AdminId, name, email, category, address, phone, salary, status, password } = req.body;
         const image = req.file ? req.file.path : null;
-        let detailEntry = await Details.findOne({ AdminId });
-
-        if (detailEntry) {
-            detailEntry.details.push({ name, category, address, phone, salary, status, image });
-        } else {
-            detailEntry = new Details({
-                AdminId,
-                details: [{ name, category, address, phone, salary, status, image }]
-            });
-        }
+        let detailEntry = new Details({
+            AdminId,
+            name,
+            email,
+            category,
+            address,
+            phone,
+            salary,
+            status,
+            image,
+            password
+        });
 
         await detailEntry.save();
+        res.status(201).json({ message: 'Staff detail added successfully', detailEntry });
 
-        res.status(200).json({ message: 'Detail added successfully', detailEntry });
     } catch (error) {
-        console.error('Error adding detail:', error);
+        console.error('Error adding staff detail:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
@@ -40,119 +44,93 @@ export const addDetail = async (req, res) => {
 export const getDetails = async (req, res) => {
     try {
         const { AdminId } = req.params;
+        const details = await Details.find({ AdminId });
 
-        const detailEntry = await Details.findOne({ AdminId });
-
-        if (!detailEntry) {
-            return res.status(404).json({ message: 'No details found for this AdminId' });
+        if (!details.length) {
+            return res.status(404).json({ message: 'No staff details found for this AdminId' });
         }
 
-        res.status(200).json({ details: detailEntry.details });
+        res.status(200).json({ details });
     } catch (error) {
-        console.error('Error fetching details:', error);
+        console.error('Error fetching staff details:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
-// Fetch a specific detail by its ID
+// Fetch a specific staff detail by ID
 export const getDetailById = async (req, res) => {
     try {
         const { AdminId, detailId } = req.params;
-
-        const detailEntry = await Details.findOne({ AdminId });
-
-        if (!detailEntry) {
-            return res.status(404).json({ message: 'Detail not found' });
-        }
-
-        const detail = detailEntry.details.id(detailId);
+        const detail = await Details.findOne({ _id: detailId, AdminId });
 
         if (!detail) {
-            return res.status(404).json({ message: 'Detail not found' });
+            return res.status(404).json({ message: 'Staff detail not found' });
         }
 
         res.status(200).json({ detail });
     } catch (error) {
-        console.error('Error fetching detail:', error);
+        console.error('Error fetching staff detail:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
-// Update a specific detail
+// Update a specific staff detail
 export const updateDetail = async (req, res) => {
     try {
         const { AdminId, detailId } = req.params;
-        const { name, category, address, phone, salary, status } = req.body;
+        const { name, email, category, address, phone, salary, status, password } = req.body;
         const newImage = req.file ? req.file.path : null;
 
-        const detailEntry = await Details.findOne({ AdminId });
-
-        if (!detailEntry) {
-            return res.status(404).json({ message: 'Detail not found' });
-        }
-
-        const detail = detailEntry.details.id(detailId);
+        const detail = await Details.findOne({ _id: detailId, AdminId });
 
         if (!detail) {
-            return res.status(404).json({ message: 'Detail not found' });
+            return res.status(404).json({ message: 'Staff detail not found' });
         }
 
-        // If there is a new image, delete the old one
+        // Delete the old image if a new one is uploaded
         if (newImage && detail.image) {
             deleteImageFile(detail.image);
         }
 
-        // Update the detail fields
+        // Update fields
         detail.name = name || detail.name;
+        detail.email = email || detail.email;
         detail.category = category || detail.category;
         detail.address = address || detail.address;
         detail.phone = phone || detail.phone;
         detail.salary = salary || detail.salary;
         detail.status = status || detail.status;
         detail.image = newImage || detail.image;
+        if (password) detail.password = password; // Hashing handled in schema
 
-        await detailEntry.save();
+        await detail.save();
 
-        res.status(200).json({ message: 'Detail updated successfully', detail });
+        res.status(200).json({ message: 'Staff detail updated successfully', detail });
     } catch (error) {
-        console.error('Error updating detail:', error);
+        console.error('Error updating staff detail:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
-// Delete a specific detail
+// Delete a specific staff detail
 export const deleteDetail = async (req, res) => {
     try {
         const { AdminId, detailId } = req.params;
 
-        // Find the detail entry for the given AdminId
-        const detailEntry = await Details.findOne({ AdminId });
+        const detail = await Details.findOneAndDelete({ _id: detailId, AdminId });
 
-        if (!detailEntry) {
-            return res.status(404).json({ message: 'Detail entry not found' });
+        if (!detail) {
+            return res.status(404).json({ message: 'Staff detail not found' });
         }
 
-        // Remove the detail from the details array
-        const result = await Details.updateOne(
-            { AdminId, 'details._id': detailId },
-            { $pull: { details: { _id: detailId } } }
-        );
-
-        if (result.modifiedCount === 0) {
-            return res.status(404).json({ message: 'Detail not found' });
+        // Delete the associated image file
+        if (detail.image) {
+            deleteImageFile(detail.image);
         }
 
-        // Find the detail document that was removed to check for image deletion
-        const removedDetail = detailEntry.details.id(detailId);
-        
-        // Delete the detail's image file if it exists
-        if (removedDetail && removedDetail.image) {
-            deleteImageFile(removedDetail.image);
-        }
-
-        res.status(200).json({ message: 'Detail deleted successfully' });
+        res.status(200).json({ message: 'Staff detail deleted successfully' });
     } catch (error) {
-        console.error('Error deleting detail:', error);
+        console.error('Error deleting staff detail:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };

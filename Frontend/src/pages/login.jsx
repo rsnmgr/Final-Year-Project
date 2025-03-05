@@ -32,7 +32,7 @@ export default function Login() {
     // Display message with Toastify
     if (res.status === 201) {
       localStorage.setItem("TokenFoodMe", res.result.token);
-      if (res.result.userValid.role === "admin") {
+      if (res.result.userValid.role === "admin" || res.result.userValid.role === "staff") {
         navigate('/admin');
       } else if (res.result.userValid.role === "super") {
         navigate('/super');

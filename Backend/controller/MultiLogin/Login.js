@@ -1,6 +1,7 @@
 import User from '../../model/Online/userSchema.js';
 import Admin from '../../model/UserModel/Admin.js';
 import Super from '../../model/UserModel/Super.js';
+import Staff from '../../model/admin/staff/Details.js';
 import bcryptjs from 'bcryptjs';
 export const login = async (req, res) => {
     const { email, password } = req.body;
@@ -24,6 +25,11 @@ export const login = async (req, res) => {
             // If not found in Admin, check Super model
             userValid = await Super.findOne({ email: email });
             role = 'super'; // Change role if found in Super model
+        }
+        if (!userValid) {
+            // If not found in Super, check Staff model
+            userValid = await Staff.findOne({ email: email });
+            role = 'staff'; // Change role if found in Staff model
         }
 
         // If user is found in any model

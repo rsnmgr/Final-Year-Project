@@ -3,6 +3,7 @@ import Admin from "../model/UserModel/Admin.js";
 import Super from '../model/UserModel/Super.js';
 import Online from "../model/Online/userSchema.js";
 import Customer from "../model/customer/Customer.js";
+import Staff from "../model/admin/staff/Details.js";
 const keySecret = 'ldjfjaojorejoojfoajoejrfoaoohahojoehojohahojfoaohahojoeoohohohoh';
 
 export const authenticate = async (req, res, next) => {
@@ -27,6 +28,8 @@ export const authenticate = async (req, res, next) => {
         }
         else if ((rootUser = await Customer.findOne({ _id: verifytoken._id }))) {
             req.userRole = "Customer";
+        }else if ((rootUser = await Staff.findOne({ _id: verifytoken._id }))) {
+            req.userRole = "Staff";
         }
 
         // If the user isn't found in any schema, throw an error
