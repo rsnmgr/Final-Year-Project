@@ -110,7 +110,7 @@ export default function Table({ onTableSelect }) {
     if (tableOrder) {
       totalOrderAmount = tableOrder.totalOrderAmount;
       if (tableOrder.orderStatus === 'Running') {
-        statusClass = 'bg-green-800';
+        statusClass = 'bg-red-800';
       }
     }
 
@@ -133,7 +133,7 @@ export default function Table({ onTableSelect }) {
         <ul className='flex items-center'>
           <li className='bg-gray-500 p-1.5 rounded-full mr-2'></li>
           <li className='mr-4'>Blank</li>
-          <li className='bg-green-500 p-1.5 rounded-full mr-2'></li>
+          <li className='bg-red-800 p-1.5 rounded-full mr-2'></li>
           <li>Running</li>
         </ul>
       </div>

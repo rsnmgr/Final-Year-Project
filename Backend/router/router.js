@@ -94,7 +94,7 @@ router.delete("/delete-selected-items/:AdminId/:tableId/:CustomerId", deleteAllS
 
 
 // Order
-import { addOrder, fetchOrders,fetchOrdersByAdminId,deleteOrder,updateOrderStatus,OrdersTable,deleteOrderHistory} from '../controller/Customer/AddOrder.js'; // Adjust the path as necessary
+import { addOrder, fetchOrders,fetchOrdersByAdminId,deleteOrder,updateOrderStatus,OrdersTable,deleteOrderHistory,editOrderItem,deleteOrderItem} from '../controller/Customer/AddOrder.js'; // Adjust the path as necessary
 router.post('/add-order', addOrder);
 router.get('/fetch-orders/:AdminId/:tableId', fetchOrders);
 router.get('/fetch-orders/:AdminId', fetchOrdersByAdminId);
@@ -103,6 +103,9 @@ router.get('/orders/:AdminId', OrdersTable);
 router.delete('/orders/:AdminId/:tableId', deleteOrder);
 router.put('/update-order-status/:adminId/:tableId/:orderId', updateOrderStatus);
 router.delete('/delete-order-id/:adminId/:tableId/:orderId', deleteOrderHistory);
+
+router.put("/order/item/edit/:adminId/:tableId/:orderHistoryId/:itemId", editOrderItem);
+router.delete("/order/item/delete/:adminId/:tableId/:orderHistoryId/:itemId", deleteOrderItem);
 
 // Report
 import {addSalesReport} from '../controller/admin/reports/reports.js';

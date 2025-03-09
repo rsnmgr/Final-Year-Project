@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { CustomerContext } from "../../ContextProvider/CustomerContext";
 import moment from "moment";
 import { MdOutlineAutoDelete } from "react-icons/md";
+import { BiEdit } from "react-icons/bi";
+
 import io from "socket.io-client";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -15,8 +17,7 @@ export default function Bill() {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [deleteOrderForm, setDeleteOrderForm] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState(null);
-  const [hideDeleteIcon, setHideDeleteIcon] = useState({}); // To track which order's delete icon should be hidden
-  const CustomerId = customerData?.validUser?._id;
+  
   const fetchOrders = async () => {
     try {
       const response = await fetch(
@@ -42,50 +43,26 @@ export default function Bill() {
     };
   }, []);
 
-  useEffect(() => {
-    const newHideDeleteIcon = {};
-    const currentTime = Date.now(); // Current time in milliseconds
-
-    orders.forEach((order) => {
-      const orderDate = moment(order.orderDate).valueOf(); // Convert orderDate to a timestamp
-      const hideTime = orderDate + 60000; // Add 60 seconds to the order date
-
-      // If current time is greater than or equal to the hide time, hide the delete icon
-      if (currentTime >= hideTime) {
-        newHideDeleteIcon[order._id] = true;
-      } else {
-        newHideDeleteIcon[order._id] = false;
-        // Set timeout for orders that are still within the 1-minute window
-        const timeout = setTimeout(() => {
-          setHideDeleteIcon((prev) => ({ ...prev, [order._id]: true }));
-        }, hideTime - currentTime);
-        // Cleanup timeout on component unmount or when orders change
-        return () => clearTimeout(timeout);
-      }
-    });
-
-    setHideDeleteIcon(newHideDeleteIcon); // Update the state
-  }, [orders]);
-
   const handleDelete = async () => {
-    // Prevent deletion if the delete icon is hidden
-    if (!hideDeleteIcon[orderToDelete]) {
-      try {
-        const response = await fetch(
-          `${API_URL}/api/delete-order-id/${AdminId}/${tableId}/${orderToDelete}`,
-          {
-            method: "DELETE",
-          }
-        );
-        if (response.ok) {
-          setDeleteOrderForm(false);
-          fetchOrders();
+    if (!orderToDelete) return;
+    const order = orders.find((o) => o._id === orderToDelete);
+    if (order?.itemsStatus !== "pending") {
+      console.log("Order cannot be deleted as it is already accepted.");
+      return;
+    }
+    try {
+      const response = await fetch(
+        `${API_URL}/api/delete-order-id/${AdminId}/${tableId}/${orderToDelete}`,
+        {
+          method: "DELETE",
         }
-      } catch (error) {
-        console.error("Error deleting order:", error);
+      );
+      if (response.ok) {
+        setDeleteOrderForm(false);
+        fetchOrders();
       }
-    } else {
-      console.log("Order cannot be deleted as time has expired.");
+    } catch (error) {
+      console.error("Error deleting order:", error);
     }
   };
 
@@ -110,7 +87,7 @@ export default function Bill() {
                 <div className="text-xs">
                   <div className="flex justify-between items-center">
                     <label>
-                      {moment(order.orderDate).format("hh:mm A")}{" "}
+                      {moment(order.orderDate).format("hh:mm A")} 
                     </label>
                     <h1
                       className={`underline ${
@@ -128,10 +105,10 @@ export default function Bill() {
                 <div>${order.total}</div>
               </div>
 
-              {/* Show the delete icon if it's not hidden */}
-              {!hideDeleteIcon[order._id] && (
+              {/* Show the delete icon only if status is pending */}
+              {order.itemsStatus === "pending" && (
                 <div
-                  className="absolute top-0 right-0 h-full flex justify-center items-center text-red-700 cursor-pointer"
+                  className="absolute top-0 right-0 h-auto flex justify-center items-center text-red-700 cursor-pointer"
                   onClick={() => {
                     setDeleteOrderForm(true);
                     setOrderToDelete(order._id);
@@ -157,6 +134,10 @@ export default function Bill() {
                         </span>
                         <span>
                           {item.quantity} x ${item.price}
+                        </span>
+                        <span className="flex gap-2">
+                          <BiEdit size={20} className="text-green-600 cursor-pointer"/>
+                          <MdOutlineAutoDelete size={20} className="text-red-600 cursor-pointer"/>
                         </span>
                       </li>
                     ))}
@@ -192,7 +173,7 @@ export default function Bill() {
               <button
                 className="bg-red-500 text-white px-4 py-2 rounded"
                 onClick={handleDelete}
-                disabled={hideDeleteIcon[orderToDelete]} // Disable delete if the icon is hidden
+                disabled={orders.find((o) => o._id === orderToDelete)?.itemsStatus !== "pending"}
               >
                 Delete
               </button>

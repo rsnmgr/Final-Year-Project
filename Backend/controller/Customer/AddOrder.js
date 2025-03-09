@@ -75,36 +75,13 @@ export const fetchOrdersByAdminId = async (req, res) => {
         .json({ message: "No orders found for this AdminId" });
     }
 
-    // Step 2: Iterate over orders and filter each OrderHistory by itemsStatus 'prepare'
-    const filteredOrders = orders
-      .map((order) => {
-        const filteredHistory = order.OrderHistory.filter(
-          (history) => history.itemsStatus === "prepare"
-        );
-
-        // Step 3: Only return orders where there are items with 'prepare' status
-        if (filteredHistory.length > 0) {
-          return {
-            ...order._doc, // Spread the order details
-            OrderHistory: filteredHistory, // Replace the OrderHistory with filtered results
-          };
-        }
-        return null;
-      })
-      .filter((order) => order !== null); // Remove null orders where no items are 'prepare'
-
-    // Step 4: Respond with filtered orders
-    if (filteredOrders.length === 0) {
-      return res
-        .status(404)
-        .json({ message: 'No orders with itemsStatus "prepare" found' });
-    }
-
-    return res.status(200).json({ orders: filteredOrders });
+    // Step 2: Simply return all the orders, without filtering by itemsStatus
+    return res.status(200).json({ orders });
   } catch (error) {
     return res.status(500).json({ message: "Error fetching orders", error });
   }
 };
+
 
 export const OrdersTable = async (req, res) => {
   try {
@@ -228,5 +205,103 @@ export const deleteOrderHistory = async (req, res) => {
     return res
       .status(500)
       .json({ message: "Error deleting order history", error });
+  }
+};
+
+
+
+
+export const editOrderItem = async (req, res) => {
+  try {
+    const { adminId, tableId, orderHistoryId, itemId } = req.params;
+    const updatedItem = req.body; // The new item details
+
+    // Find the order
+    const order = await Order.findOne({ AdminId: adminId, tableId: tableId });
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Find the specific order history entry
+    const orderHistory = order.OrderHistory.find(
+      (history) => history._id.toString() === orderHistoryId
+    );
+
+    if (!orderHistory) {
+      return res.status(404).json({ message: "Order history not found" });
+    }
+
+    // Find the item inside the order history
+    const item = orderHistory.items.find((item) => item._id.toString() === itemId);
+
+    if (!item) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    // Update the item's properties
+    Object.assign(item, updatedItem);
+
+    // Recalculate subtotal, gst, and total
+    orderHistory.subtotal = orderHistory.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    orderHistory.total = orderHistory.subtotal + orderHistory.gst;
+
+    // Update totalOrderAmount
+    order.totalOrderAmount = order.OrderHistory.reduce((sum, history) => sum + history.total, 0);
+
+    // Save changes
+    await order.save();
+
+    io.emit("orderItemUpdated", { adminId, tableId, orderHistoryId, itemId });
+
+    res.status(200).json({ message: "Order item updated successfully", order });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating order item", error });
+  }
+};
+
+export const deleteOrderItem = async (req, res) => {
+  try {
+    const { adminId, tableId, orderHistoryId, itemId } = req.params;
+
+    // Find the order
+    const order = await Order.findOne({ AdminId: adminId, tableId: tableId });
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Find the specific order history entry
+    const orderHistory = order.OrderHistory.find(
+      (history) => history._id.toString() === orderHistoryId
+    );
+
+    if (!orderHistory) {
+      return res.status(404).json({ message: "Order history not found" });
+    }
+
+    // Filter out the item from the order history's items array
+    const initialLength = orderHistory.items.length;
+    orderHistory.items = orderHistory.items.filter((item) => item._id.toString() !== itemId);
+
+    if (orderHistory.items.length === initialLength) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    // Recalculate subtotal, gst, and total
+    orderHistory.subtotal = orderHistory.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    orderHistory.total = orderHistory.subtotal + orderHistory.gst;
+
+    // Update totalOrderAmount
+    order.totalOrderAmount = order.OrderHistory.reduce((sum, history) => sum + history.total, 0);
+
+    // Save changes
+    await order.save();
+
+    io.emit("orderItemRemoved", { adminId, tableId, orderHistoryId, itemId });
+
+    res.status(200).json({ message: "Order item deleted successfully", order });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting order item", error });
   }
 };
