@@ -129,6 +129,7 @@ export default function Admin() {
               profile={profile}
               title={headerTitle}
               setSidebar={setSidebar}
+              setProfile={setProfile}
             />
           </div>
         </div>
