@@ -176,12 +176,15 @@ export default function Bag() {
     }, []);
 
   return (
-    <div className="bg-gray-900">
-      <header className="grid grid-cols-3 p-2  shadow-xl">
-        <IoIosArrowUp
-          className="transform rotate-[-90deg] w-6 h-6 cursor-pointer"
-          onClick={() => navigate(`/menu`)}
-        />
+    <div >
+      <header className="flex justify-between items-center p-2  shadow-xl">
+        <div className="flex items-center">
+          <IoIosArrowUp
+            className="transform rotate-[-90deg] w-6 h-6 cursor-pointer"
+            onClick={() => navigate(`/menu`)}
+          />
+          <span>Back</span>
+        </div>
         <div className="flex items-center">
           <MdShoppingCart className="w-6 h-6" />
           <h1 className="">Order Cart</h1>
@@ -341,8 +344,8 @@ export default function Bag() {
 
       {/* Instructions Form */}
       {showInstructions && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-gray-900 border border-gray-700 p-6 rounded shadow-lg">
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center p-2">
+          <div className="bg-gray-900 border border-gray-700 w-full md:w-1/2 p-6 rounded shadow-lg">
             <h2 className="text-xl  mb-4">Instructions</h2>
             <textarea
               className="w-full h-40 p-2 border border-gray-500 bg-gray-900 rounded"
@@ -369,7 +372,7 @@ export default function Bag() {
       {/* Success Fully place order */}
       {loading && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center px-2">
-          <div className="bg-gray-900 border border-gray-700 p-6 w-full h-1/2 md:w-1/3 rounded shadow-lg">
+          <div className="bg-gray-900 border border-gray-700 p-6 w-full h-auto rounded shadow-lg">
             <div className="flex justify-center items-center mt-10">
               <TiTick size={72} className="text-white bg-green-700 p-2 rounded-full"/>
             </div>

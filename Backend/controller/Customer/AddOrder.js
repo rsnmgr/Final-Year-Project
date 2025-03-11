@@ -272,27 +272,44 @@ export const deleteOrderItem = async (req, res) => {
     }
 
     // Find the specific order history entry
-    const orderHistory = order.OrderHistory.find(
+    const orderHistoryIndex = order.OrderHistory.findIndex(
       (history) => history._id.toString() === orderHistoryId
     );
 
-    if (!orderHistory) {
+    if (orderHistoryIndex === -1) {
       return res.status(404).json({ message: "Order history not found" });
     }
 
-    // Filter out the item from the order history's items array
-    const initialLength = orderHistory.items.length;
-    orderHistory.items = orderHistory.items.filter((item) => item._id.toString() !== itemId);
+    const orderHistory = order.OrderHistory[orderHistoryIndex];
 
-    if (orderHistory.items.length === initialLength) {
+    // Find the item to be deleted
+    const itemIndex = orderHistory.items.findIndex((item) => item._id.toString() === itemId);
+
+    if (itemIndex === -1) {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    // Recalculate subtotal, gst, and total
+    // Remove the item
+    orderHistory.items.splice(itemIndex, 1);
+
+    // If no items remain in the order history, delete the order history entry
+    if (orderHistory.items.length === 0) {
+      order.OrderHistory.splice(orderHistoryIndex, 1);
+    }
+
+    // If no order history remains, delete the entire order
+    if (order.OrderHistory.length === 0) {
+      await Order.deleteOne({ AdminId: adminId, tableId: tableId });
+      io.emit("orderRemoved", { adminId, tableId });
+      return res.status(200).json({ message: "Order deleted successfully" });
+    }
+
+    // Recalculate subtotal, GST, and total for the remaining order history
     orderHistory.subtotal = orderHistory.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    orderHistory.gst = orderHistory.subtotal * 0.13;
     orderHistory.total = orderHistory.subtotal + orderHistory.gst;
 
-    // Update totalOrderAmount
+    // Recalculate total order amount for the entire order
     order.totalOrderAmount = order.OrderHistory.reduce((sum, history) => sum + history.total, 0);
 
     // Save changes

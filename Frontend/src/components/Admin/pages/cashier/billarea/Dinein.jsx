@@ -77,6 +77,7 @@ export default function Dinein({ setSelectedTable }) {
     socket.on("orderUpdated", fetchOrderData);
     socket.on("orderRemoved", fetchOrderData);
     socket.on("orderHistoryRemoved", fetchOrderData);
+    socket.on("orderItemRemoved", fetchOrderData);
 
     // Cleanup the socket connection on unmount
     return () => {
@@ -84,6 +85,7 @@ export default function Dinein({ setSelectedTable }) {
       socket.off("orderUpdated", fetchOrderData);
       socket.off("orderRemoved", fetchOrderData);
       socket.off("orderHistoryRemoved", fetchOrderData);
+      socket.off("orderItemRemoved", fetchOrderData);
 
     };
   }, [AdminId, tableId]);

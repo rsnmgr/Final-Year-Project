@@ -107,8 +107,10 @@ router.delete('/delete-order-id/:adminId/:tableId/:orderId', deleteOrderHistory)
 router.put("/order/item/edit/:adminId/:tableId/:orderHistoryId/:itemId", editOrderItem);
 router.delete("/order/item/delete/:adminId/:tableId/:orderHistoryId/:itemId", deleteOrderItem);
 
-// Report
+// Salse Report
 import {addSalesReport} from '../controller/admin/reports/reports.js';
 router.post('/add-report', addSalesReport);
+
+
 
 export default router;

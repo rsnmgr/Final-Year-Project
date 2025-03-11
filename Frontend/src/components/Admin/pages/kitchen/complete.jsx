@@ -36,12 +36,15 @@ export default function complete() {
     socket.on("orderUpdated", fetchOrders);
     socket.on("orderRemoved", fetchOrders);
     socket.on("orderHistoryRemoved", fetchOrders);
+    socket.on("orderItemRemoved", fetchOrders);
 
     return () => {
       socket.off("orderAdded", fetchOrders);
       socket.off("orderUpdated", fetchOrders);
       socket.off("orderRemoved", fetchOrders);
       socket.off("orderHistoryRemoved", fetchOrders);
+      socket.off("orderItemRemoved", fetchOrders);
+
     };
   }, [userId]);
 

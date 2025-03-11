@@ -15,88 +15,82 @@ export default function Table({ onTableSelect }) {
   useEffect(() => {
     if (!AdminId) return;
 
-    // Fetch tables and orders
-    const fetchTablesAndOrders = async () => {
+    const fetchData = async () => {
       try {
-        const tableResponse = await axios.get(`${API_URL}/api/tables/${AdminId}`);
-        if (Array.isArray(tableResponse.data.tables)) {
-          setTables(tableResponse.data.tables);
-        } else {
-          console.error('Unexpected tables format:', tableResponse.data);
-          setTables([]);
-        }
+        const [tableResponse, orderResponse] = await Promise.all([
+          axios.get(`${API_URL}/api/tables/${AdminId}`),
+          axios.get(`${API_URL}/api/orders/${AdminId}`)
+        ]);
 
-        const orderResponse = await axios.get(`${API_URL}/api/orders/${AdminId}`);
-        if (Array.isArray(orderResponse.data.orders)) {
-          setOrders(orderResponse.data.orders);
-        } else {
-          console.error('Unexpected orders format:', orderResponse.data);
-          setOrders([]);
-        }
+        setTables(tableResponse.data.tables || []);
+        setOrders(orderResponse.data.orders || []);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
-    fetchTablesAndOrders();
+    fetchData();
 
-    // Socket event listeners for order updates
     const handleOrderAdded = (orderData) => {
-      if (Array.isArray(orderData)) {
-        setOrders(prevOrders => [...prevOrders, ...orderData]);
-      } else {
-        setOrders(prevOrders => {
-          const existingOrderIndex = prevOrders.findIndex(order => order.tableId === orderData.tableId);
-          if (existingOrderIndex === -1) {
-            return [...prevOrders, orderData];
-          } else {
-            const updatedOrders = [...prevOrders];
-            updatedOrders[existingOrderIndex] = orderData;
-            return updatedOrders;
-          }
-        });
-      }
+      setOrders(prevOrders => {
+        const existingOrderIndex = prevOrders.findIndex(order => order.tableId === orderData.tableId);
+        if (existingOrderIndex === -1) {
+          return [...prevOrders, orderData];
+        }
+        return prevOrders.map(order => (order.tableId === orderData.tableId ? orderData : order));
+      });
     };
 
-    const handleOrderRemoved = (orderData) => {
-      setOrders(prevOrders => prevOrders.filter(order => order.tableId !== orderData.tableId));
-      setTables(prevTables =>
-        prevTables.map(table =>
-          table._id === orderData.tableId ? { ...table, statusClass: 'bg-gray-500' } : table
-        )
-      );
+    const handleOrderRemoved = ({ tableId }) => {
+      setOrders(prevOrders => prevOrders.filter(order => order.tableId !== tableId));
+      setTables(prevTables => prevTables.map(table =>
+        table._id === tableId ? { ...table, statusClass: 'bg-gray-500' } : table
+      ));
     };
 
-    const handleOrderHistoryRemoved = (removedData) => {
-      // Update orders when order history is removed
+    const handleOrderItemRemoved = (removedData) => {
       setOrders(prevOrders => {
         return prevOrders.map(order => {
           if (order.tableId === removedData.tableId) {
-            const updatedHistory = order.OrderHistory.filter(history => history._id !== removedData.orderId);
-            
-            // Recalculate the totalOrderAmount after removal
-            const newTotalAmount = updatedHistory.reduce((acc, history) => acc + history.total, 0);
-            return { ...order, OrderHistory: updatedHistory, totalOrderAmount: newTotalAmount };
+            const updatedHistory = order.OrderHistory.map(history => {
+              if (history._id === removedData.orderHistoryId) {
+                // Remove the item from history
+                const updatedItems = history.items.filter(item => item._id !== removedData.itemId);
+                
+                // Recalculate subtotal, GST, and total
+                const newSubtotal = updatedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+                const newGst = newSubtotal * 0.13;
+                const newTotal = newSubtotal + newGst;
+    
+                return { ...history, items: updatedItems, subtotal: newSubtotal, gst: newGst, total: newTotal };
+              }
+              return history;
+            }).filter(history => history.items.length > 0); // Remove empty histories
+    
+            // Recalculate totalOrderAmount for the order
+            const newTotalOrderAmount = updatedHistory.reduce((sum, history) => sum + history.total, 0);
+    
+            return { ...order, OrderHistory: updatedHistory, totalOrderAmount: newTotalOrderAmount };
           }
           return order;
         });
       });
     };
+    
 
     socket.on('orderAdded', handleOrderAdded);
     socket.on('orderRemoved', handleOrderRemoved);
-    socket.on('orderHistoryRemoved', handleOrderHistoryRemoved); // Listen for order history removal
+    socket.on('orderItemRemoved', handleOrderItemRemoved);
+    socket.on('orderHistoryRemoved', handleOrderRemoved);
 
     return () => {
       socket.off('orderAdded', handleOrderAdded);
       socket.off('orderRemoved', handleOrderRemoved);
-      socket.off('orderHistoryRemoved', handleOrderHistoryRemoved); // Cleanup the socket listener
+      socket.off('orderItemRemoved', handleOrderItemRemoved);
+      socket.off('orderHistoryRemoved', handleOrderRemoved);
     };
   }, [AdminId]);
 
-
-
-  // Get table details based on its current order status
   const getTableDetails = (tableId) => {
     const tableOrder = orders.find(order => order.tableId === tableId);
     const table = tables.find(table => table._id === tableId);
@@ -104,26 +98,14 @@ export default function Table({ onTableSelect }) {
     if (!table) return { statusClass: 'bg-gray-800', tableName: 'Unknown' };
 
     let statusClass = 'bg-gray-800';
-    let totalOrderAmount = null;
+    let totalOrderAmount = tableOrder?.totalOrderAmount || 0;
     let tableName = table.name || 'Unknown';
 
-    if (tableOrder) {
-      totalOrderAmount = tableOrder.totalOrderAmount;
-      if (tableOrder.orderStatus === 'Running') {
-        statusClass = 'bg-red-800';
-      }
+    if (tableOrder?.orderStatus === 'Running') {
+      statusClass = 'bg-red-800';
     }
 
-    return {
-      statusClass,
-      totalOrderAmount,
-      tableName,
-    };
-  };
-
-  const handleTableClick = (tableId) => {
-    localStorage.setItem('selectedTableId', tableId);
-    onTableSelect(tableId); // Update parent component (UserInfo)
+    return { statusClass, totalOrderAmount, tableName };
   };
 
   return (
@@ -146,12 +128,12 @@ export default function Table({ onTableSelect }) {
                 <div
                   key={table._id}
                   className={`border-dotted border-2 border-gray-900 ${statusClass} flex justify-center items-center cursor-pointer`}
-                  onClick={() => handleTableClick(table._id)}
+                  onClick={() => onTableSelect(table._id)}
                 >
                   <div className='relative w-16 h-16 flex flex-col justify-center items-center'>
                     <h1 className='text-xs'>12m</h1>
                     <h1 className='text-xs'>{tableName}</h1>
-                    {totalOrderAmount && <h1 className='text-xs'>{totalOrderAmount}</h1>}
+                    {totalOrderAmount > 0 && <h1 className='text-xs'>{totalOrderAmount}</h1>}
                   </div>
                 </div>
               );
@@ -161,7 +143,6 @@ export default function Table({ onTableSelect }) {
           )}
         </div>
       </div>
-     
     </div>
   );
-};
+}
