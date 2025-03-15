@@ -1,8 +1,9 @@
 import Report from "../../../model/admin/report/sales.js";
+import { io } from "../../../server.js";
 
 export const addSalesReport = async (req, res) => {
     const { adminId, tableId, Cname, Cphone, items, SubtotalAmmount, Discount, DiscountAmmount, totalAmmount, paymentType } = req.body;
-    // if(totalAmount < 0) {
+    // if(totalAmmount < 0) {
     //     return res.status(400).json({ message: "This Table Is " });
     // }
     try {
@@ -33,9 +34,11 @@ export const addSalesReport = async (req, res) => {
 
         await report.save();
         res.status(200).json({ message: "Report added successfully" });
+        io.emit("reportAdded", report);
 
     } catch (error) {
         console.error("Error adding sales report:", error); // Log for debugging
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
+

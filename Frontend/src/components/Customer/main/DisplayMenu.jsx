@@ -140,7 +140,7 @@ export default function DisplayMenu({ selectedCategory, searchQuery }) {
       });
 
       // Show toast success message
-      toast.success("Item added to cart successfully!");
+      // toast.success("Item added to cart successfully!");
 
       // Reset quantities and form after adding the item
       setQuantities((prevQuantities) => ({

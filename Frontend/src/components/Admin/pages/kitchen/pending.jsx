@@ -112,7 +112,7 @@ export default function Pending() {
     )
     .sort((a, b) => new Date(a.orderDate) - new Date(b.orderDate)) // Sort by order date (oldest first)
     .map(history => (
-      <div key={history._id} className="bg-gray-900 p-2 border border-gray-800 rounded-lg shadow-lg">
+      <div key={history._id} className="bg-gray-900 p-2 border-y border-yellow-500 rounded-lg shadow-lg">
         <div className="flex justify-between items-center bg-gray-900 p-3 border-b-2 border-gray-500">
           <h1 className="text-white font-semibold">Table: {tableData[history.tableId]?.table?.name || "Loading..."}</h1>
           <p className="text-gray-400 text-sm">{new Date(history.orderDate).toLocaleTimeString()}</p>

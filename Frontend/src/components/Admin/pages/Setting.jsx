@@ -50,7 +50,7 @@ export default function Setting() {
   };
 
   return (
-    <div className="space-y-4 max-w-screen-lg">
+    <div className="p-3 space-y-4 max-w-screen-lg">
       <div className="flex flex-col md:flex-row justify-between md:items-center space-y-4">
         <div className="flex items-center space-x-4">
           <img

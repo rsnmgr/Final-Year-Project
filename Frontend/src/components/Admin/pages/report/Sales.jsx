@@ -2,8 +2,6 @@ import React from 'react'
 
 export default function Sales() {
   return (
-    <div>
-      Sales Report
-    </div>
+    <div>Sales</div>
   )
 }

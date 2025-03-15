@@ -371,8 +371,8 @@ export default function Bag() {
       )}
       {/* Success Fully place order */}
       {loading && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center px-2">
-          <div className="bg-gray-900 border border-gray-700 p-6 w-full h-auto rounded shadow-lg">
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center p-4 justify-center px-2">
+          <div className="bg-gray-900 border border-gray-700 p-6 md:w-1/3 h-auto rounded shadow-lg">
             <div className="flex justify-center items-center mt-10">
               <TiTick size={72} className="text-white bg-green-700 p-2 rounded-full"/>
             </div>

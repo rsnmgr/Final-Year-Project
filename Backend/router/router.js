@@ -110,7 +110,12 @@ router.delete("/order/item/delete/:adminId/:tableId/:orderHistoryId/:itemId", de
 // Salse Report
 import {addSalesReport} from '../controller/admin/reports/reports.js';
 router.post('/add-report', addSalesReport);
-
-
+//Purchase Reports
+import { addPurchase, getPurchases, getPurchaseById, updatePurchase, deletePurchase } from '../controller/admin/reports/purchase.js';
+router.post('/purchases', upload.single('image'), addPurchase);
+router.get('/purchases/:AdminId', getPurchases);
+router.get('/purchases/:AdminId/:purchaseId', getPurchaseById);
+router.put('/purchases/:AdminId/:purchaseId', upload.single('image'), updatePurchase);
+router.delete('/purchases/:AdminId/:purchaseId', deletePurchase);
 
 export default router;

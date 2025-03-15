@@ -28,7 +28,7 @@ export default function Kitchen() {
           order.OrderHistory.forEach(history => {
             if (history.itemsStatus === "pending") counts.pending++;
             else if (history.itemsStatus === "accepted") counts.preparing++;
-            else if (history.itemsStatus === "completed") counts.complete++;
+            else if (history.itemsStatus === "ready") counts.complete++;
           });
         });
 
@@ -61,19 +61,19 @@ export default function Kitchen() {
         <div className='flex justify-between items-center space-x-3'> 
           <button 
             onClick={() => setStatus("Pending")} 
-            className='p-1 px-3 rounded-sm bg-red-900 cursor-pointer hover:bg-red-800'
+            className='p-1 px-3 rounded-sm bg-yellow-500 text-black cursor-pointe'
           >
             Pending ({orderCounts.pending})
           </button>
           <button 
             onClick={() => setStatus("Preparing")} 
-            className='p-1 px-3 rounded-sm bg-yellow-900 cursor-pointer hover:bg-yellow-800'
+            className='p-1 px-3 rounded-sm bg-blue-500 text-black cursor-pointer'
           >
             Preparing ({orderCounts.preparing})
           </button>
           <button 
             onClick={() => setStatus("Complete")} 
-            className='p-1 px-3 rounded-sm bg-green-900 cursor-pointer hover:bg-green-800'
+            className='p-1 px-3 rounded-sm bg-green-500 text-black cursor-pointer'
           >
             Complete ({orderCounts.complete})
           </button>

@@ -56,7 +56,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
+    <div className="p-3 flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
       {/* Left Column - User Information */}
       <div className="flex flex-col w-full md:w-1/5 space-y-6 md:space-y-4">
         {/* Profile Picture and Name */}
