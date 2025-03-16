@@ -62,7 +62,7 @@ export default function Login() {
         {/* Image Section */}
         <div className='relative hidden md:flex justify-center items-center'>
           <img src={img} alt="Login Illustration" className='h-[80vh] object-cover rounded-l-lg' />
-          <h2 className='absolute top-28 right-20 text-orange-500 font-extrabold text-xl'>FOOD ME</h2>
+          <h2 className='absolute top-36 right-16 text-orange-500 font-extrabold text-xl'>FOOD ME</h2>
         </div>
 
         {/* Form Section */}

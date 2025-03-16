@@ -1,7 +1,227 @@
-import React from 'react'
+import React, { useEffect, useState, useContext } from 'react';
+import { LuSearch } from 'react-icons/lu';
+import { MdDelete, MdModeEdit } from 'react-icons/md';
+import { LuView } from "react-icons/lu";
+import { LoginContext } from '../../../ContextProvider/Context';
+import { io } from "socket.io-client";
+
+const API_URL = import.meta.env.VITE_API_URL;
+const socket = io(API_URL);
 
 export default function Sales() {
+  const [openItems, setOpenItems] = useState(null);
+  const { loginData } = useContext(LoginContext);
+  const userId = loginData?.validUser?._id;
+  const [sales, setsales] = useState([]);
+  const [tableData, setTableData] = useState({});
+  const [deleteReport,setDeleteReport] = useState()
+  useEffect(() => {
+    if (!userId) return;
+
+    const fetchReport = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/fetch-report/${userId}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch report");
+        }
+        const data = await response.json();
+        
+        if (data && Array.isArray(data.sales)) {
+          setsales(data.sales);
+          data.sales.forEach(sale => {
+            const { tableId } = sale;
+            fetchTableName(tableId);
+          });
+        } else {
+          console.error("Fetched data is not in the expected format:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching report:", error);
+      }
+    };
+
+    const fetchTableName = async (tableId) => {
+      if (tableData[tableId]) return; // If the table data is already available, don't refetch
+      try {
+        const response = await fetch(`${API_URL}/api/tables/${userId}/${tableId}`);
+        if (response.ok) {
+          const table = await response.json();
+          setTableData(prev => ({ ...prev, [tableId]: table.table.name }));
+        }
+      } catch (error) {
+        console.error("Error fetching table data:", error);
+      }
+    };
+
+    fetchReport();
+    socket.on("reportAdded", fetchReport);
+    socket.on("saleDeleted",fetchReport)
+    return () => {
+      socket.off("reportAdded", fetchReport);
+      socket.off("saleDeleted",fetchReport)
+
+    };
+  }, [userId, tableData]); // Include tableData to refetch when it's updated
+
+  const deleteSales = async (saleId) => {
+    if (!userId || !saleId) return;
+    
+    try {
+      const response = await fetch(`${API_URL}/api/sales/delete/${userId}/${saleId}`, {
+        method: "DELETE",
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to delete sale");
+      }
+  
+      // Remove the deleted sale from the state
+      setsales(prevSales => prevSales.filter(sale => sale._id !== saleId));
+      setDeleteReport(false); // Close delete confirmation modal
+    } catch (error) {
+      console.error("Error deleting sale:", error);
+    }
+  };
+  
   return (
-    <div>Sales</div>
-  )
+    <div className='p-3'>
+      <div className='flex justify-between items-center mb-4'>
+        <div className="relative w-full max-w-xs">
+          <LuSearch className="absolute inset-y-0 left-3 top-1/2 transform -translate-y-1/2 flex items-center pointer-events-none text-gray-500 w-5 h-5" />
+          <input
+            type="text"
+            className="block w-[70%] p-3 pl-10 text-slate-200 bg-gray-900 text-sm border border-gray-300 rounded-lg"
+            placeholder="Search by item name"
+          />
+        </div>
+        <div>
+          <select name="" id="filter" className='p-2 px-3 bg-black border border-blue-700 outline-none'>
+            <option value="all">All</option>
+            <option value="days">Days</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto h-[70vh]">
+        <table className="min-w-full divide-y divide-gray-200 bg-white">
+          <thead className="bg-gray-700 sticky top-0 z-10">
+            <tr>
+              {[
+                { short: 'SN', full: 'Serial Number' },
+                { short: 'Table Name', full: 'Table Name' },
+                { short: 'Items', full: 'Item Name' },
+                { short: 'Sub Total', full: 'Sub Total' },
+                { short: 'Discount %', full: 'Discount %' },
+                { short: 'Discount Amount', full: 'Discount Amount' },
+                { short: 'Total Amount', full: 'Total Ammount' },
+                { short: 'Status', full: 'Status' },
+                { short: 'Action', full: 'Actions' }
+              ].map(({ short, full }) => (
+                <th
+                  key={short}
+                  className="px-6 py-3 text-center text-sm font-medium uppercase tracking-wider text-gray-100"
+                  title={full}
+                >
+                  {short}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-gray-800 divide-y divide-gray-700">
+          {sales.length ? sales.map((sale, index) => (   
+                <tr key={index} className="text-slate-200">
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{index + 1}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{tableData[sale.tableId] || "Loading..."}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
+                  {sale.items.reduce((total, item) => total + item.quantity, 0)}
+                </td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{sale.SubtotalAmmount}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{sale.Discount}%</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{sale.DiscountAmmount}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{sale.totalAmmount}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{sale.status}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm flex justify-center gap-2">
+                  <LuView
+                    className="text-2xl text-green-700 cursor-pointer"
+                    title='view'
+                    onClick={() => setOpenItems(sale)}
+                  />
+                  <MdDelete
+                    title="Delete"
+                    className="text-2xl text-red-600 cursor-pointer"
+                    onClick={() => setDeleteReport(sale._id)} 
+                  />
+                </td>
+              </tr>
+            )) : (
+              <tr>
+                <td colSpan="9" className="px-6 py-4 text-center text-gray-400">No sales reports found</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+        
+      </div>
+
+      {/* Modal to View Sale Items */}
+      {openItems && (
+        <div className='absolute p-3 inset-0 flex justify-center items-center h-screen bg-opacity-70 bg-gray-800 z-50'>
+          <div className='bg-gray-900 md:p-6 w-full md:w-1/3 rounded-lg'>
+            <div className="bg-gray-900 p-2 border-y border-green-500 rounded-lg shadow-lg">
+              <div className="flex justify-between items-center bg-gray-900 p-3 border-b-2 border-gray-500">
+                <h1 className="text-white font-semibold">            {tableData[openItems.tableId] ? tableData[openItems.tableId] : ``}
+                </h1>
+                <p className="text-gray-400 text-sm">{new Date(openItems.date).toLocaleTimeString()}</p>
+              </div>
+              <div className="overflow-auto max-h-72">
+                <table className="w-full text-sm text-white">
+                  <thead className="bg-gray-800 sticky top-0 z-10">
+                    <tr className="flex justify-between px-3 py-2 border-b-2 border-gray-700">
+                      <th className="flex-1 text-left">Item</th>
+                      <th className="flex-1 text-center">Quantity</th>
+                      <th className="flex-1 text-right">Size</th>
+                    </tr>
+                  </thead>
+                  <tbody className="block h-60 overflow-y-auto">
+                    {openItems.items.map((item, idx) => (
+                      <tr key={idx} className="flex justify-between px-3 py-2 border-b border-gray-800">
+                        <td className="flex-1 text-left">{item.name}</td>
+                        <td className="flex-1 text-center">{item.quantity}</td>
+                        <td className="flex-1 text-right">{item.size}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="flex justify-between items-center bg-gray-900 gap-2 border-t border-gray-500 p-2">
+                <button className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-md transition-all" onClick={() => setOpenItems(null)}>
+                  Close
+                </button>
+                <button className="w-full bg-green-700 hover:bg-green-600 text-white py-2 rounded-md transition-all">
+                  Print
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Delete Conformation */}
+      {deleteReport && (
+      <div className="absolute p-3 inset-0 flex justify-center items-center h-screen bg-opacity-70 bg-gray-800 z-50">
+        <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
+          <h2 className="text-lg font-semibold">Confirm Delete</h2>
+          <p className="text-gray-400">Are you sure you want to delete this report?</p>
+          <div className="mt-4 flex justify-end gap-2">
+            <button className="bg-gray-600 px-4 py-2 rounded-md" onClick={() => setDeleteReport(null)}>No</button>
+            <button className="px-4 py-2 rounded-md bg-red-600 text-white" onClick={() => deleteSales(deleteReport)}>Yes, Delete</button>
+          </div>
+        </div>
+      </div>
+      )}
+
+    </div>
+  );
 }

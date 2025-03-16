@@ -108,8 +108,10 @@ router.put("/order/item/edit/:adminId/:tableId/:orderHistoryId/:itemId", editOrd
 router.delete("/order/item/delete/:adminId/:tableId/:orderHistoryId/:itemId", deleteOrderItem);
 
 // Salse Report
-import {addSalesReport} from '../controller/admin/reports/reports.js';
+import {addSalesReport,getAllSalesReports,deleteSale} from '../controller/admin/reports/reports.js';
 router.post('/add-report', addSalesReport);
+router.get('/fetch-report/:adminId',getAllSalesReports);
+router.delete('/sales/delete/:adminId/:saleId',deleteSale)
 //Purchase Reports
 import { addPurchase, getPurchases, getPurchaseById, updatePurchase, deletePurchase } from '../controller/admin/reports/purchase.js';
 router.post('/purchases', upload.single('image'), addPurchase);
