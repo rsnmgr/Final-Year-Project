@@ -271,7 +271,7 @@ export default function Purchase() {
       {/* Add/Edit Purchase Modal */}
       {showModal && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-          <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-2xl w-full h-[65vh] overflow-auto">
+          <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-2xl w-full h-[72vh] overflow-auto">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-xl font-semibold text-white">{selectedPurchase ? 'Edit Purchase' : 'Add Purchase'}</h1>
               <RxCross2
@@ -329,7 +329,7 @@ export default function Purchase() {
 
                 <div className='space-y-4'>
                   {selectedImage && (
-                    <img src={selectedImage} alt="Selected" className='object-cover w-full h-auto rounded-md' />
+                    <img src={selectedImage} alt="Selected" className='object-cover w-full h-[42vh] rounded-md' />
                   )}
                   <input
                     type="file"

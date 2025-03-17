@@ -3,9 +3,10 @@ import { io } from "../../../server.js";
 
 export const addSalesReport = async (req, res) => {
     const { adminId, tableId, Cname, Cphone, items, SubtotalAmmount, Discount, DiscountAmmount, totalAmmount, paymentType } = req.body;
-    // if(totalAmmount < 0) {
-    //     return res.status(400).json({ message: "This Table Is " });
-    // }
+    if (totalAmmount <= 0) { // Prevent adding if total amount is 0 or negative
+        return res.status(400).json({ message: "Total amount must be greater than 0." });
+    }
+
     try {
 
         const status = paymentType === "Due" ? "unpaid" : "paid";

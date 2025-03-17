@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { LuSearch } from 'react-icons/lu';
-import { MdDelete, MdModeEdit } from 'react-icons/md';
+import { MdDelete } from 'react-icons/md';
 import { LuView } from "react-icons/lu";
 import { LoginContext } from '../../../ContextProvider/Context';
 import { io } from "socket.io-client";
+import moment from "moment";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL);
@@ -12,9 +13,22 @@ export default function Sales() {
   const [openItems, setOpenItems] = useState(null);
   const { loginData } = useContext(LoginContext);
   const userId = loginData?.validUser?._id;
-  const [sales, setsales] = useState([]);
+  const [sales, setSales] = useState([]);
   const [tableData, setTableData] = useState({});
-  const [deleteReport,setDeleteReport] = useState()
+  const [deleteReport, setDeleteReport] = useState();
+  const [customdate, setCustomDate] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filter, setFilter] = useState('all');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  // Open custom date form when filter is set to "custom"
+  useEffect(() => {
+    if (filter === 'custom') {
+      setCustomDate(true);
+    }
+  }, [filter]);
+
   useEffect(() => {
     if (!userId) return;
 
@@ -27,7 +41,7 @@ export default function Sales() {
         const data = await response.json();
         
         if (data && Array.isArray(data.sales)) {
-          setsales(data.sales);
+          setSales(data.sales);
           data.sales.forEach(sale => {
             const { tableId } = sale;
             fetchTableName(tableId);
@@ -55,13 +69,12 @@ export default function Sales() {
 
     fetchReport();
     socket.on("reportAdded", fetchReport);
-    socket.on("saleDeleted",fetchReport)
+    socket.on("saleDeleted", fetchReport);
     return () => {
       socket.off("reportAdded", fetchReport);
-      socket.off("saleDeleted",fetchReport)
-
+      socket.off("saleDeleted", fetchReport);
     };
-  }, [userId, tableData]); // Include tableData to refetch when it's updated
+  }, [userId, tableData]);
 
   const deleteSales = async (saleId) => {
     if (!userId || !saleId) return;
@@ -76,13 +89,42 @@ export default function Sales() {
       }
   
       // Remove the deleted sale from the state
-      setsales(prevSales => prevSales.filter(sale => sale._id !== saleId));
+      setSales(prevSales => prevSales.filter(sale => sale._id !== saleId));
       setDeleteReport(false); // Close delete confirmation modal
     } catch (error) {
       console.error("Error deleting sale:", error);
     }
   };
-  
+
+  const getFilteredSales = (sales, filter) => {
+    const now = moment();
+    switch (filter) {
+      case 'days':
+        return sales.filter(sale => moment(sale.date).isSame(now, 'day'));
+      case 'weekly':
+        return sales.filter(sale => moment(sale.date).isSame(now, 'week'));
+      case 'monthly':
+        return sales.filter(sale => moment(sale.date).isSame(now, 'month'));
+      case 'custom':
+        return sales.filter(sale => 
+          moment(sale.date).isBetween(startDate, endDate, null, '[]')
+        );
+      default:
+        return sales;
+    }
+  };
+
+  const filteredSales = getFilteredSales(sales, filter).filter(sale => 
+    tableData[sale.tableId]?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalAmount = filteredSales.reduce((total, sale) => total + sale.totalAmmount, 0);
+
+  const handleCustomFilter = () => {
+    setFilter('custom');
+    setCustomDate(false);
+  };
+
   return (
     <div className='p-3'>
       <div className='flex justify-between items-center mb-4'>
@@ -91,11 +133,19 @@ export default function Sales() {
           <input
             type="text"
             className="block w-[70%] p-3 pl-10 text-slate-200 bg-gray-900 text-sm border border-gray-300 rounded-lg"
-            placeholder="Search by item name"
+            placeholder="Search by table name"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <div>
-          <select name="" id="filter" className='p-2 px-3 bg-black border border-blue-700 outline-none'>
+          <select 
+            name="filter" 
+            id="filter" 
+            className='p-2 px-3 bg-black border border-blue-700 outline-none'
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
             <option value="all">All</option>
             <option value="days">Days</option>
             <option value="weekly">Weekly</option>
@@ -116,8 +166,9 @@ export default function Sales() {
                 { short: 'Sub Total', full: 'Sub Total' },
                 { short: 'Discount %', full: 'Discount %' },
                 { short: 'Discount Amount', full: 'Discount Amount' },
-                { short: 'Total Amount', full: 'Total Ammount' },
-                { short: 'Status', full: 'Status' },
+                { short: 'Total Amount', full: 'Total Amount' },
+                { short: 'Payment Type', full: 'Payment Type' },
+                { short: 'Date', full: 'Date' },
                 { short: 'Action', full: 'Actions' }
               ].map(({ short, full }) => (
                 <th
@@ -131,8 +182,8 @@ export default function Sales() {
             </tr>
           </thead>
           <tbody className="bg-gray-800 divide-y divide-gray-700">
-          {sales.length ? sales.map((sale, index) => (   
-                <tr key={index} className="text-slate-200">
+            {filteredSales.length ? filteredSales.map((sale, index) => (   
+              <tr key={index} className="text-slate-200">
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{index + 1}</td>
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{tableData[sale.tableId] || "Loading..."}</td>
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
@@ -142,7 +193,8 @@ export default function Sales() {
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{sale.Discount}%</td>
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{sale.DiscountAmmount}</td>
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{sale.totalAmmount}</td>
-                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{sale.status}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{sale.paymentType}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm"><span>{moment(sale.date).format("YYYY-MM-DD")}</span> <span className='block'>{moment(sale.date).format("hh:mm A")}</span></td>
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm flex justify-center gap-2">
                   <LuView
                     className="text-2xl text-green-700 cursor-pointer"
@@ -158,12 +210,11 @@ export default function Sales() {
               </tr>
             )) : (
               <tr>
-                <td colSpan="9" className="px-6 py-4 text-center text-gray-400">No sales reports found</td>
+                <td colSpan="10" className="px-6 py-4 text-center text-gray-400">No sales reports found</td>
               </tr>
             )}
           </tbody>
         </table>
-        
       </div>
 
       {/* Modal to View Sale Items */}
@@ -208,20 +259,58 @@ export default function Sales() {
           </div>
         </div>
       )}
-      {/* Delete Conformation */}
+
+      {/* Delete Confirmation */}
       {deleteReport && (
-      <div className="absolute p-3 inset-0 flex justify-center items-center h-screen bg-opacity-70 bg-gray-800 z-50">
-        <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
-          <h2 className="text-lg font-semibold">Confirm Delete</h2>
-          <p className="text-gray-400">Are you sure you want to delete this report?</p>
-          <div className="mt-4 flex justify-end gap-2">
-            <button className="bg-gray-600 px-4 py-2 rounded-md" onClick={() => setDeleteReport(null)}>No</button>
-            <button className="px-4 py-2 rounded-md bg-red-600 text-white" onClick={() => deleteSales(deleteReport)}>Yes, Delete</button>
+        <div className="absolute p-3 inset-0 flex justify-center items-center h-screen bg-opacity-70 bg-gray-800 z-50">
+          <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
+            <h2 className="text-lg font-semibold">Confirm Delete</h2>
+            <p className="text-gray-400">Are you sure you want to delete this report?</p>
+            <div className="mt-4 flex justify-end gap-2">
+              <button className="bg-gray-600 px-4 py-2 rounded-md" onClick={() => setDeleteReport(null)}>No</button>
+              <button className="px-4 py-2 rounded-md bg-red-600 text-white" onClick={() => deleteSales(deleteReport)}>Yes, Delete</button>
+            </div>
           </div>
         </div>
-      </div>
       )}
 
+      {/* Custom Date Choose */}
+      {customdate && (
+        <div className="absolute p-3 inset-0 flex justify-center items-center h-screen bg-opacity-70 bg-gray-800 z-50">
+          <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
+            <h2 className="text-lg font-semibold">Confirm Filter</h2>
+            <div className='flex items-center space-x-2'>
+              <div className='space-y-2'>
+                <label htmlFor="">Start Date</label>
+                <input 
+                  type="date" 
+                  className='block bg-gray-900 outline-none border border-gray-800 p-2' 
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </div>
+              <div className='space-y-2'>
+                <label htmlFor="">End Date</label>
+                <input 
+                  type="date" 
+                  className='block bg-gray-900 outline-none border border-gray-800 p-2' 
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="mt-4 flex justify-end gap-2">
+              <button className="bg-gray-600 px-4 py-2 rounded-md" onClick={() => setCustomDate(false)}>Cancel</button>
+              <button className="px-4 py-2 rounded-md bg-red-600 text-white" onClick={handleCustomFilter}>Apply Filter</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div>
+        <h1>Total Sales Amount</h1>
+        <span>{totalAmount}</span>
+      </div>
     </div>
   );
 }

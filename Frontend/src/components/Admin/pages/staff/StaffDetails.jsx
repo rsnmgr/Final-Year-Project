@@ -258,7 +258,7 @@ export default function StaffDetails() {
       {/* Add/Edit Detail Modal */}
       {showModal && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-20 z-50">
-          <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-xl w-full h-[77vh] overflow-auto">
+          <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-2xl w-full h-[80vh] overflow-auto">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-xl font-semibold text-white">{selectedDetail ? 'Edit Detail' : 'Add Detail'}</h1>
               <RxCross2
@@ -326,7 +326,7 @@ export default function StaffDetails() {
 
                 <div className='space-y-4'>
                   {selectedImage && (
-                    <img src={selectedImage} alt="Selected" className='object-cover w-full h-[40vh] rounded-md' />
+                    <img src={selectedImage} alt="Selected" className='object-cover w-full h-[50vh] rounded-md' />
                   )}
                   <input
                     type="file"

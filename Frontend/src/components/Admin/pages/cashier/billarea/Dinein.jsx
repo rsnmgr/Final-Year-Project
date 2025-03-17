@@ -169,8 +169,8 @@ export default function Dinein({ setSelectedTable }) {
                     <tr key={index} className="border-b border-gray-800">
                       <td className="px-6 py-2 text-white">{item.name} ({item.size})</td>
                       <td className="px-6 py-2 text-center">{item.quantity}</td>
-                      <td className="px-6 py-2 text-center">${item.subtotal.toFixed(2)}
-                        <span className="block text-gray-500">${item.price.toFixed(2)}</span>
+                      <td className="px-6 py-2 text-center">{item.subtotal.toFixed(2)}
+                        <span className="block text-gray-500">{item.price.toFixed(2)}</span>
                       </td>
                     </tr>
                   ))
@@ -185,7 +185,7 @@ export default function Dinein({ setSelectedTable }) {
               <tr className="font-semibold text-white">
                 <td className="px-6 py-2 text-base">Sub Total</td>
                 <td className="px-6 py-2 text-center">{orderData.items.reduce((sum, item) => sum + item.quantity, 0)}</td>
-                <td className="px-6 py-2 text-center">${orderData.totalOrderAmount.toFixed(2)}</td>
+                <td className="px-6 py-2 text-center">{orderData.totalOrderAmount.toFixed(2)}</td>
               </tr>
             </tfoot>
           </table>
@@ -207,7 +207,7 @@ export default function Dinein({ setSelectedTable }) {
                   onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
                 />
               </td>
-              <td className="px-6 py-2 text-center">${totalAfterDiscount}</td>
+              <td className="px-6 py-2 text-center">{totalAfterDiscount}</td>
             </tr>
           </tfoot>
         </table>

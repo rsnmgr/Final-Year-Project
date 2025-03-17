@@ -164,7 +164,7 @@ export default function Table({ onTableSelect }) {
                     {/* <h1 className="text-xs">12m</h1> */}
                     <h1 className="text-xs">{tableName}</h1>
                     {totalOrderAmount !== null && totalOrderAmount !== 0 ? (
-                      <h1 className="text-xs">${totalOrderAmount}</h1>
+                      <h1 className="text-xs">{totalOrderAmount}</h1>
                     ) : null}
                   </div>
                 </div>
