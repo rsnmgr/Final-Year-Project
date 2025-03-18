@@ -5,8 +5,8 @@ import { LoginContext } from '../../../../ContextProvider/Context';
 import axios from "axios";
 import moment from 'moment';
 import { io } from "socket.io-client";
-import { toast, ToastContainer } from "react-toastify"; // ✅ Import ToastContainer
-import "react-toastify/dist/ReactToastify.css"; // ✅ Import CSS
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL);
@@ -16,9 +16,9 @@ export default function Dinein({ setSelectedTable }) {
   const AdminId = loginData?.validUser?._id;
   const [tableData, setTableData] = useState(null);
   const [orderData, setOrderData] = useState({ items: [], totalOrderAmount: 0 });
-  const [discount, setDiscount] = useState(0); // Discount percentage
-  const [paymentType, setPaymentType] = useState("Cash"); // Define paymentType state
-  const [settlement,setSettlement] = useState(false);
+  const [discount, setDiscount] = useState(0);
+  const [paymentType, setPaymentType] = useState("Cash");
+  const [settlement, setSettlement] = useState(false);
   const tableId = localStorage.getItem("selectedTableId");
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function Dinein({ setSelectedTable }) {
         const response = await fetch(`${API_URL}/api/fetch-orders/${AdminId}/${tableId}`);
         const data = await response.json();
         const orders = data.orders?.OrderHistory || [];
-
+        
         const aggregatedItems = orders.reduce((acc, order) => {
           order.items.forEach(item => {
             const key = `${item.name}-${item.size}`;
@@ -48,8 +48,8 @@ export default function Dinein({ setSelectedTable }) {
         const items = Object.values(aggregatedItems);
         const totalOrderAmount = data.orders?.totalOrderAmount || 0;
         const orderDate = data.orders?.orderDate || null;
-
-        setOrderData({ items, totalOrderAmount, orderDate });
+        const CustomeriD = data.orders?.CustomerId; // ✅ Ensure this is set correctly
+        setOrderData({ items, totalOrderAmount, orderDate, CustomeriD }); // ✅ Pass CustomeriD to state
       } catch (error) {
         console.error("Error fetching order data:", error);
       }
@@ -59,19 +59,13 @@ export default function Dinein({ setSelectedTable }) {
       try {
         const response = await axios.get(`${API_URL}/api/tables/${AdminId}/${tableId}`);
         setTableData(response.data);
-
       } catch (error) {
         console.error("Error fetching table data:", error);
       }
     };
 
-
-
     fetchOrderData();
     fetchTableData();
-    // Socket connection
-
-  
 
     socket.on("orderAdded", fetchOrderData);
     socket.on("orderUpdated", fetchOrderData);
@@ -79,18 +73,14 @@ export default function Dinein({ setSelectedTable }) {
     socket.on("orderHistoryRemoved", fetchOrderData);
     socket.on("orderItemRemoved", fetchOrderData);
 
-    // Cleanup the socket connection on unmount
     return () => {
       socket.off("orderAdded", fetchOrderData);
       socket.off("orderUpdated", fetchOrderData);
       socket.off("orderRemoved", fetchOrderData);
       socket.off("orderHistoryRemoved", fetchOrderData);
       socket.off("orderItemRemoved", fetchOrderData);
-
     };
   }, [AdminId, tableId]);
-
-
 
   const addReport = async () => {
     const totalAfterDiscount = (orderData.totalOrderAmount - (orderData.totalOrderAmount * discount / 100)).toFixed(2);
@@ -98,6 +88,7 @@ export default function Dinein({ setSelectedTable }) {
     const reportData = {
       adminId: AdminId,
       tableId,
+      CustomerId: orderData.CustomeriD, // ✅ Use orderData.CustomeriD
       items: orderData.items.map(item => ({
         name: item.name,
         size: item.size,
@@ -123,9 +114,7 @@ export default function Dinein({ setSelectedTable }) {
       setSettlement(false);
     }
   };
-  
 
-  // Calculate total after applying percentage discount
   const totalAfterDiscount = (orderData.totalOrderAmount - (orderData.totalOrderAmount * discount / 100)).toFixed(2);
 
   return (

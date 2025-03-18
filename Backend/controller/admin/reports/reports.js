@@ -2,7 +2,7 @@ import Report from "../../../model/admin/report/sales.js";
 import { io } from "../../../server.js";
 
 export const addSalesReport = async (req, res) => {
-    const { adminId, tableId, Cname, Cphone, items, SubtotalAmmount, Discount, DiscountAmmount, totalAmmount, paymentType } = req.body;
+    const { adminId, tableId,CustomerId ,items, SubtotalAmmount, Discount, DiscountAmmount, totalAmmount, paymentType } = req.body;
     if (totalAmmount <= 0) { // Prevent adding if total amount is 0 or negative
         return res.status(400).json({ message: "Total amount must be greater than 0." });
     }
@@ -12,7 +12,8 @@ export const addSalesReport = async (req, res) => {
         const status = paymentType === "Due" ? "unpaid" : "paid";
 
         const newReportEntry = {
-            tableId, // Fixed typo
+            tableId,
+            CustomerId,
             items,
             SubtotalAmmount,
             Discount,

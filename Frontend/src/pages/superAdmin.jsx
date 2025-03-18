@@ -42,7 +42,7 @@ export default function SuperAdmin() {
     });
     const data = await res.json();
     if(res.status === 401 || !data || data.validUser.role !== "super"){
-      navigate("*");
+      navigate("/");
     }else{
       setLoginData(data);
       navigate("/super");

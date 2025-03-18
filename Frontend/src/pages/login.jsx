@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import img from '../assets/login.png';
 import { FaUser, FaLock, FaFacebook, FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -17,7 +17,37 @@ export default function Login() {
   const setVal = (e) => {
     setInpval({ ...inpval, [e.target.name]: e.target.value });
   };
-
+  const checkValidUser = async () => {
+    const token = localStorage.getItem("TokenFoodMe");
+    if (!token) return; // If no token is found, do nothing
+  
+    const res = await fetch(`${API_URL}/api/validUser`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+    });
+    const data = await res.json();
+  
+    // Check for valid user and handle redirection based on role
+    if (res.status === 401 || !data || !data.validUser) {
+      navigate("/login"); // Redirect to login if the user is not valid
+    } else {
+      // Redirect users based on their roles
+      const { role } = data.validUser;
+      if (role === 'admin') {
+        navigate("/admin/dashboard");
+      } else if (role === 'super') {
+        navigate("/super");
+      } else if (role === 'user') {
+        navigate("/user");
+      } else {
+        navigate('*'); // Fallback route
+      }
+    }
+  };
+  
   const loginuser = async (e) => {
     e.preventDefault();
     const data = await fetch(`${API_URL}/api/login`, {
@@ -32,7 +62,7 @@ export default function Login() {
     // Display message with Toastify
     if (res.status === 201) {
       localStorage.setItem("TokenFoodMe", res.result.token);
-      if (res.result.userValid.role === "admin" || res.result.userValid.role === "staff") {
+      if (res.result.userValid.role === "admin") {
         navigate('/admin');
       } else if (res.result.userValid.role === "super") {
         navigate('/super');
@@ -55,6 +85,9 @@ export default function Login() {
     navigate('/register'); // Navigate to the register page
   };
 
+  useEffect(() => {
+    checkValidUser(); // Check if a valid user is already logged in
+  }, []);
   return (
     <div className='flex justify-center items-center min-h-screen'>
       <div className='grid grid-cols-1 md:grid-cols-2 bg-gray-700 rounded-lg shadow-lg w-full max-w-4xl mx-4'>

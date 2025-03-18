@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const purchaseSchema = new mongoose.Schema({
-    AdminId: { type: String, required: true },
+    AdminId: { type: mongoose.Schema.Types.ObjectId, required: true },
     purchases: [{
         supplierName: { type: String, required: true },
         dateOfPurchase: { type: Date, required: true },

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const categorySchema = new mongoose.Schema({
-    AdminId: { type: String, required: true },
+    AdminId: { type: mongoose.Schema.Types.ObjectId, required: true },
     category: [{
         name: { type: String, required: true },
     }]

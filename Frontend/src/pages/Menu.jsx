@@ -16,7 +16,7 @@ export default function Menu() {
     const token = localStorage.getItem("customerToken");
     if (!token) {
       // If there's no token, navigate to a different page or logout
-      navigate("*"); // Redirect to an error page or login page
+      navigate("/error"); // Redirect to an error page or login page
       return;
     }
 
@@ -33,14 +33,14 @@ export default function Menu() {
       
       // If validation fails or the user is not a customer, redirect
       if (res.status === 401 || !data || data.validUser.role !== 'customer') {
-        navigate("*"); // Redirect to an error page or login page
+        navigate("/error"); // Redirect to an error page or login page
       } else {
         setCustomerData(data); // Set the validated customer data
         navigate("/menu"); // Redirect to the menu page after validation
       }
     } catch (error) {
       console.error('Error during customer validation:', error);
-      navigate("*"); // If an error occurs, redirect to an error page or login page
+      navigate("/error"); // If an error occurs, redirect to an error page or login page
     }
   };
 

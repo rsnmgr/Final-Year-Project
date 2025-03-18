@@ -6,8 +6,8 @@ const keySecret =
 const customerSchema = new mongoose.Schema({
   name: { type: "string" },
   phone: { type: "string" },
-  adminId: { type: "string", required: true },
-  tableId: { type: "string", required: true },
+  adminId: { type: mongoose.Schema.Types.ObjectId, required: true },
+  tableId: { type: mongoose.Schema.Types.ObjectId, required: true },
   role: { type: "string", default: "customer" },
   tokens: [
     {

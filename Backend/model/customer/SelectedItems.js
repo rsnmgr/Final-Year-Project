@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
 const selectedItems = new mongoose.Schema({
-    AdminId: { type: String, required: true },
-    tableId: { type: String, required: true },
-    CustomerId: {type: String, required:true},
+    AdminId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    tableId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    CustomerId: {type: mongoose.Schema.Types.ObjectId, required:true},
     selectedItems: [{
       name: { type: String, required: true },
       category: { type: String },

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const salesSchema = new mongoose.Schema({
-    adminId: { type: String, required: true },
+    adminId: { type: mongoose.Schema.Types.ObjectId, required: true },
     sales: [{
         items: [{
             name: { type: String, required: true },
@@ -9,7 +9,8 @@ const salesSchema = new mongoose.Schema({
             quantity: { type: Number, required: true },
             price: { type: Number, required: true },
         }],
-        tableId: { type: String, required: true }, // Fixed typo
+        tableId: { type: mongoose.Schema.Types.ObjectId, required: true }, // Fixed typo
+        CustomerId:{ type: mongoose.Schema.Types.ObjectId },
         SubtotalAmmount: { type: Number, required: true },
         Discount: { type: Number, required: true },
         DiscountAmmount: { type: Number, required: true },
