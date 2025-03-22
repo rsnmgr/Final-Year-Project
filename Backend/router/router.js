@@ -120,4 +120,9 @@ router.get('/purchases/:AdminId/:purchaseId', getPurchaseById);
 router.put('/purchases/:AdminId/:purchaseId', upload.single('image'), updatePurchase);
 router.delete('/purchases/:AdminId/:purchaseId', deletePurchase);
 
+
+// user request
+import {reqmessage} from '../controller/labding/message.js'
+router.post('/message',reqmessage);
+
 export default router;

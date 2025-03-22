@@ -1,6 +1,39 @@
-import React from 'react';
+import React,{useState} from 'react';
+import axios from 'axios';  // Import axios
+
+const API_URL = import.meta.env.VITE_API_URL;
+import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
+import 'react-toastify/dist/ReactToastify.css';  
 
 export default function Contact() {
+  const [formData,setFormData] = useState({
+    name: '',
+    email:'',
+    message:'',
+  });
+  const handleChange = (e)=>{
+    const {id,value} = e.target;
+    setFormData({...formData,[id]:value});
+  }
+  const handleSubmit = async(e)=>{
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${API_URL}/api/message`, formData);
+      
+      // Display backend message in Toast
+      toast.success(response.data.message);  
+
+      // Clear form after success
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error) {
+      // Display backend error message (if available)
+      if (error.response && error.response.data.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong! Please try again.");
+      }
+    }
+  }
   return (
     <div>
       <h1 className='text-center text-4xl text-orange-500 font-semibold my-10'>Get in Touch</h1>
@@ -18,6 +51,8 @@ export default function Contact() {
               className='shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline bg-gray-900'
               id='name'
               type='text'
+              value={formData.name}
+              onChange={handleChange}
               placeholder='Your Name'
               required
             />
@@ -31,6 +66,8 @@ export default function Contact() {
               className='shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline bg-gray-900'
               id='email'
               type='email'
+              value={formData.email}
+              onChange={handleChange}
               placeholder='Your Email'
               required
             />
@@ -43,6 +80,8 @@ export default function Contact() {
             <textarea
               className='shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline bg-gray-900'
               id='message'
+              value={formData.message}
+              onChange={handleChange}
               placeholder='Your Message'
               rows='4'
               required
@@ -53,6 +92,7 @@ export default function Contact() {
             <button
               className='bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded w-full focus:outline-none focus:shadow-outline'
               type='submit'
+              onClick={handleSubmit}
             >
               Send Message
             </button>
@@ -71,6 +111,7 @@ export default function Contact() {
           </p>
         </div>
       </footer>
+      <ToastContainer />
     </div>
   );
 }
