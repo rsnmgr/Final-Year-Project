@@ -12,7 +12,8 @@ import Admin from './pages/admin';
 import Menu from './pages/Menu';
 import Error from './pages/error';
 import Info from './pages/info';
-
+import UnAuthorized from './pages/unAuthorized';
+import Loding from './pages/loding';
 export default function App() {
   return (
     <div className='bg-gray-950 text-slate-300 h-screen'>
@@ -27,6 +28,8 @@ export default function App() {
             <Route path="/info/:AdminId/:tableId" element={<Info />} />
             <Route path="/menu/*" element={<Menu />} /> 
             <Route path="*" element={<Error />} /> 
+            <Route path="/unAuthorized" element={<UnAuthorized />} />
+            <Route path="/loding" element={<Loding />} />
           </Routes>
         </BrowserRouter>
       </CustomerContextProvider>

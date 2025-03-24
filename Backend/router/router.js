@@ -122,7 +122,8 @@ router.delete('/purchases/:AdminId/:purchaseId', deletePurchase);
 
 
 // user request
-import {reqmessage} from '../controller/labding/message.js'
+import {reqmessage,getmessage} from '../controller/labding/message.js'
 router.post('/message',reqmessage);
+router.get('/message',getmessage);
 
 export default router;

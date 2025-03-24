@@ -60,7 +60,7 @@ export default function Admin() {
     });
     const data = await res.json();
     if (res.status === 401 || !data || data.validUser.role !== 'admin') {
-      navigate("/");
+      navigate("/unAuthorized");
     } else {
       setLoginData(data);
       navigate("/admin/dashboard");

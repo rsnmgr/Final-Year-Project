@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function Contact() {
   const [formData,setFormData] = useState({
     name: '',
+    phone:'',
     email:'',
     message:'',
   });
@@ -24,7 +25,7 @@ export default function Contact() {
       toast.success(response.data.message);  
 
       // Clear form after success
-      setFormData({ name: '', email: '', message: '' });
+      setFormData({ name: '',phone:'', email: '', message: '' });
     } catch (error) {
       // Display backend error message (if available)
       if (error.response && error.response.data.message) {
@@ -54,6 +55,21 @@ export default function Contact() {
               value={formData.name}
               onChange={handleChange}
               placeholder='Your Name'
+              required
+            />
+          </div>
+
+          <div className='mb-4'>
+            <label className='block  text-sm font-bold mb-2' htmlFor='email'>
+              Phone
+            </label>
+            <input
+              className='shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline bg-gray-900'
+              id='phone'
+              type='text'
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder='Your Phone'
               required
             />
           </div>

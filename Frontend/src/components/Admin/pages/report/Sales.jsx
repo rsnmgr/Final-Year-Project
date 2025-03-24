@@ -102,17 +102,22 @@ export default function Sales() {
       case 'days':
         return sales.filter(sale => moment(sale.date).isSame(now, 'day'));
       case 'weekly':
-        return sales.filter(sale => moment(sale.date).isSame(now, 'week'));
+        return sales.filter(sale => 
+          moment(sale.date).isSameOrAfter(now.clone().subtract(7, 'days'), 'day')
+        );
       case 'monthly':
-        return sales.filter(sale => moment(sale.date).isSame(now, 'month'));
+        return sales.filter(sale => 
+          moment(sale.date).isSameOrAfter(now.clone().subtract(30, 'days'), 'day')
+        );
       case 'custom':
         return sales.filter(sale => 
-          moment(sale.date).isBetween(startDate, endDate, null, '[]')
+          moment(sale.date).isBetween(moment(startDate), moment(endDate), null, '[]')
         );
       default:
         return sales;
     }
   };
+  
 
   const filteredSales = getFilteredSales(sales, filter).filter(sale => 
     tableData[sale.tableId]?.toLowerCase().includes(searchTerm.toLowerCase())

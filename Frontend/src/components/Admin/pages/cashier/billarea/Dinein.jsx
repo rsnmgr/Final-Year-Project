@@ -7,7 +7,8 @@ import moment from 'moment';
 import { io } from "socket.io-client";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { CiCalculator2 } from "react-icons/ci";
+import Calculator from './Dinein/calculator';
 const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL);
 
@@ -20,7 +21,7 @@ export default function Dinein({ setSelectedTable }) {
   const [paymentType, setPaymentType] = useState("Cash");
   const [settlement, setSettlement] = useState(false);
   const tableId = localStorage.getItem("selectedTableId");
-
+  const [calculator, setCalculator] = useState(false);
   useEffect(() => {
     if (!AdminId || !tableId) return;
 
@@ -126,6 +127,8 @@ export default function Dinein({ setSelectedTable }) {
           <li className="p-2 px-6 border border-gray-700 text-sm cursor-pointer">{tableData?.table?.name || "N/A"}</li>
           <li className="p-2 px-6 border border-gray-700 text-sm cursor-pointer"><FaUsersLine size={20} /></li>
           <li className="p-2 px-6 border border-gray-700 text-sm cursor-pointer"><IoIosStar size={20} /></li>
+          <li className="p-2 px-6 border border-gray-700 text-sm cursor-pointer" onClick={()=>setCalculator(true)}> <CiCalculator2 size={20} /></li>
+
         </ul>
         <span>{orderData.orderDate ? moment(orderData.orderDate).format('hh:mm:ss A') : ""}</span>
       </div>
@@ -230,6 +233,13 @@ export default function Dinein({ setSelectedTable }) {
             <button className="p-2 rounded-md bg-gray-900 px-6" onClick={()=>setSettlement(false)}>Cancle</button>
             <button className="p-2 rounded-md bg-green-900 px-3" onClick={addReport}>Settlement</button>
           </div>
+        </div>
+      </div>
+      )}
+      {calculator &&(
+      <div className="absolute top-0 left-0 w-full h-full bg-gray-900 bg-opacity-90 flex justify-center items-center z-50">
+        <div className="bg-gray-800 p-8 rounded-lg space-y-4">
+          <Calculator setCalculator={setCalculator} tableData={tableData} totalAfterDiscount={totalAfterDiscount}/>
         </div>
       </div>
       )}
