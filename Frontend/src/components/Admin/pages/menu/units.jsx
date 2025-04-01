@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import  { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
@@ -151,14 +151,14 @@ export default function units() {
           <LuSearch className="absolute inset-y-0 left-3 top-1/2 transform -translate-y-1/2 flex items-center pointer-events-none text-gray-500 w-5 h-5" />
           <input
             type="text"
-            className="block w-[70%] p-3 pl-10 text-slate-200 bg-gray-900 bg-opacity-80 text-sm border border-gray-300 rounded-lg"
+            className="block w-[70%] p-3 pl-10 text-slate-200 bg-gray-900 bg-opacity-80 text-sm border border-gray-800 outline-none rounded-lg"
             placeholder="Search by name"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <button
-          className="p-2 bg-gray-900 text-white w-auto border"
+          className="p-2 bg-gray-900 text-white w-auto border border-gray-800"
           title="Unit Add"
           onClick={handleToggleModal}
         >
@@ -168,7 +168,7 @@ export default function units() {
       <div className="overflow-x-auto h-[70vh]">
         <div className="relative">
           <table className="min-w-full divide-y divide-gray-200 bg-white">
-            <thead className="bg-gray-700 sticky top-0 z-10">
+            <thead className="bg-gray-800 sticky top-0 z-10">
               <tr>
                 {["SN", "Name", "Status", "Actions"].map((header) => (
                   <th
@@ -180,7 +180,7 @@ export default function units() {
                 ))}
               </tr>
             </thead>
-            <tbody className="bg-gray-800 divide-y divide-gray-700">
+            <tbody className="bg-gray-900 divide-y divide-gray-700">
               {filteredUnits.length > 0 ? (
                 filteredUnits.map((unit, index) => (
                   <tr key={unit._id} className="text-slate-200">
@@ -195,13 +195,13 @@ export default function units() {
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm flex justify-center gap-4">
                       <MdModeEdit
-                        className="text-2xl text-green-700 cursor-pointer"
+                        className="text-2xl text-green-800 cursor-pointer"
                         title="Edit"
                         onClick={() => handleEditClick(unit._id)}
                       />
                       <MdDelete
                         title="Delete"
-                        className="text-2xl text-red-500 cursor-pointer"
+                        className="text-2xl text-red-800 cursor-pointer"
                         onClick={() => handleDeleteClick(unit._id)}
                       />
                     </td>
@@ -223,8 +223,8 @@ export default function units() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-20 z-50">
-          <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-md w-full">
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-950 bg-opacity-20 z-50">
+          <div className="relative p-8 bg-gray-900 border border-gray-800 rounded-lg shadow-md max-w-md w-full">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-xl font-semibold text-white">
                 {selectedUnit ? "Edit unit" : "Add unit"}
@@ -283,8 +283,8 @@ export default function units() {
       )}
 
       {showDeleteConfirm && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-          <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-md w-full">
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-950 bg-opacity-50 z-50">
+          <div className="relative p-8 bg-gray-900 border border-gray-800 rounded-lg shadow-md max-w-md w-full">
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-xl font-semibold text-white">
                 Confirm Deletion
@@ -301,13 +301,13 @@ export default function units() {
             <div className="flex justify-end gap-4">
               <button
                 onClick={handleDeleteConfirm}
-                className="p-2 bg-red-600 text-white w-auto"
+                className="p-2 rounded-sm px-3 bg-red-800 text-white w-auto"
               >
                 Delete
               </button>
               <button
                 onClick={handleDeleteCancel}
-                className="p-2 bg-gray-600 text-white w-auto"
+                className="p-2 rounded-sm px-3 bg-gray-800 text-white w-auto"
               >
                 Cancel
               </button>

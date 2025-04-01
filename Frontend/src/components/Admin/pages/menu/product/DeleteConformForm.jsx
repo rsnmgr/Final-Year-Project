@@ -1,12 +1,11 @@
-import React from "react";
 
 export default function DeleteConformForm({
   handleDeleteConfirm,
   handleDeleteCancel,
 }) {
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-20 z-50">
-      <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-sm w-full">
+    <div className="fixed inset-0 flex justify-center items-center bg-gray-950 bg-opacity-50 z-50">
+      <div className="relative p-8 bg-gray-900 border border-gray-800 rounded-lg shadow-md max-w-sm w-full">
         <h1 className="text-lg font-semibold text-white mb-6">
           Are you sure you want to delete this product?
         </h1>

@@ -1,5 +1,5 @@
 // Sidebar.js
-import React, { useContext, useEffect, useState } from 'react';
+import  { useContext, useEffect, useState } from 'react';
 import axios from 'axios'; 
 import { CustomerContext } from '../../ContextProvider/CustomerContext';
 

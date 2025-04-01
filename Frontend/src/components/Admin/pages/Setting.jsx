@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import img from '../../../assets/defaultImg.png';
 import Sidebar from './Setting/Sidebar';
 import Profile from './Setting/pages/Profile';

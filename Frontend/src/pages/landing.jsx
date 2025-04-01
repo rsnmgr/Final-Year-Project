@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { LuUtensilsCrossed } from "react-icons/lu";
 import { useNavigate } from 'react-router-dom';
-import { FaUserCircle } from "react-icons/fa";
 import '../App.css'
 
 // Landing pages components
@@ -11,17 +10,12 @@ import About from '../components/Landing/About';
 import Feature from '../components/Landing/Feature';
 import Services from '../components/Landing/Services';
 import Contact from '../components/Landing/Contact';
-const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Landing() {
   const [menu, setMenu] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState('');
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   validateUserRole(); // Validate user on component mount
-  // }, []);
+  
 
   const openMenu = () => {
     setMenu(!menu);
@@ -38,45 +32,14 @@ export default function Landing() {
   };
 
   const handleLoginClick = () => {
-  //   if (isLoggedIn) {
-  //     if (userRole === 'admin') {
-  //         navigate("/admin");
-  //     } else if (userRole === 'super') {
-  //         navigate("/super");
-  //     } else {
-  //         navigate("/");
-  //     }
-  // } else {
       navigate("/login");
-  // }
   };
 
   const handleRegisterClick = () => {
     navigate('/register');
   };
 
-  // const validateUserRole = async () => {
-  //   try {
-  //     const token = localStorage.getItem("TokenFoodMe");
-  //     const res = await fetch(`${API_URL}/api/validUser`, {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': token,
-  //       }
-  //     });
-  //     const data = await res.json();
-  //     if (res.status === 401 || !data) {
-  //       setIsLoggedIn(false);
-  //     } else {
-  //       setIsLoggedIn(true);
-  //       setUserRole(data.validUser.role);
-  //     }
-  //   } catch (error) {
-  //     // console.error("Error validating user role", error);
-  //     // navigate("*");
-  //   }
-  // };
+  
 
   return (
     <div className='h-[100vh]'>

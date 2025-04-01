@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaQrcode, FaMobileAlt, FaUtensils, FaShoppingCart, FaMoneyBillAlt, FaUserShield, FaClock, FaStar, FaGift } from 'react-icons/fa';
 
 export default function Feature() {

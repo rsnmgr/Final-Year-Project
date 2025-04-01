@@ -1,8 +1,6 @@
-import React from 'react';
 import Roshan from '../../assets/roshan.png';
 import Sadir from '../../assets/Sadir.png';
 import Rijan from '../../assets/Rijan.png';
-import { MdOutlinePhoneMissed } from "react-icons/md";
 import { FaFacebook, FaInstagramSquare, FaTwitter, FaGithub, FaLinkedin } from "react-icons/fa";
 
 export default function About() {

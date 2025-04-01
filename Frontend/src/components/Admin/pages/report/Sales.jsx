@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { LuSearch } from 'react-icons/lu';
 import { MdDelete } from 'react-icons/md';
 import { LuView } from "react-icons/lu";
@@ -137,7 +137,7 @@ export default function Sales() {
           <LuSearch className="absolute inset-y-0 left-3 top-1/2 transform -translate-y-1/2 flex items-center pointer-events-none text-gray-500 w-5 h-5" />
           <input
             type="text"
-            className="block w-[70%] p-3 pl-10 text-slate-200 bg-gray-900 text-sm border border-gray-300 rounded-lg"
+            className="block w-[70%] p-3 pl-10 text-slate-200 bg-gray-900 text-sm border border-gray-800 outline-none rounded-lg"
             placeholder="Search by table name"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -147,7 +147,7 @@ export default function Sales() {
           <select 
             name="filter" 
             id="filter" 
-            className='p-2 px-3 bg-black border border-blue-700 outline-none'
+            className='p-2 px-3 bg-black border border-gray-800 outline-none'
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           >
@@ -160,9 +160,9 @@ export default function Sales() {
         </div>
       </div>
 
-      <div className="overflow-x-auto h-[70vh]">
+      <div className="overflow-x-auto rounded-md h-[70vh]">
         <table className="min-w-full divide-y divide-gray-200 bg-white">
-          <thead className="bg-gray-700 sticky top-0 z-10">
+          <thead className="bg-gray-800 sticky top-0 z-10">
             <tr>
               {[
                 { short: 'SN', full: 'Serial Number' },
@@ -186,7 +186,7 @@ export default function Sales() {
               ))}
             </tr>
           </thead>
-          <tbody className="bg-gray-800 divide-y divide-gray-700">
+          <tbody className="bg-gray-900 divide-y divide-gray-700">
             {filteredSales.length ? filteredSales.map((sale, index) => (   
               <tr key={index} className="text-slate-200">
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{index + 1}</td>
@@ -202,13 +202,13 @@ export default function Sales() {
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm"><span>{moment(sale.date).format("YYYY-MM-DD")}</span> <span className='block'>{moment(sale.date).format("hh:mm A")}</span></td>
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm flex justify-center gap-2">
                   <LuView
-                    className="text-2xl text-green-700 cursor-pointer"
+                    className="text-2xl text-green-800 cursor-pointer"
                     title='view'
                     onClick={() => setOpenItems(sale)}
                   />
                   <MdDelete
                     title="Delete"
-                    className="text-2xl text-red-600 cursor-pointer"
+                    className="text-2xl text-red-800 cursor-pointer"
                     onClick={() => setDeleteReport(sale._id)} 
                   />
                 </td>
@@ -224,9 +224,9 @@ export default function Sales() {
 
       {/* Modal to View Sale Items */}
       {openItems && (
-        <div className='absolute p-3 inset-0 flex justify-center items-center h-screen bg-opacity-70 bg-gray-800 z-50'>
-          <div className='bg-gray-900 md:p-6 w-full md:w-1/3 rounded-lg'>
-            <div className="bg-gray-900 p-2 border-y border-green-500 rounded-lg shadow-lg">
+        <div className='absolute p-3 inset-0 flex justify-center items-center h-screen bg-opacity-70 bg-gray-950 z-50'>
+          <div className='bg-gray-900 border border-gray-800 md:p-6 w-full md:w-1/3 rounded-lg'>
+            <div className="bg-gray-900 p-2 border-t border-green-500 rounded-lg shadow-lg">
               <div className="flex justify-between items-center bg-gray-900 p-3 border-b-2 border-gray-500">
                 <h1 className="text-white font-semibold">            {tableData[openItems.tableId] ? tableData[openItems.tableId] : ``}
                 </h1>
@@ -253,10 +253,10 @@ export default function Sales() {
                 </table>
               </div>
               <div className="flex justify-between items-center bg-gray-900 gap-2 border-t border-gray-500 p-2">
-                <button className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-md transition-all" onClick={() => setOpenItems(null)}>
+                <button className="w-full bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-md transition-all" onClick={() => setOpenItems(null)}>
                   Close
                 </button>
-                <button className="w-full bg-green-700 hover:bg-green-600 text-white py-2 rounded-md transition-all">
+                <button className="w-full bg-green-800 hover:bg-green-700 text-white py-2 rounded-md transition-all">
                   Print
                 </button>
               </div>
@@ -267,13 +267,13 @@ export default function Sales() {
 
       {/* Delete Confirmation */}
       {deleteReport && (
-        <div className="absolute p-3 inset-0 flex justify-center items-center h-screen bg-opacity-70 bg-gray-800 z-50">
-          <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
+        <div className="absolute p-3 inset-0 flex justify-center items-center h-screen bg-opacity-70 bg-gray-950 z-50">
+          <div className="bg-gray-900 border border-gray-800 p-6 rounded-lg shadow-lg">
             <h2 className="text-lg font-semibold">Confirm Delete</h2>
             <p className="text-gray-400">Are you sure you want to delete this report?</p>
             <div className="mt-4 flex justify-end gap-2">
-              <button className="bg-gray-600 px-4 py-2 rounded-md" onClick={() => setDeleteReport(null)}>No</button>
-              <button className="px-4 py-2 rounded-md bg-red-600 text-white" onClick={() => deleteSales(deleteReport)}>Yes, Delete</button>
+              <button className="bg-gray-800 px-4 py-2 rounded-md" onClick={() => setDeleteReport(null)}>No</button>
+              <button className="px-4 py-2 rounded-md bg-red-800 text-white" onClick={() => deleteSales(deleteReport)}>Yes, Delete</button>
             </div>
           </div>
         </div>
@@ -281,8 +281,8 @@ export default function Sales() {
 
       {/* Custom Date Choose */}
       {customdate && (
-        <div className="absolute p-3 inset-0 flex justify-center items-center h-screen bg-opacity-70 bg-gray-800 z-50">
-          <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
+        <div className="absolute p-3 inset-0 flex justify-center items-center h-screen bg-opacity-70 bg-gray-950 z-50">
+          <div className="bg-gray-900 border border-gray-800 p-6 rounded-lg shadow-lg">
             <h2 className="text-lg font-semibold">Confirm Filter</h2>
             <div className='flex items-center space-x-2'>
               <div className='space-y-2'>
@@ -305,8 +305,8 @@ export default function Sales() {
               </div>
             </div>
             <div className="mt-4 flex justify-end gap-2">
-              <button className="bg-gray-600 px-4 py-2 rounded-md" onClick={() => setCustomDate(false)}>Cancel</button>
-              <button className="px-4 py-2 rounded-md bg-red-600 text-white" onClick={handleCustomFilter}>Apply Filter</button>
+              <button className="bg-gray-800 px-4 py-2 rounded-md" onClick={() => setCustomDate(false)}>Cancel</button>
+              <button className="px-4 py-2 rounded-md bg-red-800 text-white" onClick={handleCustomFilter}>Apply Filter</button>
             </div>
           </div>
         </div>

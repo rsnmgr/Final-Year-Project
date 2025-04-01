@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { MdDelete, MdModeEdit } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
@@ -197,9 +197,9 @@ export default function Purchase() {
       </div>
 
       {/* Purchase Table */}
-      <div className="overflow-x-auto h-[70vh]">
+      <div className="overflow-x-auto rounded-md h-[70vh]">
         <table className="min-w-full divide-y divide-gray-200 bg-white">
-          <thead className="bg-gray-700 sticky top-0 z-10">
+          <thead className="bg-gray-800 sticky top-0 z-10">
             <tr>
               {[
                 { short: 'SN', full: 'Serial Number' },
@@ -223,7 +223,7 @@ export default function Purchase() {
               ))}
             </tr>
           </thead>
-          <tbody className="bg-gray-800 divide-y divide-gray-700">
+          <tbody className="bg-gray-900 divide-y divide-gray-700">
             {purchases.filter(purchase => purchase.itemName.toLowerCase().includes(searchTerm.toLowerCase())).length > 0 ? (
               purchases.filter(purchase => purchase.itemName.toLowerCase().includes(searchTerm.toLowerCase())).map((purchase, index) => (
                 <tr key={purchase._id} className="text-slate-200">
@@ -231,8 +231,8 @@ export default function Purchase() {
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{purchase.supplierName}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{purchase.itemName}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{purchase.quantity}</td>
-                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">${purchase.pricePerUnit}</td>
-                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">${purchase.totalPrice}</td>
+                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{purchase.pricePerUnit}</td>
+                  <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{purchase.totalPrice}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                     <img
                       src={`${API_URL}/${purchase.image}` || image}
@@ -244,13 +244,13 @@ export default function Purchase() {
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{purchase.dateOfPurchase.slice(0, 10)}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap text-sm flex justify-center gap-2">
                     <MdModeEdit
-                      className="text-2xl text-green-700 cursor-pointer"
+                      className="text-2xl text-green-800 cursor-pointer"
                       title='Edit'
                       onClick={() => handleToggleModal(purchase)}
                     />
                     <MdDelete
                       title='Delete'
-                      className="text-2xl text-red-600 cursor-pointer"
+                      className="text-2xl text-red-800 cursor-pointer"
                       onClick={() => handleDeleteClick(purchase)}
                     />
                   </td>
@@ -270,8 +270,8 @@ export default function Purchase() {
 
       {/* Add/Edit Purchase Modal */}
       {showModal && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-          <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-2xl w-full h-[72vh] overflow-auto">
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-950 bg-opacity-50 z-50">
+          <div className="relative p-8 bg-gray-900 border border-gray-800 rounded-lg shadow-md max-w-2xl w-full h-[65vh] overflow-auto">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-xl font-semibold text-white">{selectedPurchase ? 'Edit Purchase' : 'Add Purchase'}</h1>
               <RxCross2
@@ -329,7 +329,7 @@ export default function Purchase() {
 
                 <div className='space-y-4'>
                   {selectedImage && (
-                    <img src={selectedImage} alt="Selected" className='object-cover w-full h-[42vh] rounded-md' />
+                    <img src={selectedImage} alt="Selected" className='object-cover w-full h-[37vh] rounded-md' />
                   )}
                   <input
                     type="file"
@@ -341,11 +341,11 @@ export default function Purchase() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current.click()}
-                    className='p-2 bg-green-700 text-white w-full'
+                    className='p-2 bg-green-800 text-white w-full'
                   >
                     Browse Image
                   </button>
-                  <button type="submit" className='p-2 bg-gray-700 text-white w-full'>
+                  <button type="submit" className='p-2 bg-gray-800 text-white w-full'>
                     {selectedPurchase ? 'Update' : 'Submit'}
                   </button>
                 </div>
@@ -357,8 +357,8 @@ export default function Purchase() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-          <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-md w-full">
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-950 bg-opacity-50 z-50">
+          <div className="relative p-8 bg-gray-900 border border-gray-800 rounded-lg shadow-md max-w-md w-full">
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-xl font-semibold text-white">Confirm Deletion</h1>
               <RxCross2
@@ -371,13 +371,13 @@ export default function Purchase() {
             <div className="flex justify-end gap-4">
               <button
                 onClick={handleDeleteConfirm}
-                className="p-1 bg-red-600 text-white w-auto"
+                className="p-1 bg-red-800 text-white w-auto"
               >
                 Delete
               </button>
               <button
                 onClick={handleDeleteCancel}
-                className="p-1 bg-gray-600 text-white w-auto"
+                className="p-1 bg-gray-800 text-white w-auto"
               >
                 Cancel
               </button>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { TiMinus } from "react-icons/ti";
 import { FaPlus } from "react-icons/fa";
 import { CustomerContext } from '../../ContextProvider/CustomerContext';

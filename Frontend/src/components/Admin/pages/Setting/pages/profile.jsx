@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import { GrEdit } from 'react-icons/gr';
 import io from 'socket.io-client';
 import { LoginContext } from '../../../../ContextProvider/Context';
 import img from '../../../../../assets/defaultImg.png';
 import { toast,ToastContainer } from 'react-toastify'; // Import Toastify
 import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
+import { RxCross2 } from 'react-icons/rx';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -16,6 +17,7 @@ export default function Profile() {
   const userId = loginData?.validUser?._id;
   const socket = io(API_URL);
   const fileInputRef = useRef(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     if (userId) fetchUserData();
@@ -54,6 +56,7 @@ export default function Profile() {
       fetchUserData();
       const data = await response.json();
       toast.success(data.message); // Show success message using Toastify
+      setShowMessageBox(false);
     } else {
       const data = await response.json();
       toast.error(data.message); // Show error message using Toastify
@@ -68,6 +71,8 @@ export default function Profile() {
       fetchUserData();
       const data = await response.json();
       toast.success(data.message); // Show success message using Toastify
+      setShowDeleteConfirm(false);
+      setShowMessageBox(false);
     } else {
       const data = await response.json();
       toast.error(data.message); // Show error message using Toastify
@@ -127,12 +132,38 @@ export default function Profile() {
               <div className="absolute left-1/4 py-1 w-48 border border-gray-700 text-sm bg-gray-950 rounded-md">
                 <button className="block w-full text-left px-4 py-1 hover:bg-blue-800" onClick={() => fileInputRef.current.click()}>Upload Photo</button>
                 <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageChange} />
-                <button className="block w-full text-left px-4 py-1 hover:bg-blue-800" onClick={handleImageDelete}>Delete Photo</button>
+                <button className="block w-full text-left px-4 py-1 hover:bg-blue-800" onClick={()=>setShowDeleteConfirm(true)}>Delete Photo</button>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-950 bg-opacity-50 z-50">
+          <div className="relative p-8 bg-gray-900 border border-gray-800 rounded-lg shadow-md max-w-md w-full">
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-xl font-semibold text-white">Confirm Deletion</h1>
+              
+            </div>
+            <p className="text-white mb-4">Are you sure you want to delete the Profile Image ?</p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={handleImageDelete}
+                className="p-1 bg-red-800 text-white w-auto"
+              >
+                Delete
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="p-1 bg-gray-800 text-white w-auto"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <ToastContainer />
     </div>
   );

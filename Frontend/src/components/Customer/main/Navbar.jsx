@@ -1,5 +1,5 @@
 // Navbar.js
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { LuSearch } from 'react-icons/lu';
 import { MdShoppingCart } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';

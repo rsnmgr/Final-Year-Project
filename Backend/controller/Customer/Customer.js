@@ -36,3 +36,22 @@ export const validCustomer = async (req, res) => {
     res.status(500).json({ status: 500, message: "Server error", error });
   }
 };
+
+
+export const getCustomer = async (req, res) => {
+  try {
+    const { AdminId } = req.params; // Extract AdminId from params
+
+    // Fetch customers based on the AdminId
+    const customers = await Customer.find({ adminId: AdminId });
+
+    if (!customers.length) {
+      return res.status(404).json({ message: "No customers found for this admin" });
+    }
+
+    res.status(200).json(customers);
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    res.status(500).json({ message: "Server error fetching customers" });
+  }
+};

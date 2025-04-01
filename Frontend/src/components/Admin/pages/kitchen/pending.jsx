@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import  { useState, useEffect, useContext } from 'react';
 import { LoginContext } from '../../../ContextProvider/Context';
 import axios from 'axios';
 import { io } from "socket.io-client";
@@ -100,7 +100,7 @@ export default function Pending() {
   };
 
   return (
-    <div className="h-[70vh]">
+    <div className="h-[78vh]">
       <ToastContainer />
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 overflow-y-auto">
   {orders

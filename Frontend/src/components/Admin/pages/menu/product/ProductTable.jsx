@@ -1,4 +1,3 @@
-import React from "react";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
 import { LuSearch } from "react-icons/lu";
@@ -20,14 +19,14 @@ export default function ProductTable({
           <LuSearch className="absolute inset-y-0 left-3 top-1/2 transform -translate-y-1/2 flex items-center pointer-events-none text-gray-500 w-5 h-5" />
           <input
             type="text"
-            className="block w-[70%] p-3 pl-10 text-slate-200 bg-gray-800 text-sm border border-gray-300 rounded-lg"
+            className="block w-[70%] p-3 pl-10 text-slate-200 bg-gray-900 text-sm border border-gray-800 outline-none rounded-lg"
             placeholder="Search by name"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <button
-          className="p-2 bg-gray-900 text-white border w-auto"
+          className="p-2 bg-gray-900 text-white border border-gray-800 w-auto"
           title="Detail Add"
           onClick={() => handleToggleModal()}
         >
@@ -37,7 +36,7 @@ export default function ProductTable({
 
       <div className="overflow-x-auto h-[70vh]">
         <table className="min-w-full divide-y divide-gray-200 bg-white">
-          <thead className="bg-gray-700 sticky top-0 z-10">
+          <thead className="bg-gray-800 sticky top-0 z-10">
             <tr>
               {[
                 "SN",
@@ -57,7 +56,7 @@ export default function ProductTable({
               ))}
             </tr>
           </thead>
-          <tbody className="bg-gray-800 divide-y divide-gray-700">
+          <tbody className="bg-gray-900 divide-y divide-gray-700">
             {details.filter((detail) =>
               detail.name.toLowerCase().includes(searchTerm.toLowerCase())
             ).length > 0 ? (
@@ -93,7 +92,7 @@ export default function ProductTable({
 
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                       <img
-                        src={`${API_URL}/${detail.image}` || image}
+                        src={`${API_URL}/${detail.image}` }
                         alt="Detail"
                         className="w-8 h-8 rounded-md object-cover mx-auto"
                       />
@@ -103,13 +102,13 @@ export default function ProductTable({
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm flex justify-center gap-2">
                       <MdModeEdit
-                        className="text-2xl text-green-700 cursor-pointer"
+                        className="text-2xl text-green-800 cursor-pointer"
                         title="Edit"
                         onClick={() => handleToggleModal(detail)}
                       />
                       <MdDelete
                         title="Delete"
-                        className="text-2xl text-red-600 cursor-pointer"
+                        className="text-2xl text-red-800 cursor-pointer"
                         onClick={() => handleDeleteClick(detail)}
                       />
                     </td>

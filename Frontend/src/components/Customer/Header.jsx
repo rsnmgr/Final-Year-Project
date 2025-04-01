@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { GiRoundTable } from "react-icons/gi";
 import { MdOutlineMenu } from "react-icons/md";
 import { CustomerContext } from '../ContextProvider/CustomerContext';

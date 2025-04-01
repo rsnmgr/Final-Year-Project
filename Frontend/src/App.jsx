@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
 import { CustomerContextProvider } from './components/ContextProvider/CustomerContext';  // Import your CustomerContextProvider

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import img from '../../../assets/defaultImg.png';
 import { PiMapPinAreaBold } from "react-icons/pi";
 import { IoMailSharp } from "react-icons/io5";

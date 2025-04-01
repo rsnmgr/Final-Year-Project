@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import  { useState, useRef, useEffect, useContext } from "react";
 import axios from "axios";
 import image from "../.././../../assets/defaultImg.png";
 import { LoginContext } from "../../../ContextProvider/Context";

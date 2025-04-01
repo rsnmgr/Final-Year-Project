@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { FaEdit, FaTrash, FaPlus, FaQrcode } from 'react-icons/fa';
 import { RxCross2 } from 'react-icons/rx';
 import { LoginContext } from '../../ContextProvider/Context';
@@ -31,7 +31,7 @@ export default function Table() {
       const response = await axios.get(`${API_URL}/${userId}`);
       setTables(response.data.tables);
     } catch (error) {
-      // toast.error(error.response?.data?.message || 'Error fetching tables');
+      console.log(error.response?.data?.message || 'Error fetching tables');
     }
   };
 
@@ -153,8 +153,8 @@ export default function Table() {
         </button>
       </div>
       <div className="relative overflow-x-auto mt-4 h-[74vh] overflow-y-auto">
-        <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <table className="w-full text-sm text-center rtl:text-right text-gray-50">
+          <thead className="text-xs text-gray-50 uppercase bg-gray-800 ">
             <tr>
               <th className="px-4 py-3">#</th>
               <th className="px-6 py-3">Table Name</th>
@@ -163,22 +163,22 @@ export default function Table() {
               <th className="px-6 py-3">Action</th>
             </tr>
           </thead>
-          <tbody className="bg-gray-800 divide-y dark:divide-gray-700">
+          <tbody className="bg-gray-800 divide-y divide-gray-700 ">
             {tables.length ? (
               tables.map((table, index) => (
-                <tr key={table._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <tr key={table._id} className="border-b bg-gray-900 border-gray-700">
                   <td className="px-4 py-4 text-center">{index + 1}</td>
                   <td className="px-6 py-4 text-center">{table.name}</td>
                   <td className="px-6 py-4 text-center">{table.department}</td>
                   <td className="px-6 py-4 text-center">{table.status}</td>
                   <td className="flex items-center justify-center px-6 py-4 space-x-4">
-                    <button className="text-blue-600 dark:text-blue-500" onClick={() => openEditForm(table)}>
+                    <button className="text-blue-600" onClick={() => openEditForm(table)}>
                       <FaEdit size={16} />
                     </button>
-                    <button className="text-blue-600 dark:text-blue-500" onClick={() => generateQRCode(table._id, table.name)}>
+                    <button className="text-blue-600" onClick={() => generateQRCode(table._id, table.name)}>
                       <FaQrcode size={16} />
                     </button>
-                    <button className="text-red-600 dark:text-red-500" onClick={() => confirmDeleteTable(table._id)}>
+                    <button className="text-red-600 " onClick={() => confirmDeleteTable(table._id)}>
                       <FaTrash size={16} />
                     </button>
                   </td>
@@ -195,8 +195,8 @@ export default function Table() {
 
       {/* Add/Edit Modal */}
       {form && (
-        <div className="absolute inset-0 flex justify-center items-center bg-opacity-50 bg-gray-800 z-50">
-          <div className="bg-gray-950 p-8 rounded-md">
+        <div className="absolute inset-0 flex justify-center items-center bg-opacity-50 bg-gray-950 z-50">
+          <div className="bg-gray-900  border border-gray-800 p-8 rounded-md">
             <form onSubmit={handleSubmit}>
               <div className="flex justify-between items-center mb-4">
                 <h1 className="text-lg">{selectedTableId ? 'Edit' : 'Add'} Table</h1>
@@ -205,15 +205,15 @@ export default function Table() {
               <div className="space-y-4">
                 <div>
                   <label>Table Name</label>
-                  <input type="text" name="name" value={inpVal.name} onChange={handleInputChange} className="w-full p-2 rounded-sm bg-gray-950 border border-gray-800" required />
+                  <input type="text" name="name" value={inpVal.name} onChange={handleInputChange} className="w-full p-2 rounded-sm bg-gray-900 border border-gray-800" required />
                 </div>
                 <div>
                   <label>Department Name</label>
-                  <input type="text" name="department" value={inpVal.department} onChange={handleInputChange} className="w-full p-2 rounded-sm bg-gray-950 border border-gray-800" />
+                  <input type="text" name="department" value={inpVal.department} onChange={handleInputChange} className="w-full p-2 rounded-sm bg-gray-900 border border-gray-800" />
                 </div>
                 <div>
                   <label>Status</label>
-                  <select name="status" value={inpVal.status} onChange={handleInputChange} className="w-full p-2 rounded-sm bg-gray-950 border border-gray-800">
+                  <select name="status" value={inpVal.status} onChange={handleInputChange} className="w-full p-2 rounded-sm bg-gray-900 border outline-none border-gray-800">
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
                   </select>
@@ -227,15 +227,15 @@ export default function Table() {
 
       {/* QR Code Display */}
       {qrCodeUrl && (
-        <div className="absolute inset-0 flex justify-center items-center bg-opacity-50 bg-gray-800 z-50">
-          <div className="relative bg-gray-950 border border-blue-700 w-full max-w-md p-8 rounded-md flex flex-col items-center">
+        <div className="absolute inset-0 flex justify-center items-center bg-opacity-50 bg-gray-950 z-50">
+          <div className="relative bg-gray-900 border border-gray-800  w-full max-w-md p-8 rounded-md flex flex-col items-center">
             <div className="flex justify-between items-center w-full mb-4">
               <RxCross2 size={20} className="cursor-pointer" onClick={() => setQrCodeUrl('')} />
-              <span className="text-blue-500 cursor-pointer" onClick={downloadQRCode}>{`Download (${selectedTableName})`}</span>
+              <span className=" text-green-600 cursor-pointer" onClick={downloadQRCode}>{`Download (${selectedTableName})`}</span>
             </div>
             <h1 className="text-2xl text-center mb-4">Scan Me</h1>
             <img src={qrCodeUrl} alt="QR Code" className="mb-4" />
-            <input type="text" className="bg-gray-950 border border-gray-900 p-2 w-full mb-4 text-center" value={`${window.location.origin}/info/${userId}/${selectedTableId}`} readOnly />
+            <input type="text" className="bg-gray-900 border border-gray-800 outline-none p-2 w-full mb-4 text-center" value={`${window.location.origin}/info/${userId}/${selectedTableId}`} readOnly />
             <button className="bg-gray-800 p-2 w-full mb-4" onClick={copyToClipboard}>Copy URL</button>
           </div>
         </div>
@@ -243,8 +243,8 @@ export default function Table() {
 
       {/* Delete Confirmation Modal */}
       {deleteForm && (
-        <div className="absolute inset-0 flex justify-center items-center bg-opacity-50 bg-gray-800 z-50">
-          <div className="bg-gray-950 p-8 rounded-md">
+        <div className="absolute inset-0 flex justify-center items-center bg-opacity-50 bg-gray-950 z-50">
+          <div className="bg-gray-900 border border-gray-800 p-8 rounded-md">
             <h1>Are you sure you want to delete this table?</h1>
             <div className="flex items-center space-x-2 mt-4">
               <button className="bg-gray-800 p-2 w-full" onClick={() => setDeleteForm(false)}>Cancel</button>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { FaPlus } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -48,8 +48,8 @@ export default function ProductForm({
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-20 z-50">
-      <div className="relative p-4 bg-gray-900 rounded-lg shadow-md max-w-xl w-full ">
+    <div className="fixed inset-0 flex justify-center items-center bg-gray-950 bg-opacity-50 z-50">
+      <div className="relative p-4 bg-gray-900 border border-gray-800 rounded-lg shadow-md max-w-xl w-full ">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-xl font-semibold text-white">
             {selectedDetail ? "Edit Product" : "Add Product"}

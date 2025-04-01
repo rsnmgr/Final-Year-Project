@@ -23,10 +23,10 @@ import { userRegister } from '../controller/Online/userController.js';
 router.post('/register', userRegister);
 
 // Customer
-import {addCustomer,validCustomer} from '../controller/Customer/Customer.js' ;
+import {addCustomer,validCustomer,getCustomer} from '../controller/Customer/Customer.js' ;
 router.post('/add-customer', addCustomer);
 router.get('/valid-customer',authenticate, validCustomer);
-
+router.get('/get-customer/:AdminId', getCustomer);
 // Multi-login
 import { login,validUser,logOut } from '../controller/MultiLogin/Login.js';
 router.post('/login', login);

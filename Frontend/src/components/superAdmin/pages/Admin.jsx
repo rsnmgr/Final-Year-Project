@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import { RxCross1 } from "react-icons/rx";
 import img from '../../../assets/defaultImg.png';
@@ -175,8 +175,8 @@ export default function Admin() {
 
       {/* Table Section */}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-center rtl:text-right dark:text-gray-400">
-          <thead className="text-xs uppercase bg-gray-50 dark:bg-gray-800 dark:text-gray-300 border-b border-gray-600">
+        <table className="w-full text-sm text-center rtl:text-right ">
+          <thead className="text-xs uppercase bg-gray-800  border-b border-gray-600">
             <tr>
               <th scope="col" className="px-6 py-3">SN</th>
               <th scope="col" className="px-6 py-3">User name</th>
@@ -192,9 +192,9 @@ export default function Admin() {
             {customers.length > 0 ? (
               customers.map((customer, index) => (
                 customer && (
-                  <tr key={customer._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <tr key={customer._id} className="bg-gray-900 border-b border-gray-800">
                     <td className="px-6 py-4 items-center text-center">{index + 1}</td>
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white items-center text-center">
+                    <th scope="row" className="px-6 py-4 font-medium  whitespace-nowrap items-center text-center">
                       {customer.name}
                     </th>
                     <td className="px-6 py-4 items-center text-center">{customer.email}</td>
@@ -205,10 +205,10 @@ export default function Admin() {
                       <img src={customer.image ? `${API_URL}/${customer.image}` : img} className="w-8 h-8 border border-gray-600" alt="Customer" />
                     </td>
                     <td className="flex items-center justify-center px-6 py-4 space-x-4">
-                      <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                      <a href="#" className="font-medium text-blue-600  hover:underline">
                         <FaEdit size={16} className="inline-block" onClick={() => handleOpenForm(customer)} />
                       </a>
-                      <a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline">
+                      <a href="#" className="font-medium text-red-600  hover:underline">
                         <FaTrash size={16} className="inline-block" onClick={() => handleDelete(customer._id)} />
                       </a>
                     </td>

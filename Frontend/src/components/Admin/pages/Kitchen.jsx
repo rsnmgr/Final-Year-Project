@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Pending from "./kitchen/Pending";
 import Preparing from "./kitchen/Preparing";
 import Complete from "./kitchen/Complete";

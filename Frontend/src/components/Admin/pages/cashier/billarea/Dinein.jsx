@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import  { useContext, useState, useEffect } from "react";
 import { FaUsersLine } from "react-icons/fa6";
 import { IoIosStar } from "react-icons/io";
 import { LoginContext } from '../../../../ContextProvider/Context';
@@ -107,6 +107,7 @@ export default function Dinein({ setSelectedTable }) {
     try {
       const response = await axios.post(`${API_URL}/api/add-report`, reportData);
       const deleteOrder = await axios.delete(`${API_URL}/api/orders/${AdminId}/${tableId}`);
+      console.log(deleteOrder);
       toast.success(response.data.message);
       setSettlement(false);
       setDiscount(0);

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { MdDelete, MdModeEdit } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
@@ -201,7 +201,7 @@ export default function StaffDetails() {
       {/* Detail Table */}
       <div className="overflow-x-auto h-[70vh]">
         <table className="min-w-full divide-y divide-gray-200 bg-white">
-          <thead className="bg-gray-700 sticky top-0 z-10">
+          <thead className="bg-gray-800 sticky top-0 z-10">
             <tr>
               {['SN', 'Name','Email', 'Position', 'Address', 'Phone', 'Salary', 'Image', 'Status', 'Actions'].map((header) => (
                 <th
@@ -213,7 +213,7 @@ export default function StaffDetails() {
               ))}
             </tr>
           </thead>
-          <tbody className="bg-gray-800 divide-y divide-gray-800">
+          <tbody className="bg-gray-900 divide-y divide-gray-800">
             {details.filter(detail => detail.name.toLowerCase().includes(searchTerm.toLowerCase())).length > 0 ? (
               details.filter(detail => detail.name.toLowerCase().includes(searchTerm.toLowerCase())).map((detail, index) => (
                 <tr key={detail._id} className="text-slate-200">
@@ -257,8 +257,8 @@ export default function StaffDetails() {
 
       {/* Add/Edit Detail Modal */}
       {showModal && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-20 z-50">
-          <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-2xl w-full h-[80vh] overflow-auto">
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-950 bg-opacity-20 z-50">
+          <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-2xl w-full">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-xl font-semibold text-white">{selectedDetail ? 'Edit Detail' : 'Add Detail'}</h1>
               <RxCross2
@@ -326,7 +326,7 @@ export default function StaffDetails() {
 
                 <div className='space-y-4'>
                   {selectedImage && (
-                    <img src={selectedImage} alt="Selected" className='object-cover w-full h-[50vh] rounded-md' />
+                    <img src={selectedImage} alt="Selected" className='object-cover w-full h-[44vh] rounded-md' />
                   )}
                   <input
                     type="file"
@@ -354,7 +354,7 @@ export default function StaffDetails() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-950 bg-opacity-50 z-50">
           <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-md w-full">
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-xl font-semibold text-white">Confirm Deletion</h1>

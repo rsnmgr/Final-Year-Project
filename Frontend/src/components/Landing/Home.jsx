@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaLongArrowAltRight } from "react-icons/fa";
 import Food from '../../assets/Food.png';
 

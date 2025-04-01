@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Table from './cashier/Table';
 import BillArea from './cashier/BillArea';
 

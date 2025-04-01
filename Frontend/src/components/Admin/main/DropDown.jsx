@@ -1,20 +1,12 @@
-import React,{useContext} from 'react'
 import { RxCross1 } from "react-icons/rx";
-import { MdOutlineMailOutline } from "react-icons/md";
-import { MdPhoneInTalk } from "react-icons/md";
-import { PiMapPinArea } from "react-icons/pi";
-import { MdEdit } from "react-icons/md";
 import { MdEmojiEmotions } from "react-icons/md";
 import { AiOutlineUser } from "react-icons/ai";
 import { PiSignOutBold } from "react-icons/pi";
 import { IoSettingsOutline } from "react-icons/io5";
-import { LoginContext } from '../../ContextProvider/Context';
 import {useNavigate} from 'react-router-dom';
-import img from '../../../assets/defaultImg.png';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function DropDown({profileClick,setSidebar,userData}) {
-  const {loginData, setLoginData} = useContext(LoginContext);
   const navigate = useNavigate();
   const handleItemClick = (page) => {
     setSidebar(false);
@@ -31,7 +23,6 @@ export default function DropDown({profileClick,setSidebar,userData}) {
         'Authorization': token,
       }
     });
-    const data = await res.json();
     if(res.status === 201){
       localStorage.removeItem("TokenFoodMe");
       navigate("/login");

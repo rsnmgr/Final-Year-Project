@@ -1,4 +1,3 @@
-import React from 'react';
 import { LiaUserSolid } from 'react-icons/lia';
 import { IoMdSettings } from 'react-icons/io';
 import { IoNotifications } from 'react-icons/io5';

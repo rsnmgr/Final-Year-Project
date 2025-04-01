@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import  { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import img from '../assets/login.png';
 import { FaUser, FaLock, FaFacebook, FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -87,10 +87,10 @@ export default function Login() {
 
   useEffect(() => {
     checkValidUser(); // Check if a valid user is already logged in
-  }, []);
+  }, [API_URL]);
   return (
     <div className='flex justify-center items-center min-h-screen'>
-      <div className='grid grid-cols-1 md:grid-cols-2 bg-gray-700 rounded-lg shadow-lg w-full max-w-4xl mx-4'>
+      <div className='grid grid-cols-1 md:grid-cols-2 bg-gray-900 rounded-lg shadow-lg w-full max-w-4xl mx-4 border border-gray-700'>
         
         {/* Image Section */}
         <div className='relative hidden md:flex justify-center items-center'>

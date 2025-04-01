@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useContext } from 'react';
+import  { useState,useEffect,useContext } from 'react';
 import {useNavigate} from 'react-router-dom';
 import {LoginContext} from '../components/ContextProvider/Context';
 
@@ -18,7 +18,7 @@ export default function SuperAdmin() {
   const [sidebar,setSidebar] = useState(false);
   const [currentPage, setCurrentPage] = useState('Dashboard'); // Track current page
   const [headerTitle, setHeaderTitle] = useState('Dashboard'); // Track header title
-  const {loginData, setLoginData} = useContext(LoginContext)
+  const { setLoginData} = useContext(LoginContext)
   // Profile Drop Down
   const [profile,setProfile] = useState();
     const profileClick =()=>{

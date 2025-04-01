@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { LoginContext } from '../components/ContextProvider/Context';
 
@@ -33,7 +33,7 @@ export default function Admin() {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebar, setSidebar] = useState(false);
-  const { loginData, setLoginData } = useContext(LoginContext);
+  const {  setLoginData } = useContext(LoginContext);
 
   // Profile Drop Down
   const [profile, setProfile] = useState(false);

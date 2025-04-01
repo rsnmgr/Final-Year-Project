@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import img from '../assets/login.png';
@@ -53,7 +53,7 @@ export default function Register() {
 
   return (
     <div className='flex justify-center items-center min-h-screen'>
-      <div className='grid grid-cols-1 md:grid-cols-2 bg-gray-700 rounded-lg shadow-lg w-full max-w-4xl mx-4'>
+      <div className='grid grid-cols-1 md:grid-cols-2 bg-gray-900 rounded-lg shadow-lg w-full max-w-4xl mx-4 border border-gray-700'>
         
         {/* Image Section */}
         <div className='relative hidden md:flex justify-center items-center'>

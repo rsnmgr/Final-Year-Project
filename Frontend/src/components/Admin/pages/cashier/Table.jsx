@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { LoginContext } from '../../../ContextProvider/Context';
 import io from 'socket.io-client';
@@ -77,7 +77,7 @@ export default function Table({ onTableSelect }) {
       );
     };
 
-    const handleOrderItemRemoved = async (removedData) => {
+    const handleOrderItemRemoved = async () => {
       // Refetch the order data from the server
       await fetchOrders();
     };
@@ -117,16 +117,16 @@ export default function Table({ onTableSelect }) {
     const tableOrder = orders.find((order) => order.tableId === tableId);
     const table = tables.find((table) => table._id === tableId);
 
-    if (!table) return { statusClass: 'bg-gray-800', tableName: 'Unknown' };
+    if (!table) return { statusClass: 'bg-gray-900', tableName: 'Unknown' };
 
-    let statusClass = 'bg-gray-800'; // Default status for blank tables
+    let statusClass = 'bg-gray-900'; // Default status for blank tables
     let totalOrderAmount = null;
     let tableName = table.name || 'Unknown';
 
     if (tableOrder) {
       totalOrderAmount = tableOrder.totalOrderAmount;
       if (tableOrder.orderStatus === 'Running') {
-        statusClass = 'bg-red-800';
+        statusClass = 'bg-red-900';
       }
     }
 
@@ -157,7 +157,7 @@ export default function Table({ onTableSelect }) {
               return (
                 <div
                   key={table._id}
-                  className={`border-dotted border-2 border-gray-900 ${statusClass} flex justify-center items-center cursor-pointer`}
+                  className={`border-dotted border-2 border-gray-800 ${statusClass} flex justify-center items-center cursor-pointer`}
                   onClick={() => handleTableClick(table._id)}
                 >
                   <div className="relative w-16 h-16 flex flex-col justify-center items-center">

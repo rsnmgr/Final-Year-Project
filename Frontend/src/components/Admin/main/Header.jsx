@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import  { useState, useEffect, useContext } from 'react';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { LoginContext } from '../../ContextProvider/Context';
-import { useNavigate } from 'react-router-dom';
 import DropDown from './DropDown';
 import io from 'socket.io-client';
 import { IoNotifications } from "react-icons/io5";
@@ -9,12 +8,11 @@ import Notification from './Notification';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export default function Header({ toggleSidebar, profileClick, profile, setProfile, title, setSidebar }) {
+export default function Header({ toggleSidebar, profile, setProfile, title, setSidebar }) {
   const { loginData } = useContext(LoginContext);
   const [userData, setUserData] = useState(null);
   const userId = loginData?.validUser?._id;
   const socket = io(`${API_URL}`);
-  const navigate = useNavigate();
   const [notification, setNotification] = useState(false);
 
   // Toggle notification panel and ensure profile dropdown is closed

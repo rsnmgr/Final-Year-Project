@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import  {  useEffect, useContext } from 'react';
 import Header from '../components/Customer/Header';
 import Main from '../components/Customer/Main';
 import Bag from '../components/Customer/pages/Bag';

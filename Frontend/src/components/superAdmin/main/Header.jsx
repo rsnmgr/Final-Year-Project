@@ -1,14 +1,13 @@
-import React, {  useState,useContext,useEffect } from 'react'
+import {  useState,useContext,useEffect } from 'react'
 /* React Icons */
 import { GiHamburgerMenu } from "react-icons/gi";
 import DropDown from './DropDown';
 /* Import Default Image */
-import img from '../../../assets/defaultImg.png';
 import { LoginContext } from '../../ContextProvider/Context';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Header({toggleSidebar,profileClick,profile,title,handlePageChange}) {
-  const {loginData, setLoginData} = useContext(LoginContext)
+  const {loginData} = useContext(LoginContext)
   const [userData, setUserData] = useState(null);
   const userId = loginData?.validUser?._id;
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
@@ -145,7 +145,7 @@ export default function staffCategory() {
       <div className="overflow-x-auto h-[70vh]">
         <div className="relative">
           <table className="min-w-full divide-y divide-gray-200 bg-white">
-            <thead className="bg-gray-700 sticky top-0 z-10">
+            <thead className="bg-gray-800 sticky top-0 z-10">
               <tr>
                 {["SN", "Name", "Actions"].map(header => (
                   <th
@@ -157,7 +157,7 @@ export default function staffCategory() {
                 ))}
               </tr>
             </thead>
-            <tbody className="bg-gray-800 divide-y divide-gray-700">
+            <tbody className="bg-gray-900 divide-y divide-gray-700">
               {filteredCategories.length > 0 ? (
                 filteredCategories.map((category, index) => (
                   <tr key={category._id} className="text-slate-200">
@@ -194,7 +194,7 @@ export default function staffCategory() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-20 z-50">
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-950 bg-opacity-20 z-50">
           <div className="relative p-8 bg-gray-900 rounded-lg shadow-md max-w-md w-full">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-xl font-semibold text-white">{selectedCategory ? "Edit Category" : "Add Category"}</h1>

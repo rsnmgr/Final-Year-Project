@@ -1,5 +1,5 @@
 // Main.js
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Navbar from './main/Navbar';
 import Sidebar from './main/Sidebar';
 import DisplayMenu from './main/DisplayMenu';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { IoIosArrowForward } from "react-icons/io";
 import { useParams, useNavigate } from "react-router-dom";
 

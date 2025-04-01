@@ -1,4 +1,3 @@
-import React from 'react'
 /* React Icons */
 import { RxDashboard } from "react-icons/rx";
 import { GrUserAdmin } from "react-icons/gr";

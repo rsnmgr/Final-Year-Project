@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { IoIosArrowUp } from "react-icons/io";
 import { MdShoppingCart } from "react-icons/md";

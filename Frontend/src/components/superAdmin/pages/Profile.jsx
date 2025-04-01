@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import img from '../../../assets/defaultImg.png';
 import { PiMapPinAreaBold } from "react-icons/pi";
 import { IoMailSharp } from "react-icons/io5";
@@ -12,7 +12,7 @@ import io from 'socket.io-client';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Profile({handlePageChange}) {
-  const { loginData, setLoginData } = useContext(LoginContext);
+  const { loginData } = useContext(LoginContext);
   const [userData, setUserData] = useState(null);
   const userId = loginData?.validUser?._id;
   const socket = io(`${API_URL}`);
