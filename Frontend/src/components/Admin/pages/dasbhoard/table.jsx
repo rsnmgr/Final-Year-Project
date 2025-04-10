@@ -124,8 +124,21 @@ export default function Orders() {
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{tableData[history.tableId]?.table?.name || "Loading..."}</td>
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{history.items.length}</td>
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{history.total || 0}</td>
-                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{history.itemsStatus || 'Pending'}</td>
-                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{new Date(history.orderDate).toLocaleString()}</td>
+                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
+                  <button type="button" className={`px-3 py-1 rounded-full font-medium capitalize transition duration-200 hover:brightness-110 ${
+                    history.itemsStatus === 'pending'
+                      ? 'bg-amber-500 text-white'
+                      : history.itemsStatus === 'accepted'
+                      ? 'bg-blue-500 text-white'
+                      : history.itemsStatus === 'ready'
+                      ? 'bg-emerald-500 text-white'
+                      : history.itemsStatus === 'finished'
+                      ? 'bg-slate-600 text-white'
+                      : 'bg-gray-500 text-white'
+                  }`}>
+                    {history.itemsStatus || 'Pending'}
+                  </button>
+                </td>                <td className="px-6 py-4 text-center whitespace-nowrap text-sm">{new Date(history.orderDate).toLocaleString()}</td>
                 <td className="px-6 py-4 text-center whitespace-nowrap text-sm flex justify-center gap-2">
                   <MdOutlinePreview 
                     className="text-2xl text-green-700 cursor-pointer"

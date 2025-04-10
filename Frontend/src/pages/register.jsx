@@ -1,8 +1,9 @@
 import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash,FaPhoneAlt,FaLocationArrow } from 'react-icons/fa';
 import img from '../assets/login.png';
 const API_URL = import.meta.env.VITE_API_URL;
+import { GrRestaurant } from "react-icons/gr";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,6 +11,9 @@ export default function Register() {
   const [inputValue,setInputValue] = useState({
     name:"",
     email:"",
+    phone:"",
+    address:"",
+    estaurant:"",
     password:"",
     cpassword:"",
   });
@@ -33,7 +37,7 @@ export default function Register() {
 
   const handleRegisterSubmit = async(e) => {
     e.preventDefault();
-    const data = await fetch(`${API_URL}/api/register`,{
+    const data = await fetch(`${API_URL}/api/create`,{
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -58,14 +62,15 @@ export default function Register() {
         {/* Image Section */}
         <div className='relative hidden md:flex justify-center items-center'>
           <img src={img} alt="Register Illustration" className='h-[80vh] object-cover rounded-l-lg' />
-          <h2 className='absolute top-28 right-20 text-orange-500 font-extrabold text-xl'>FOOD ME</h2>
+          <h2 className='absolute top-36 right-16 text-orange-500 font-extrabold text-xl'>FOOD ME</h2>
+          <h2 className='absolute top-36 right-16 text-orange-500 font-extrabold text-xl'>FOOD ME</h2>
         </div>
 
         {/* Form Section */}
         <div className='flex flex-col justify-center items-center p-6 bg-gray-800 text-white rounded-r-lg shadow-lg'>
           <h2 className='text-3xl font-bold mb-6 text-center'>Register</h2>
           
-          <form className='flex flex-col gap-4 w-full max-w-xs' onSubmit={handleRegisterSubmit}>
+          <form className='flex flex-col gap-2 w-full max-w-xs' onSubmit={handleRegisterSubmit}>
             {/* Username Input */}
             <div className='flex items-center border border-gray-400 p-3 rounded-md bg-gray-800'>
               <FaUser className='text-gray-500 mr-3' />
@@ -89,6 +94,45 @@ export default function Register() {
                 onChange ={setValue}
                 value ={inputValue.email}
                 placeholder='Email'
+                className='outline-none w-full bg-gray-800 text-white'
+                required
+              />
+            </div>
+            {/* Phone Input */}
+            <div className='flex items-center border border-gray-400 p-3 rounded-md bg-gray-800'>
+              <FaPhoneAlt className='text-gray-500 mr-3' />
+              <input
+                type='text'
+                name= 'phone'
+                onChange ={setValue}
+                value ={inputValue.phone}
+                placeholder='Phone'
+                className='outline-none w-full bg-gray-800 text-white'
+                required
+              />
+            </div>
+            {/* Address Input */}
+            <div className='flex items-center border border-gray-400 p-3 rounded-md bg-gray-800'>
+              <FaLocationArrow className='text-gray-500 mr-3' />
+              <input
+                type='text'
+                name= 'address'
+                onChange ={setValue}
+                value ={inputValue.address}
+                placeholder='Address'
+                className='outline-none w-full bg-gray-800 text-white'
+                required
+              />
+            </div>
+            {/* Restaurant Input */}
+            <div className='flex items-center border border-gray-400 p-3 rounded-md bg-gray-800'>
+              <GrRestaurant className='text-gray-500 mr-3' />
+              <input
+                type='text'
+                name= 'restaurant'
+                onChange ={setValue}
+                value ={inputValue.restaurant}
+                placeholder='Restaurant Name'
                 className='outline-none w-full bg-gray-800 text-white'
                 required
               />

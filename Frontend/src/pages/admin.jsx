@@ -133,7 +133,7 @@ export default function Admin() {
             />
           </div>
         </div>
-        <div className="overflow-y-auto">
+        <div className="overflow-y-auto bg-gray-950">
           {/* Page Routes */}
           <Routes>
             <Route path="dashboard" element={<Dashboard />} />

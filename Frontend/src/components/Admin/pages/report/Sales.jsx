@@ -225,8 +225,8 @@ export default function Sales() {
       {/* Modal to View Sale Items */}
       {openItems && (
         <div className='absolute p-3 inset-0 flex justify-center items-center h-screen bg-opacity-70 bg-gray-950 z-50'>
-          <div className='bg-gray-900 border border-gray-800 md:p-6 w-full md:w-1/3 rounded-lg'>
-            <div className="bg-gray-900 p-2 border-t border-green-500 rounded-lg shadow-lg">
+          <div className='bg-gray-900 border border-gray-700 md:p-6 w-full md:w-1/3 rounded-lg'>
+            <div className="0 p-2  rounded-lg shadow-lg">
               <div className="flex justify-between items-center bg-gray-900 p-3 border-b-2 border-gray-500">
                 <h1 className="text-white font-semibold">            {tableData[openItems.tableId] ? tableData[openItems.tableId] : ``}
                 </h1>
@@ -252,8 +252,8 @@ export default function Sales() {
                   </tbody>
                 </table>
               </div>
-              <div className="flex justify-between items-center bg-gray-900 gap-2 border-t border-gray-500 p-2">
-                <button className="w-full bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-md transition-all" onClick={() => setOpenItems(null)}>
+              <div className="flex justify-between items-center  gap-2 border-t border-gray-500 p-2">
+                <button className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-md transition-all" onClick={() => setOpenItems(null)}>
                   Close
                 </button>
                 <button className="w-full bg-green-800 hover:bg-green-700 text-white py-2 rounded-md transition-all">

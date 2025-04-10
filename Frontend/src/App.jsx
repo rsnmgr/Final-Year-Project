@@ -13,6 +13,7 @@ import Error from './pages/error';
 import Info from './pages/info';
 import UnAuthorized from './pages/unAuthorized';
 import Loding from './pages/loding';
+import OnlineUser from './pages/onlineUser';
 export default function App() {
   return (
     <div className='bg-gray-950 text-slate-300 h-screen'>
@@ -29,6 +30,7 @@ export default function App() {
             <Route path="*" element={<Error />} /> 
             <Route path="/unAuthorized" element={<UnAuthorized />} />
             <Route path="/loding" element={<Loding />} />
+            <Route path="/user" element={<OnlineUser />} />
           </Routes>
         </BrowserRouter>
       </CustomerContextProvider>

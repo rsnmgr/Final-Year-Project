@@ -10,13 +10,12 @@ export default function Dashboard() {
         <h1 className="text-xl">My Dashboard</h1>
       </div>
       <Card />
-      <div >
-        <h1 className="mb-3">View Chart</h1>
+      {/* <div >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Chart />
         <PieChart/>
         </div>
-      </div>
+      </div> */}
       <Table/>
     </div>
   );

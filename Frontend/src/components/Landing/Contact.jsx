@@ -40,7 +40,7 @@ export default function Contact() {
       <h1 className='text-center text-4xl text-orange-500 font-semibold my-10'>Get in Touch</h1>
 
       {/* Contact Form */}
-      <div className='max-w-md mx-auto'>
+      <div className=''>
         <form className='bg-gray-900 shadow-md rounded px-8 pt-6 pb-8 mb-4'>
           <h2 className='text-2xl text-center mb-6'>Contact Us</h2>
           
@@ -121,9 +121,9 @@ export default function Contact() {
         <div className='max-w-4xl mx-auto text-center'>
           <p className='text-sm'>© 2024 FOODS ME. All Rights Reserved.</p>
           <p className='text-sm'>Follow us on social media: 
-            <a href="#" className='text-orange-500 hover:text-orange-400 mx-2'>Facebook</a> |
-            <a href="#" className='text-orange-500 hover:text-orange-400 mx-2'>Twitter</a> |
-            <a href="#" className='text-orange-500 hover:text-orange-400 mx-2'>Instagram</a>
+            <a href="https://www.facebook.com/profile.php?id=100084512194161" target="_blank" className='text-orange-500 hover:text-orange-400 mx-2'>Facebook</a> |
+            <a href="#" target="_blank" className='text-orange-500 hover:text-orange-400 mx-2'>Twitter</a> |
+            <a href="https://www.instagram.com/roshanthapamagar_/" target="_blank"  className='text-orange-500 hover:text-orange-400 mx-2'>Instagram</a>
           </p>
         </div>
       </footer>

@@ -1,36 +1,81 @@
+import { FaTabletAlt, FaUtensils, FaConciergeBell, FaMoneyCheckAlt, FaChartBar, FaBell, FaCogs, FaMobileAlt } from 'react-icons/fa';
+import { MdDashboardCustomize } from 'react-icons/md';
 
-const servicesData = [
+const services = [
   {
-    title: "Service 1",
-    description: "Description of service 1. This could include details about what the service entails and its benefits.",
+    icon: <FaTabletAlt className="text-3xl" />,
+    title: 'Digital Menu & Table Ordering',
+    description:
+      'Interactive digital menus with QR code/tablet ordering. Let guests customize and place orders with ease.',
   },
   {
-    title: "Service 2",
-    description: "Description of service 2. Highlight the key features and advantages of this service.",
+    icon: <FaUtensils className="text-3xl" />,
+    title: 'Real-Time Order Management',
+    description:
+      'Track orders instantly from table to kitchen. Update order statuses in real-time for seamless flow.',
   },
   {
-    title: "Service 3",
-    description: "Description of service 3. Explain how this service can help solve customer problems.",
+    icon: <FaConciergeBell className="text-3xl" />,
+    title: 'Kitchen Display System (KDS)',
+    description:
+      'Streamline kitchen operations with digital displays. Prioritize, organize, and manage prep time efficiently.',
   },
   {
-    title: "Service 4",
-    description: "Description of service 4. Provide insights into what makes this service unique.",
+    icon: <MdDashboardCustomize className="text-3xl" />,
+    title: 'Waitstaff Dashboard',
+    description:
+      'Give servers the tools they need to manage tables, orders, split bills, and more—right from their device.',
+  },
+  {
+    icon: <FaMoneyCheckAlt className="text-3xl" />,
+    title: 'Integrated Billing & Payments',
+    description:
+      'Fast, accurate billing with split payments, tax handling, and support for multiple payment methods.',
+  },
+  {
+    icon: <FaChartBar className="text-3xl" />,
+    title: 'Analytics & Reports',
+    description:
+      'Make data-driven decisions with detailed reports on orders, sales, peak hours, and top-performing items.',
+  },
+  {
+    icon: <FaBell className="text-3xl" />,
+    title: 'Table Notification System',
+    description:
+      'Notify guests when their orders are ready or when service is needed—no interruptions, just smooth service.',
+  },
+  {
+    icon: <FaCogs className="text-3xl" />,
+    title: 'Customization & Integration',
+    description:
+      'Integrate with your POS, CRM, or loyalty apps. Highly customizable to fit your restaurant’s unique needs.',
+  },
+  {
+    icon: <FaMobileAlt className="text-3xl" />,
+    title: 'Multi-Device Support',
+    description:
+      'Access and control the system from tablets, desktops, or mobile devices. Stay connected anytime, anywhere.',
   },
 ];
 
-export default function Services() {
+export default function ServicesSection() {
   return (
-    <div>
-      <h1 className='text-center text-4xl text-orange-500 font-semibold my-10'>Our Services</h1>
-      
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto'>
-        {servicesData.map((service, index) => (
-          <div key={index} className='bg-gray-900 hover:bg-gray-800 shadow-md rounded-lg p-6 text-center transition-transform transform hover:scale-105'>
-            <h2 className='text-xl font-bold mb-2 text-orange-600'>{service.title}</h2>
-            <p className=''>{service.description}</p>
-          </div>
-        ))}
+    <section className='py-12'>
+      <div >
+        <h2 className="text-4xl font-bold text-center mb-12">🍽️ Our Services</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className="bg-gray-900 rounded-2xl p-6 shadow-md hover:shadow-lg transition duration-300"
+            >
+              <div className="mb-4">{service.icon}</div>
+              <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
+              <p className="text-gray-500">{service.description}</p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

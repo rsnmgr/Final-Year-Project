@@ -84,7 +84,7 @@ export default function Feature() {
         </div>
 
         {/* Customer Feedback Feature */}
-        <div className='bg-gray-900 p-6 rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-800 transform hover:scale-105 transition duration-300 ease-in-out cursor-pointer'>
+        {/* <div className='bg-gray-900 p-6 rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-800 transform hover:scale-105 transition duration-300 ease-in-out cursor-pointer'>
           <div className='flex justify-center mb-6'>
             <FaStar className="text-orange-500 text-6xl" />
           </div>
@@ -92,10 +92,10 @@ export default function Feature() {
           <p className='text-gray-300 text-center'>
             Customers can easily leave feedback after their meals, helping restaurants improve service quality while building customer satisfaction and loyalty.
           </p>
-        </div>
+        </div> */}
 
         {/* Loyalty Rewards Program Feature */}
-        <div className='bg-gray-900 p-6 rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-800 transform hover:scale-105 transition duration-300 ease-in-out cursor-pointer'>
+        {/* <div className='bg-gray-900 p-6 rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-800 transform hover:scale-105 transition duration-300 ease-in-out cursor-pointer'>
           <div className='flex justify-center mb-6'>
             <FaGift className="text-orange-500 text-6xl" />
           </div>
@@ -103,7 +103,7 @@ export default function Feature() {
           <p className='text-gray-300 text-center'>
             Implement a loyalty program where returning customers earn points for discounts, exclusive deals, and special offers, enhancing retention.
           </p>
-        </div>
+        </div> */}
 
       </div>
     </div>

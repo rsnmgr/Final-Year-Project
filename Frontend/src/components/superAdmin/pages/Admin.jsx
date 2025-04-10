@@ -19,6 +19,7 @@ export default function Admin() {
     address: '',
     restaurant: '',
     password: '',
+    status: 'Active',
   });
   const [customers, setCustomers] = useState([]);
 
@@ -70,6 +71,7 @@ export default function Admin() {
         address: customer.address,
         restaurant: customer.restaurant,
         password: '', // Don't populate password for security reasons
+        status: customer.status,
       });
       setSelectedImage(customer.image ? `${API_URL}/${customer.image}` : img);
     } else {
@@ -81,6 +83,7 @@ export default function Admin() {
         address: '',
         restaurant: '',
         password: '',
+        status: '',
       });
       setSelectedImage(img);
     }
@@ -150,6 +153,7 @@ export default function Admin() {
           address: '',
           restaurant: '',
           password: '',
+          status: '',
         });
         setSelectedImage(img);
         setFormVisible(false);
@@ -185,6 +189,7 @@ export default function Admin() {
               <th scope="col" className="px-6 py-3">Address</th>
               <th scope="col" className="px-6 py-3">Restaurant Name</th>
               <th scope="col" className="px-6 py-3">Image</th>
+              <th scope="col" className="px-6 py-3">Status</th>
               <th scope="col" className="px-6 py-3">Action</th>
             </tr>
           </thead>
@@ -203,6 +208,11 @@ export default function Admin() {
                     <td className="px-6 py-4 items-center text-center">{customer.restaurant}</td>
                     <td className="px-6 py-4 items-center text-center">
                       <img src={customer.image ? `${API_URL}/${customer.image}` : img} className="w-8 h-8 border border-gray-600" alt="Customer" />
+                    </td>
+                    <td className="px-6 py-4 items-center text-center">
+                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${customer.status === 'Active' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                        {customer.status}
+                      </span>
                     </td>
                     <td className="flex items-center justify-center px-6 py-4 space-x-4">
                       <a href="#" className="font-medium text-blue-600  hover:underline">
@@ -269,6 +279,21 @@ export default function Admin() {
                   <div>
                     <label htmlFor="password" className="block text-sm font-medium text-gray-300">Password:</label>
                     <input type="text" id="password" name="password" onChange={handleChange} value={inpVal.password} className="w-full p-1 mt-1 text-gray-300 border border-gray-500 outline-none bg-gray-800" required={currentCustomerId === null} />
+                  </div>
+                  <div className="relative">
+                    <label className="block text-sm font-medium text-white mb-1">
+                      Status 
+                    </label>
+                    <select
+                      name="status"
+                      value={inpVal.status}
+                      onChange={handleChange}
+                      className="block p-1 bg-gray-900 px-3 border border-gray-700 outline-none w-full"
+                      required
+                    >
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                    </select>
                   </div>
                 </div>
 

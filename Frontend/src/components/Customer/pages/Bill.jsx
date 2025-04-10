@@ -10,14 +10,14 @@ const socket = io(API_URL);
 
 export default function Bill() {
   const navigate = useNavigate();
-  const { customerData, AdminId, tableId } = useContext(CustomerContext);
+  const { customerData,CustomerId, AdminId, tableId } = useContext(CustomerContext);
   const [orders, setOrders] = useState([]);
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [deleteOrderForm, setDeleteOrderForm] = useState(null);
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/fetch-orders/${AdminId}/${tableId}`);
+      const response = await fetch(`${API_URL}/api/fetch-orders/${AdminId}/${tableId}/${CustomerId}`);
       const data = await response.json();
       if (response.ok) {
         // If no orders found, ensure orders is an empty array
@@ -33,8 +33,8 @@ export default function Bill() {
   };
 
   useEffect(() => {
-    if (AdminId && tableId) fetchOrders(); // Ensure both AdminId and tableId are valid
-  }, [AdminId, tableId]);
+    if (AdminId && tableId && CustomerId) fetchOrders(); // Ensure both AdminId and tableId are valid
+  }, [AdminId, tableId, CustomerId]);
 
   useEffect(() => {
     socket.on("orderAdded", fetchOrders);

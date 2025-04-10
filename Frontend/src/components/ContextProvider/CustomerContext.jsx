@@ -12,6 +12,7 @@ export function CustomerContextProvider({ children }) {
   const tableId = customerData?.validUser?.tableId;
   const Cname = customerData?.validUser?.name;
   const Cphone = customerData?.validUser?.phone;
+  const CustomerId = customerData?.validUser?._id;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,7 +29,7 @@ export function CustomerContextProvider({ children }) {
   }, [AdminId, tableId]);
   
   return (
-    <CustomerContext.Provider value={{ customerData, setCustomerData ,tableData,AdminId, tableId,Cname,Cphone}}>
+    <CustomerContext.Provider value={{ customerData,CustomerId, setCustomerData ,tableData,AdminId, tableId,Cname,Cphone}}>
       {children}
     </CustomerContext.Provider>
   );
