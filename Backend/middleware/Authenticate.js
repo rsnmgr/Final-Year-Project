@@ -5,7 +5,6 @@ import Online from "../model/Online/userSchema.js";
 import Customer from "../model/customer/Customer.js";
 import Staff from "../model/admin/staff/Details.js";
 const keySecret = 'ldjfjaojorejoojfoajoejrfoaoohahojoehojohahojfoaohahojoeoohohohoh';
-
 export const authenticate = async (req, res, next) => {
     try {
         const token = req.headers.authorization;
@@ -17,27 +16,24 @@ export const authenticate = async (req, res, next) => {
         // Verify the JWT token
         const verifytoken = jwt.verify(token, keySecret);
 
-        // Check each schema to find the user
-        let rootUser;
-        if ((rootUser = await Admin.findOne({ _id: verifytoken._id }))) {
-            req.userRole = "Admin"; // Optional: Attach user role if needed
-        } else if ((rootUser = await Super.findOne({ _id: verifytoken._id }))) {
-            req.userRole = "Super";
-        } else if ((rootUser = await Online.findOne({ _id: verifytoken._id }))) {
-            req.userRole = "Online";
-        }
-        else if ((rootUser = await Customer.findOne({ _id: verifytoken._id }))) {
-            req.userRole = "Customer";
-        }else if ((rootUser = await Staff.findOne({ _id: verifytoken._id }))) {
-            req.userRole = "Staff";
-        }
+        // Find the user
+        let rootUser = await Admin.findOne({ _id: verifytoken._id }) ||
+                       await Super.findOne({ _id: verifytoken._id }) ||
+                       await Online.findOne({ _id: verifytoken._id }) ||
+                       await Customer.findOne({ _id: verifytoken._id }) ||
+                       await Staff.findOne({ _id: verifytoken._id });
 
-        // If the user isn't found in any schema, throw an error
         if (!rootUser) {
             return res.status(404).json({ status: 404, message: "User not found" });
         }
 
-        // Attach user details to request object
+        // Check if the token exists in the user's stored tokens
+        const isTokenValid = rootUser.tokens.some((t) => t.token === token);
+
+        if (!isTokenValid) {
+            return res.status(401).json({ status: 401, message: "Unauthorized, token mismatch" });
+        }
+
         req.token = token;
         req.rootUser = rootUser;
         req.userId = rootUser._id;

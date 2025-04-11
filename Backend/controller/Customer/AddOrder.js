@@ -62,6 +62,23 @@ export const fetchOrders = async (req, res) => {
   }
 };
 
+export const fetchOrdersbyCustomerId = async (req, res) => {
+  try {
+    const { AdminId, tableId,CustomerId } = req.params;
+
+    // Find orders by AdminId and tableId
+    const orders = await Order.findOne({ AdminId, tableId,CustomerId });
+
+    if (!orders) {
+      return res.status(404).json({ message: "No orders found" });
+    }
+
+    return res.status(200).json({ orders });
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching orders", error });
+  }
+};
+
 export const fetchOrdersByAdminId = async (req, res) => {
   try {
     const { AdminId } = req.params;

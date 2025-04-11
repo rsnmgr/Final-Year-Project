@@ -1,14 +1,14 @@
 import Report from "../../../model/admin/report/sales.js";
 import { io } from "../../../server.js";
-
+import Order from "../../../model/customer/AddOrder.js";
 export const addSalesReport = async (req, res) => {
-    const { adminId, tableId,CustomerId ,items, SubtotalAmmount, Discount, DiscountAmmount, totalAmmount, paymentType } = req.body;
-    if (totalAmmount <= 0) { // Prevent adding if total amount is 0 or negative
+    const { adminId, tableId, CustomerId, items, SubtotalAmmount, Discount, DiscountAmmount, totalAmmount, paymentType } = req.body;
+
+    if (totalAmmount <= 0) {
         return res.status(400).json({ message: "Total amount must be greater than 0." });
     }
 
     try {
-
         const status = paymentType === "Due" ? "unpaid" : "paid";
 
         const newReportEntry = {
@@ -22,6 +22,21 @@ export const addSalesReport = async (req, res) => {
             paymentType,
             status,
         };
+
+        let order = await Order.findOne({ AdminId: adminId, tableId: tableId });
+
+        if (!order) {
+            return res.status(404).json({ message: "Order not found." });
+        }
+
+        const orderHistory = order.OrderHistory || [];
+
+        // Check if all orderHistory items have itemsStatus === "Finished"
+        const allItemsFinished = orderHistory.every(item => item.itemsStatus === "Finished");
+
+        if (!allItemsFinished) {
+            return res.status(400).json({ message: "All items must have 'Finished' status before bill settlement." });
+        }
 
         let report = await Report.findOne({ adminId });
 
@@ -39,10 +54,11 @@ export const addSalesReport = async (req, res) => {
         io.emit("reportAdded", report);
 
     } catch (error) {
-        console.error("Error adding sales report:", error); // Log for debugging
+        console.error("Error adding sales report:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
+
 
 
 // Fetch all sales reports for the given adminId

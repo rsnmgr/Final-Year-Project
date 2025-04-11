@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Purchases from '../../../model/admin/report/purchase.js'; // Adjust path
+import { io } from "../../../server.js";
 
 // Helper function to delete an image file
 const deleteImageFile = (filePath) => {
@@ -30,6 +31,7 @@ export const addPurchase = async (req, res) => {
         }
 
         await purchaseEntry.save();
+        io.emit("purchaseAdded", purchaseEntry);
 
         res.status(200).json({ message: 'Purchase added successfully', purchaseEntry });
     } catch (error) {
@@ -115,6 +117,7 @@ export const updatePurchase = async (req, res) => {
         purchase.image = newImage || purchase.image;
 
         await purchaseEntry.save();
+        io.emit("purchaseUpdated", purchaseEntry);
 
         res.status(200).json({ message: 'Purchase updated successfully', purchase });
     } catch (error) {

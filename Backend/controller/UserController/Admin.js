@@ -24,10 +24,10 @@ const isEmailDuplicate = async (email) => {
 // Create a customer
 export const createCustomer = async (req, res) => {
     try {
-        const { name, email, phone, address, restaurant, password } = req.body;
-
+        const { name, email, phone, address, restaurant, password ,status} = req.body;
+        console.log(req.body);
         // Check if all required fields are provided
-        if (!name || !email || !phone || !address || !restaurant || !password) {
+        if (!name || !email || !phone || !address || !restaurant || !password || !status) {
             return res.status(400).json({ message: 'All required fields must be provided' });
         }
 
@@ -36,7 +36,7 @@ export const createCustomer = async (req, res) => {
             return res.status(400).json({ message: 'Email already exists' });
         }
 
-        const data = { name, email, phone, address, restaurant, password };
+        const data = { name, email, phone, address, restaurant, password,status };
 
         // Include the image path if it exists
         if (req.file) {
@@ -91,7 +91,7 @@ export const fetchCustomerById = async (req, res) => {
 // Update customer details and image
 export const updateCustomer = async (req, res) => {
     const { id } = req.params;
-    const { name, email, phone, address, restaurant, password } = req.body;
+    const { name, email, phone, address, restaurant, password,status } = req.body;
     const image = req.file ? req.file.path : null;
 
     try {
@@ -117,6 +117,7 @@ export const updateCustomer = async (req, res) => {
         customer.address = address || customer.address;
         customer.restaurant = restaurant || customer.restaurant;
         customer.password = password || customer.password;
+        customer.status = status || customer.status;
 
         // Update image if a new one is provided
         if (image) {

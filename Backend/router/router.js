@@ -94,9 +94,10 @@ router.delete("/delete-selected-items/:AdminId/:tableId/:CustomerId", deleteAllS
 
 
 // Order
-import { addOrder, fetchOrders,fetchOrdersByAdminId,deleteOrder,updateOrderStatus,OrdersTable,deleteOrderHistory,editOrderItem,deleteOrderItem} from '../controller/Customer/AddOrder.js'; // Adjust the path as necessary
+import { addOrder, fetchOrders,fetchOrdersbyCustomerId,fetchOrdersByAdminId,deleteOrder,updateOrderStatus,OrdersTable,deleteOrderHistory,editOrderItem,deleteOrderItem} from '../controller/Customer/AddOrder.js'; // Adjust the path as necessary
 router.post('/add-order', addOrder);
 router.get('/fetch-orders/:AdminId/:tableId', fetchOrders);
+router.get('/fetch-orders/:AdminId/:tableId/:CustomerId', fetchOrdersbyCustomerId);
 router.get('/fetch-orders/:AdminId', fetchOrdersByAdminId);
 router.get('/orders/:AdminId', OrdersTable);
 
